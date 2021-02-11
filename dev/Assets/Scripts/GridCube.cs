@@ -38,7 +38,6 @@ public class GridCube : MonoBehaviour
         }
     }
 
-
     struct verticesValue {
         Vector3 vertice;
         float value;
