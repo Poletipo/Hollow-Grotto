@@ -19,18 +19,23 @@ public class Chunk : MonoBehaviour
 
 
     private void Start() {
+
+        float start = Time.realtimeSinceStartup;
         MeshFilter = GetComponent<MeshFilter>();
         MeshCollider = GetComponent<MeshCollider>();
 
         CreateGrid();
         UpdateMesh();
+
+        float end = Time.realtimeSinceStartup;
+        Debug.Log(end - start);
     }
 
     void CreateGrid() {
         int nbPoint = (int)Mathf.Pow((ChunkManager.GridResolution+1), 3);
         gridPoints = new Utilities.Point[nbPoint];
 
-        float gridSize = (ChunkManager.ChunkSize+1.0f) / ChunkManager.GridResolution;
+        float gridSize = ((float)ChunkManager.ChunkSize) / ChunkManager.GridResolution;
 
         int i = 0;
         for (int z = 0; z < (ChunkManager.GridResolution + 1); z++) {
@@ -46,15 +51,10 @@ public class Chunk : MonoBehaviour
                 }
             }
         }
-
-        //gridPoints[0].val = 0.0f;
-        //gridPoints[1].val = 0.0f;
-        //gridPoints[6].val = 0.0f;
-
     }
 
     void UpdateMesh() {
-        Mesh mesh = ChunkManager.MeshGenerator1.GenerateMesh(gridPoints);
+        Mesh mesh = ChunkManager.MeshGenerator.GenerateMesh(gridPoints);
         mesh.RecalculateBounds();
         MeshFilter.mesh = mesh;
         MeshCollider.sharedMesh = mesh;
@@ -72,7 +72,5 @@ public class Chunk : MonoBehaviour
     //        Gizmos.DrawSphere(gridPoints[i].pos, 0.1f);
     //    }
     //}
-
-
 
 }
