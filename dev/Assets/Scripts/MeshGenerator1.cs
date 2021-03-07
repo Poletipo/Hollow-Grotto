@@ -1,248 +1,102 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
-//[ExecuteInEditMode]
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
-public class MeshGenerator : MonoBehaviour
+public class MeshGenerator1 : MonoBehaviour
 {
-    struct Triangle {
-        public Vector3[] p;
-    }
 
-    struct GridCell {
-        public Vector3[] p;
-        public float[] val;
-    }
 
-    public float isolevel = 1;
-    public Vector3Int cellNumber = new Vector3Int(1,1,1);
-    public float gridSize = 1;
-    GridCell[] gridCells;
+    public ChunkManager ChunkManager;
+    public float Threshold = 0.5f;
 
-    List<Vector3> vertices;
 
-    GridCell fullGrid;
-    Mesh mesh;
+    Mesh GenerateMesh(Utilities.Point[] gridPoints) {
+        Mesh mesh = new Mesh();
 
-    MeshCollider mc;
+        int nbCells = (int)Mathf.Pow(ChunkManager.GridResolution, 3);
+        Utilities.GridCell[] listCells = new Utilities.GridCell[nbCells];
 
-    void CreateGrid() {
-        int nbPoint = (cellNumber.x + 1) * (cellNumber.y+ 1) * (cellNumber.z+ 1);
-        fullGrid = new GridCell() { p = new Vector3[nbPoint], val = new float[nbPoint] };
-        int i = 0;
-        for (int z = 0; z < (cellNumber .z+ 1); z++) {
-            for (int y = 0; y < (cellNumber .y+ 1); y++) {
-                for (int x = 0; x < (cellNumber .x+ 1); x++) {
-                    fullGrid.p[i] = new Vector3(transform.position.x + x* gridSize,
-                        transform.position.y + y * gridSize,
-                        transform.position.z + z * gridSize);
-                    //fullGrid.val[i] = Random.Range(0.0f, 1.0f);
-                    float yValue = Mathf.PerlinNoise((float)(x+x) / cellNumber.x, (float)(y+y) / cellNumber.x) / 2.0f;
-                    float zValue = Mathf.PerlinNoise((float)(x+x) / cellNumber.x, (float)(z+z) / cellNumber.x) / 2.0f;
-                    fullGrid.val[i] = yValue + zValue;
-                    i++;
+
+        int gridIndex = 0;
+        for (int z = 0; z < ChunkManager.GridResolution; z++) {
+            for (int y = 0; y < ChunkManager.GridResolution; y++) {
+                for (int x = 0; x < ChunkManager.GridResolution; x++) {
+                    listCells[gridIndex].point = new[]{
+                        gridPoints[indexFromCoord(x,y,z)],
+                        gridPoints[indexFromCoord(x,y,z+1)],
+                        gridPoints[indexFromCoord(x+1,y,z+1)],
+                        gridPoints[indexFromCoord(x+1,y,z)],
+                        gridPoints[indexFromCoord(x,y+1,z)],
+                        gridPoints[indexFromCoord(x,y+1,z+1)],
+                        gridPoints[indexFromCoord(x+1,y+1,z+1)],
+                        gridPoints[indexFromCoord(x+1,y+1,z)]
+                    };
+                    gridIndex++;
                 }
             }
         }
-    }
+        int ntriang = 0;
+        int cubeindex;
+        Vector3[] vertlist = new Vector3[12];
+
+        foreach (Utilities.GridCell gridCell in listCells) {
 
 
-    void Polygonize() {
+            cubeindex = 0;
 
-    }
+            if (gridCell.point[0].val < Threshold) cubeindex |= 1;
+            if (gridCell.point[1].val < Threshold) cubeindex |= 2;
+            if (gridCell.point[2].val < Threshold) cubeindex |= 4;
+            if (gridCell.point[3].val < Threshold) cubeindex |= 8;
+            if (gridCell.point[4].val < Threshold) cubeindex |= 16;
+            if (gridCell.point[5].val < Threshold) cubeindex |= 32;
+            if (gridCell.point[6].val < Threshold) cubeindex |= 64;
+            if (gridCell.point[7].val < Threshold) cubeindex |= 128;
 
-    private void Start() {
-        //StartCoroutine(Generate());
-        mc = GetComponent<MeshCollider>();
-        Generate();
+            if(edgeTable[cubeindex] == 0) {
+                continue;
+            }
+
+            if ((edgeTable[cubeindex] & 1) != 0)
+                vertlist[0] = InterpolateVerts(gridCell.point[0], gridCell.point[1]);
+            if ((edgeTable[cubeindex] & 2) != 0)
+                vertlist[1] = InterpolateVerts(gridCell.point[1], gridCell.point[2]);
+            if ((edgeTable[cubeindex] & 4) != 0)
+                vertlist[2] = InterpolateVerts(gridCell.point[2], gridCell.point[3]);
+            if ((edgeTable[cubeindex] & 8) != 0)
+                vertlist[3] = InterpolateVerts(gridCell.point[3], gridCell.point[0]);
+            if ((edgeTable[cubeindex] & 16) != 0)
+                vertlist[4] = InterpolateVerts(gridCell.point[4], gridCell.point[5]);
+            if ((edgeTable[cubeindex] & 32) != 0)
+                vertlist[5] = InterpolateVerts(gridCell.point[5], gridCell.point[6]);
+            if ((edgeTable[cubeindex] & 64) != 0)
+                vertlist[6] = InterpolateVerts(gridCell.point[6], gridCell.point[7]);
+            if ((edgeTable[cubeindex] & 128) != 0)
+                vertlist[7] = InterpolateVerts(gridCell.point[7], gridCell.point[4]);
+            if ((edgeTable[cubeindex] & 256) != 0)
+                vertlist[8] = InterpolateVerts(gridCell.point[0], gridCell.point[4]);
+            if ((edgeTable[cubeindex] & 512) != 0)
+                vertlist[9] = InterpolateVerts(gridCell.point[1], gridCell.point[5]);
+            if ((edgeTable[cubeindex] & 1024) != 0)
+                vertlist[10] = InterpolateVerts(gridCell.point[2], gridCell.point[6]);
+            if ((edgeTable[cubeindex] & 2048) != 0)
+                vertlist[11] = InterpolateVerts(gridCell.point[3], gridCell.point[7]);
+        }
+
+
+
+        return mesh;
     }
 
     int indexFromCoord(int x, int y, int z) {
-        return z * cellNumber.x * cellNumber.x + y * cellNumber.x + x;
+
+        return z*((ChunkManager.GridResolution+1) * (ChunkManager.GridResolution+1)) + (y* (ChunkManager.GridResolution + 1)) + x;
+        //return ((z * ChunkManager.GridResolution) * ChunkManager.GridResolution) + (y * ChunkManager.GridResolution) + x;
     }
 
-
-    // Start is called before the first frame update
-    void Generate()
-    {
-        int cubeCount = cellNumber.x * cellNumber.y * cellNumber.z;
-        //mesh.Clear();
-        CreateGrid();
-        List<Triangle> triangles = new List<Triangle>();
-        vertices = new List<Vector3>();
-        gridCells = new GridCell[cubeCount];
-        int cubeIndex = 0;
-        int pointIndex = 0;
-        int Size = (cellNumber.x + 1) * (cellNumber.z + 1);
-
-        for (int z = 1; z <= (cellNumber.z); z++) {
-            for (int y = 1; y <= (cellNumber.y); y++) {
-                for (int x = 1; x <= (cellNumber.x); x++) {
-                    gridCells[cubeIndex] = new GridCell(){ p = new Vector3[8], val = new float[8]};
-
-                    gridCells[cubeIndex].p[0] = fullGrid.p[pointIndex + Size];
-                    gridCells[cubeIndex].val[0] = fullGrid.val[pointIndex + Size];
-
-                    gridCells[cubeIndex].p[1] = fullGrid.p[pointIndex + Size+1];
-                    gridCells[cubeIndex].val[1] = fullGrid.val[pointIndex + Size+1];
-
-                    gridCells[cubeIndex].p[2] = fullGrid.p[pointIndex + 1];
-                    gridCells[cubeIndex].val[2] = fullGrid.val[pointIndex + 1];
-
-                    gridCells[cubeIndex].p[3] = fullGrid.p[pointIndex];
-                    gridCells[cubeIndex].val[3] = fullGrid.val[pointIndex];
-
-                    gridCells[cubeIndex].p[4] = fullGrid.p[pointIndex + Size + (cellNumber.x+1)];
-                    gridCells[cubeIndex].val[4] = fullGrid.val[pointIndex + Size + (cellNumber.x+1)];
-
-                    gridCells[cubeIndex].p[5] = fullGrid.p[pointIndex + Size + (cellNumber.x + 1)+1];
-                    gridCells[cubeIndex].val[5] = fullGrid.val[pointIndex + Size + (cellNumber.x + 1)+1];
-
-                    gridCells[cubeIndex].p[6] = fullGrid.p[pointIndex + (cellNumber.x + 1) + 1];
-                    gridCells[cubeIndex].val[6] = fullGrid.val[pointIndex + (cellNumber.x + 1) + 1];
-
-                    gridCells[cubeIndex].p[7] = fullGrid.p[pointIndex + (cellNumber.x + 1)];
-                    gridCells[cubeIndex].val[7] = fullGrid.val[pointIndex + (cellNumber.x + 1)];
-
-                    pointIndex++;
-                    cubeIndex++;
-                }
-                pointIndex++;
-            }
-            pointIndex += (cellNumber.y + 1);
-        }
-        int i, ntriang;
-        int cubeindex;
-        ntriang = 0;
-
-        foreach (GridCell gridCell in gridCells) {
-
-        
-            Vector3[] vertlist = new Vector3[12];
-
-            cubeindex = 0;
-            if (gridCell.val[0] < isolevel) cubeindex |= 1;
-            if (gridCell.val[1] < isolevel) cubeindex |= 2;
-            if (gridCell.val[2] < isolevel) cubeindex |= 4;
-            if (gridCell.val[3] < isolevel) cubeindex |= 8;
-            if (gridCell.val[4] < isolevel) cubeindex |= 16;
-            if (gridCell.val[5] < isolevel) cubeindex |= 32;
-            if (gridCell.val[6] < isolevel) cubeindex |= 64;
-            if (gridCell.val[7] < isolevel) cubeindex |= 128;
-
-
-            if (edgeTable[cubeindex] != 0) {
-
-                if ((edgeTable[cubeindex] & 1) != 0)
-                    vertlist[0] = (gridCell.p[0] + gridCell.p[1]) / 2;
-                //VertexInterp(isolevel, gridCell.p[0], gridCell.p[1], gridCell.val[0], gridCell.val[1]);
-                if ((edgeTable[cubeindex] & 2) != 0)
-                    vertlist[1] = (gridCell.p[1] + gridCell.p[2]) / 2;
-                       //VertexInterp(isolevel, gridCell.p[1], gridCell.p[2], gridCell.val[1], gridCell.val[2]);
-                if ((edgeTable[cubeindex] & 4) != 0)
-                    vertlist[2] = (gridCell.p[2] + gridCell.p[3]) / 2;
-                //VertexInterp(isolevel, gridCell.p[2], gridCell.p[3], gridCell.val[2], gridCell.val[3]);
-                if ((edgeTable[cubeindex] & 8) != 0)
-                    vertlist[3] = (gridCell.p[3] + gridCell.p[0]) / 2;
-                //VertexInterp(isolevel, gridCell.p[3], gridCell.p[0], gridCell.val[3], gridCell.val[0]);
-                if ((edgeTable[cubeindex] & 16) != 0)
-                    vertlist[4] = (gridCell.p[4] + gridCell.p[5]) / 2;
-                //VertexInterp(isolevel, gridCell.p[4], gridCell.p[5], gridCell.val[4], gridCell.val[5]);
-                if ((edgeTable[cubeindex] & 32) != 0)
-                    vertlist[5] = (gridCell.p[5] + gridCell.p[6]) / 2;
-                //VertexInterp(isolevel, gridCell.p[5], gridCell.p[6], gridCell.val[5], gridCell.val[6]);
-                if ((edgeTable[cubeindex] & 64) != 0)
-                    vertlist[6] = (gridCell.p[6] + gridCell.p[7]) / 2;
-                //VertexInterp(isolevel, gridCell.p[6], gridCell.p[7], gridCell.val[6], gridCell.val[7]);
-                if ((edgeTable[cubeindex] & 128) != 0)
-                    vertlist[7] = (gridCell.p[7] + gridCell.p[4]) / 2;
-                //VertexInterp(isolevel, gridCell.p[7], gridCell.p[4], gridCell.val[7], gridCell.val[4]);
-                if ((edgeTable[cubeindex] & 256) != 0)
-                    vertlist[8] = (gridCell.p[0] + gridCell.p[4]) / 2;
-                //VertexInterp(isolevel, gridCell.p[0], gridCell.p[4], gridCell.val[0], gridCell.val[4]);
-                if ((edgeTable[cubeindex] & 512) != 0)
-                    vertlist[9] = (gridCell.p[1] + gridCell.p[5]) / 2;
-                //VertexInterp(isolevel, gridCell.p[1], gridCell.p[5], gridCell.val[1], gridCell.val[5]);
-                if ((edgeTable[cubeindex] & 1024) != 0)
-                    vertlist[10] = (gridCell.p[2] + gridCell.p[6]) / 2;
-                //VertexInterp(isolevel, gridCell.p[2], gridCell.p[6], gridCell.val[2], gridCell.val[6]);
-                if ((edgeTable[cubeindex] & 2048) != 0)
-                    vertlist[11] = (gridCell.p[3] + gridCell.p[7]) / 2;
-                //VertexInterp(isolevel, gridCell.p[3], gridCell.p[7], gridCell.val[3], gridCell.val[7]);
-
-
-
-                for (i = 0; triTable[cubeindex, i] != -1; i += 3) {
-                    triangles.Add(new Triangle() { p = new Vector3[3] });
-                    triangles[ntriang].p[0] = vertlist[triTable[cubeindex, i]];
-                    triangles[ntriang].p[1] = vertlist[triTable[cubeindex, i + 1]];
-                    triangles[ntriang].p[2] = vertlist[triTable[cubeindex, i + 2]];
-                    ntriang++;
-                }
-
-                
-
-
-                //WaitForSeconds wait = new WaitForSeconds(0.5f);
-                //yield return wait;
-            }
-            vertices.Clear();
-            for (int k = 0; k < ntriang; k++) {
-                vertices.Add(triangles[k].p[0]);
-                vertices.Add(triangles[k].p[1]);
-                vertices.Add(triangles[k].p[2]);
-            }
-
-            int[] triangleOrder = new int[ntriang * 3];
-            for (int k = 0; k < (ntriang * 3); k++) {
-                triangleOrder[k] = k;
-            }
-            GetComponent<MeshFilter>().mesh = mesh = new Mesh();
-            mesh.name = "MarchingCube";
-
-            Vector3[] verticess = new Vector3[vertices.Count];
-            for (i = 0; i < vertices.Count; i++) {
-                verticess[i] = vertices[i];
-            }
-            mesh.vertices = verticess;
-            mesh.triangles = triangleOrder;
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
-            GetComponent<MeshCollider>().sharedMesh = mesh;
-        }
-    }
-
-    private void OnDrawGizmos() {
-        if (fullGrid.p == null) {
-            return;
-        }
-        Gizmos.color = Color.white;
-        for (int i = 0; i < fullGrid.p.Length; i++) {
-            Gizmos.color = fullGrid.val[i] < isolevel ? Color.black : Color.white;
-            //Gizmos.color = Color.Lerp(Color.white, Color.black, fullGrid.val[i]);
-            Handles.Label(fullGrid.p[i], i.ToString());
-            Gizmos.DrawSphere(fullGrid.p[i], 0.1f);
-        }
-    }
-
-    Vector3 VertexInterp(float isolevel, Vector3 p1, Vector3 p2, float valp1, float valp2) {
-        float mu;
-        Vector3 p = new Vector3();
-
-        if (Mathf.Abs(isolevel - valp1) < 0.00001)
-            return (p1);
-        if (Mathf.Abs(isolevel - valp2) < 0.00001)
-            return (p2);
-        if (Mathf.Abs(valp1 - valp2) < 0.00001)
-            return (p1);
-        mu = (isolevel - valp1) / (valp2 - valp1);
-        p.x = p1.x + mu * (p2.x - p1.x);
-        p.y = p1.y + mu * (p2.y - p1.y);
-        p.z = p1.z + mu * (p2.z - p1.z);
-
-        return p;
+    Vector3 InterpolateVerts(Utilities.Point v1, Utilities.Point v2) {
+        float t = (Threshold - v1.val) / (v2.val - v1.val);
+        return v1.pos + t * (v2.pos - v1.pos);
     }
 
 
@@ -537,6 +391,5 @@ public class MeshGenerator : MonoBehaviour
 {0, 9, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 {0, 3, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
 
 }
