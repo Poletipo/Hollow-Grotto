@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+[ExecuteInEditMode]
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
 public class Chunk : MonoBehaviour
 {
@@ -24,37 +25,46 @@ public class Chunk : MonoBehaviour
         MeshFilter = GetComponent<MeshFilter>();
         MeshCollider = GetComponent<MeshCollider>();
 
-        CreateGrid();
-        UpdateMesh();
+        
 
         float end = Time.realtimeSinceStartup;
-        Debug.Log(end - start);
+        Debug.Log("All: "+ (end - start));
+    }
+
+
+    private void Update() {
+        CreateGrid();
+        UpdateMesh();
     }
 
     void CreateGrid() {
         int nbPoint = (int)Mathf.Pow((ChunkManager.GridResolution+1), 3);
         gridPoints = new Utilities.Point[nbPoint];
 
-        float gridSize = ((float)ChunkManager.ChunkSize) / ChunkManager.GridResolution;
+        float gridSize = ((float)ChunkManager.ChunkSize) / (ChunkManager.GridResolution);
 
         int i = 0;
         for (int z = 0; z < (ChunkManager.GridResolution + 1); z++) {
             for (int y = 0; y < (ChunkManager.GridResolution + 1); y++) {
                 for (int x = 0; x < (ChunkManager.GridResolution + 1); x++) {
-                    gridPoints[i] = new Utilities.Point { pos =
-                        new Vector3(transform.position.x + x * gridSize,
-                        transform.position.y + y * gridSize,
-                        transform.position.z + z * gridSize),
-                        val = Random.Range(0.0f, 1.0f)
+
+                    Vector3 position = new Vector3(x * gridSize,
+                        y * gridSize,
+                        z * gridSize) + transform.position;
+
+                    gridPoints[i] = new Utilities.Point { pos = position,
+                        val = ChunkManager.NoiseGenerator.GetValue(position)
                     };
                     i++;
                 }
             }
         }
+        Debug.Log(gridPoints[0].pos);
     }
 
+
     void UpdateMesh() {
-        Mesh mesh = ChunkManager.MeshGenerator.GenerateMesh(gridPoints);
+        Mesh mesh = ChunkManager.MeshGenerator.GenerateMesh(gridPoints, transform.position);
         mesh.RecalculateBounds();
         MeshFilter.mesh = mesh;
         MeshCollider.sharedMesh = mesh;
@@ -66,9 +76,9 @@ public class Chunk : MonoBehaviour
     //    }
     //    Gizmos.color = Color.white;
     //    for (int i = 0; i < gridPoints.Length; i++) {
-    //        Gizmos.color = gridPoints[i].val < ChunkManager.MeshGenerator1.Threshold ? Color.black : Color.white;
+    //        Gizmos.color = gridPoints[i].val < ChunkManager.MeshGenerator.Threshold ? Color.black : Color.white;
     //        //Gizmos.color = Color.Lerp(Color.white, Color.black, fullGrid.val[i]);
-    //        Handles.Label(gridPoints[i].pos, i.ToString());
+    //        //Handles.Label(gridPoints[i].pos, i.ToString());
     //        Gizmos.DrawSphere(gridPoints[i].pos, 0.1f);
     //    }
     //}

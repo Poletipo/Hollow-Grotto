@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class MeshGenerator : MonoBehaviour
 {
     public ChunkManager ChunkManager;
+    [Range(0.0f, 1.0f)]
     public float Threshold = 0.5f;
 
-    public Mesh GenerateMesh(Utilities.Point[] gridPoints) {
+    public Mesh GenerateMesh(Utilities.Point[] gridPoints, Vector3 parentPos) {
         Mesh mesh = new Mesh();
 
         int nbCells = (int)Mathf.Pow(ChunkManager.GridResolution, 3);
@@ -16,6 +18,8 @@ public class MeshGenerator : MonoBehaviour
         List<Utilities.Triangle> triangles = new List<Utilities.Triangle>();
         Vector3[] vertices;
         int gridIndex = 0;
+        float start = Time.realtimeSinceStartup;
+
         for (int z = 0; z < ChunkManager.GridResolution; z++) {
             for (int y = 0; y < ChunkManager.GridResolution; y++) {
                 for (int x = 0; x < ChunkManager.GridResolution; x++) {
@@ -33,6 +37,10 @@ public class MeshGenerator : MonoBehaviour
                 }
             }
         }
+        
+        float end = Time.realtimeSinceStartup;
+        Debug.Log("ListCubes: "+ (end - start));
+
         int ntriang = 0;
         int cubeindex;
         Vector3[] vertlist = new Vector3[12];
@@ -55,29 +63,29 @@ public class MeshGenerator : MonoBehaviour
             }
 
             if ((edgeTable[cubeindex] & 1) != 0)
-                vertlist[0] = InterpolateVerts(gridCell.point[0], gridCell.point[1]);
+                vertlist[0] = InterpolateVerts(gridCell.point[0], gridCell.point[1], parentPos);
             if ((edgeTable[cubeindex] & 2) != 0)
-                vertlist[1] = InterpolateVerts(gridCell.point[1], gridCell.point[2]);
+                vertlist[1] = InterpolateVerts(gridCell.point[1], gridCell.point[2], parentPos);
             if ((edgeTable[cubeindex] & 4) != 0)
-                vertlist[2] = InterpolateVerts(gridCell.point[2], gridCell.point[3]);
+                vertlist[2] = InterpolateVerts(gridCell.point[2], gridCell.point[3], parentPos);
             if ((edgeTable[cubeindex] & 8) != 0)
-                vertlist[3] = InterpolateVerts(gridCell.point[3], gridCell.point[0]);
+                vertlist[3] = InterpolateVerts(gridCell.point[3], gridCell.point[0], parentPos);
             if ((edgeTable[cubeindex] & 16) != 0)
-                vertlist[4] = InterpolateVerts(gridCell.point[4], gridCell.point[5]);
+                vertlist[4] = InterpolateVerts(gridCell.point[4], gridCell.point[5], parentPos);
             if ((edgeTable[cubeindex] & 32) != 0)
-                vertlist[5] = InterpolateVerts(gridCell.point[5], gridCell.point[6]);
+                vertlist[5] = InterpolateVerts(gridCell.point[5], gridCell.point[6], parentPos);
             if ((edgeTable[cubeindex] & 64) != 0)
-                vertlist[6] = InterpolateVerts(gridCell.point[6], gridCell.point[7]);
+                vertlist[6] = InterpolateVerts(gridCell.point[6], gridCell.point[7], parentPos);
             if ((edgeTable[cubeindex] & 128) != 0)
-                vertlist[7] = InterpolateVerts(gridCell.point[7], gridCell.point[4]);
+                vertlist[7] = InterpolateVerts(gridCell.point[7], gridCell.point[4], parentPos);
             if ((edgeTable[cubeindex] & 256) != 0)
-                vertlist[8] = InterpolateVerts(gridCell.point[0], gridCell.point[4]);
+                vertlist[8] = InterpolateVerts(gridCell.point[0], gridCell.point[4], parentPos);
             if ((edgeTable[cubeindex] & 512) != 0)
-                vertlist[9] = InterpolateVerts(gridCell.point[1], gridCell.point[5]);
+                vertlist[9] = InterpolateVerts(gridCell.point[1], gridCell.point[5], parentPos);
             if ((edgeTable[cubeindex] & 1024) != 0)
-                vertlist[10] = InterpolateVerts(gridCell.point[2], gridCell.point[6]);
+                vertlist[10] = InterpolateVerts(gridCell.point[2], gridCell.point[6], parentPos);
             if ((edgeTable[cubeindex] & 2048) != 0)
-                vertlist[11] = InterpolateVerts(gridCell.point[3], gridCell.point[7]);
+                vertlist[11] = InterpolateVerts(gridCell.point[3], gridCell.point[7], parentPos);
 
             for (int i = 0; triTable[cubeindex, i] != -1; i += 3) {
                 triangles.Add(new Utilities.Triangle() { corner = new Vector3[3] });
@@ -115,7 +123,9 @@ public class MeshGenerator : MonoBehaviour
         return z*((ChunkManager.GridResolution+1) * (ChunkManager.GridResolution+1)) + (y* (ChunkManager.GridResolution + 1)) + x;
     }
 
-    Vector3 InterpolateVerts(Utilities.Point v1, Utilities.Point v2) {
+    Vector3 InterpolateVerts(Utilities.Point v1, Utilities.Point v2, Vector3 parentPos) {
+        v1.pos -= parentPos;
+        v2.pos -= parentPos;
 
         //return (v1.pos + v2.pos) / 2;
 
