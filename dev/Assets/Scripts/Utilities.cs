@@ -12,4 +12,9 @@ public static class Utilities
     public struct GridCell {
         public Point[] point;
     }
+
+    public struct Triangle {
+        public Vector3[] corner;
+    }
+
 }

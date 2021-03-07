@@ -214,18 +214,18 @@ public class MeshGenerator : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos() {
-        if (fullGrid.p == null) {
-            return;
-        }
-        Gizmos.color = Color.white;
-        for (int i = 0; i < fullGrid.p.Length; i++) {
-            Gizmos.color = fullGrid.val[i] < isolevel ? Color.black : Color.white;
-            //Gizmos.color = Color.Lerp(Color.white, Color.black, fullGrid.val[i]);
-            Handles.Label(fullGrid.p[i], i.ToString());
-            Gizmos.DrawSphere(fullGrid.p[i], 0.1f);
-        }
-    }
+    //private void OnDrawGizmos() {
+    //    if (fullGrid.p == null) {
+    //        return;
+    //    }
+    //    Gizmos.color = Color.white;
+    //    for (int i = 0; i < fullGrid.p.Length; i++) {
+    //        Gizmos.color = fullGrid.val[i] < isolevel ? Color.black : Color.white;
+    //        //Gizmos.color = Color.Lerp(Color.white, Color.black, fullGrid.val[i]);
+    //        Handles.Label(fullGrid.p[i], i.ToString());
+    //        Gizmos.DrawSphere(fullGrid.p[i], 0.1f);
+    //    }
+    //}
 
     Vector3 VertexInterp(float isolevel, Vector3 p1, Vector3 p2, float valp1, float valp2) {
         float mu;

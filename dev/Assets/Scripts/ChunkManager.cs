@@ -6,6 +6,8 @@ public class ChunkManager : MonoBehaviour
 {
     public int GridResolution = 4;
     public int ChunkSize = 4;
+
+    public MeshGenerator1 MeshGenerator1;
      
 
     // Start is called before the first frame update
@@ -14,9 +16,5 @@ public class ChunkManager : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }

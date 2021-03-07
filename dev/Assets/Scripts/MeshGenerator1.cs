@@ -10,13 +10,14 @@ public class MeshGenerator1 : MonoBehaviour
     public float Threshold = 0.5f;
 
 
-    Mesh GenerateMesh(Utilities.Point[] gridPoints) {
+    public Mesh GenerateMesh(Utilities.Point[] gridPoints) {
         Mesh mesh = new Mesh();
 
         int nbCells = (int)Mathf.Pow(ChunkManager.GridResolution, 3);
         Utilities.GridCell[] listCells = new Utilities.GridCell[nbCells];
 
-
+        List<Utilities.Triangle> triangles = new List<Utilities.Triangle>();
+        Vector3[] vertices;
         int gridIndex = 0;
         for (int z = 0; z < ChunkManager.GridResolution; z++) {
             for (int y = 0; y < ChunkManager.GridResolution; y++) {
@@ -40,7 +41,6 @@ public class MeshGenerator1 : MonoBehaviour
         Vector3[] vertlist = new Vector3[12];
 
         foreach (Utilities.GridCell gridCell in listCells) {
-
 
             cubeindex = 0;
 
@@ -81,9 +81,35 @@ public class MeshGenerator1 : MonoBehaviour
                 vertlist[10] = InterpolateVerts(gridCell.point[2], gridCell.point[6]);
             if ((edgeTable[cubeindex] & 2048) != 0)
                 vertlist[11] = InterpolateVerts(gridCell.point[3], gridCell.point[7]);
+
+            for (int i = 0; triTable[cubeindex, i] != -1; i += 3) {
+                triangles.Add(new Utilities.Triangle() { corner = new Vector3[3] });
+                triangles[ntriang].corner[0] = vertlist[triTable[cubeindex, i]];
+                triangles[ntriang].corner[1] = vertlist[triTable[cubeindex, i + 1]];
+                triangles[ntriang].corner[2] = vertlist[triTable[cubeindex, i + 2]];
+                ntriang++;
+            }
+        }
+        vertices = new Vector3[ntriang * 3];
+        int[] triangleCornerIndex = new int[ntriang * 3];
+
+        int verticeIndex = 0;
+        for (int i = 0; i < ntriang; i++, verticeIndex+=3) {
+            vertices[verticeIndex] = triangles[i].corner[0];
+            vertices[verticeIndex + 1] = triangles[i].corner[1];
+            vertices[verticeIndex + 2] = triangles[i].corner[2];
+        }
+
+        for (int i = 0; i < vertices.Length; i++) {
+            triangleCornerIndex[i] = i;
         }
 
 
+        mesh.name = "MarchingCube";
+
+        mesh.vertices = vertices;
+        mesh.triangles = triangleCornerIndex;
+        mesh.RecalculateNormals();
 
         return mesh;
     }
@@ -95,8 +121,11 @@ public class MeshGenerator1 : MonoBehaviour
     }
 
     Vector3 InterpolateVerts(Utilities.Point v1, Utilities.Point v2) {
-        float t = (Threshold - v1.val) / (v2.val - v1.val);
-        return v1.pos + t * (v2.pos - v1.pos);
+
+        return (v1.pos + v2.pos) / 2;
+
+        //float t = (Threshold - v1.val) / (v2.val - v1.val);
+        //return v1.pos + t * (v2.pos - v1.pos);
     }
 
 
