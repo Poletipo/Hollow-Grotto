@@ -16,6 +16,7 @@ public class NoiseGenerator : MonoBehaviour
 
     public float GetValue(Vector3 pos) {
         //float value = 0.0f;
+        //return Random.Range(0.0f, 1.0f);
 
         float noiseY = Mathf.PerlinNoise((pos.x + pos.z)  * Scale, (pos.y + pos.x)  * Scale) / 2;
         float noiseZ = Mathf.PerlinNoise((pos.x + pos.y)  * Scale, (pos.z + pos.y)  * Scale) / 2;

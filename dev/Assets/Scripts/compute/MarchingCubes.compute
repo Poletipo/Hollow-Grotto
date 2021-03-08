@@ -2,7 +2,13 @@
 #pragma kernel CSMain
 #include "/MarchTables.compute"
 
-AppendStructuredBuffer<float3> vertices;
+struct Triangle {
+    float3 corner1;
+    float3 corner2;
+    float3 corner3;
+};
+
+AppendStructuredBuffer<Triangle> triangles;
 RWStructuredBuffer<float4> points;
 
 int numPointsPerAxis;
@@ -10,6 +16,7 @@ float Threshold;
 
 
 float3 InterpolateVerts(float4 v1, float4 v2) {
+    //return (v1.xyz + v2.xyz) / 2;
     float t = (Threshold - v1.w) / (v2.w - v1.w);
     return v1.xyz + t * (v2.xyz - v1.xyz);
 }
@@ -75,8 +82,39 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     if ((edgeTable[cubeindex] & 2048) != 0)
         vertlist[11] = InterpolateVerts(cubeCorner[3], cubeCorner[7]);
 
-    for (int i = 0; triTable[cubeindex][i] != -1; i++) {
-        vertices.Append(vertlist[triTable[cubeindex][i]]);
+    for (int i = 0; triTable[cubeindex][i] != -1; i+=3) {
+
+        Triangle tri;
+        tri.corner1 = vertlist[triTable[cubeindex][i]];
+        tri.corner2 = vertlist[triTable[cubeindex][i+1]];
+        tri.corner3 = vertlist[triTable[cubeindex][i+2]];
+
+        triangles.Append(tri);
+
     }
+
+
+    // Create triangles for current cube configuration
+    //for (int i = 0; triTable[cubeindex][i] != -1; i += 3) {
+    //    // Get indices of corner points A and B for each of the three edges
+    //    // of the cube that need to be joined to form the triangle.
+    //    int a0 = cornerIndexAFromEdge[triTable[cubeindex][i]];
+    //    int b0 = cornerIndexBFromEdge[triTable[cubeindex][i]];
+
+    //    int a1 = cornerIndexAFromEdge[triTable[cubeindex][i + 1]];
+    //    int b1 = cornerIndexBFromEdge[triTable[cubeindex][i + 1]];
+
+    //    int a2 = cornerIndexAFromEdge[triTable[cubeindex][i + 2]];
+    //    int b2 = cornerIndexBFromEdge[triTable[cubeindex][i + 2]];
+
+    //    Triangle tri;
+    //    tri.corner1 = InterpolateVerts(cubeCorner[a0], cubeCorner[b0]);
+    //    tri.corner2 = InterpolateVerts(cubeCorner[a1], cubeCorner[b1]);
+    //    tri.corner3 = InterpolateVerts(cubeCorner[a2], cubeCorner[b2]);
+    //    triangles.Append(tri);
+    //}
+
+
+
 
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class ChunkManager : MonoBehaviour
 {
-    [Range(1, 100)]
+    [Range(1, 500)]
     public int GridResolution = 4;
     public int ChunkSize = 4;
 

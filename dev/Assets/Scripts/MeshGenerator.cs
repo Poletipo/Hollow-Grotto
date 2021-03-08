@@ -10,7 +10,7 @@ public class MeshGenerator : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float Threshold = 0.5f;
 
-    public Mesh GenerateMesh(Utilities.Point[] gridPoints, Vector3 parentPos) {
+    public Mesh GenerateMesh(Utilities.Point[] gridPoints) {
         Mesh mesh = new Mesh();
 
         int nbCells = (int)Mathf.Pow(ChunkManager.GridResolution, 3);
@@ -40,7 +40,7 @@ public class MeshGenerator : MonoBehaviour
         }
         
         float end = Time.realtimeSinceStartup;
-        Debug.Log("ListCubes: "+ (end - start));
+        //Debug.Log("ListCubes: "+ (end - start));
 
         int ntriang = 0;
         int cubeindex;
@@ -64,29 +64,29 @@ public class MeshGenerator : MonoBehaviour
             }
 
             if ((edgeTable[cubeindex] & 1) != 0)
-                vertlist[0] = InterpolateVerts(gridCell.point[0], gridCell.point[1], parentPos);
+                vertlist[0] = InterpolateVerts(gridCell.point[0], gridCell.point[1], gridPoints[0].pos);
             if ((edgeTable[cubeindex] & 2) != 0)
-                vertlist[1] = InterpolateVerts(gridCell.point[1], gridCell.point[2], parentPos);
+                vertlist[1] = InterpolateVerts(gridCell.point[1], gridCell.point[2], gridPoints[0].pos);
             if ((edgeTable[cubeindex] & 4) != 0)
-                vertlist[2] = InterpolateVerts(gridCell.point[2], gridCell.point[3], parentPos);
+                vertlist[2] = InterpolateVerts(gridCell.point[2], gridCell.point[3], gridPoints[0].pos);
             if ((edgeTable[cubeindex] & 8) != 0)
-                vertlist[3] = InterpolateVerts(gridCell.point[3], gridCell.point[0], parentPos);
+                vertlist[3] = InterpolateVerts(gridCell.point[3], gridCell.point[0], gridPoints[0].pos);
             if ((edgeTable[cubeindex] & 16) != 0)
-                vertlist[4] = InterpolateVerts(gridCell.point[4], gridCell.point[5], parentPos);
+                vertlist[4] = InterpolateVerts(gridCell.point[4], gridCell.point[5], gridPoints[0].pos);
             if ((edgeTable[cubeindex] & 32) != 0)
-                vertlist[5] = InterpolateVerts(gridCell.point[5], gridCell.point[6], parentPos);
+                vertlist[5] = InterpolateVerts(gridCell.point[5], gridCell.point[6], gridPoints[0].pos);
             if ((edgeTable[cubeindex] & 64) != 0)
-                vertlist[6] = InterpolateVerts(gridCell.point[6], gridCell.point[7], parentPos);
+                vertlist[6] = InterpolateVerts(gridCell.point[6], gridCell.point[7], gridPoints[0].pos);
             if ((edgeTable[cubeindex] & 128) != 0)
-                vertlist[7] = InterpolateVerts(gridCell.point[7], gridCell.point[4], parentPos);
+                vertlist[7] = InterpolateVerts(gridCell.point[7], gridCell.point[4], gridPoints[0].pos);
             if ((edgeTable[cubeindex] & 256) != 0)
-                vertlist[8] = InterpolateVerts(gridCell.point[0], gridCell.point[4], parentPos);
+                vertlist[8] = InterpolateVerts(gridCell.point[0], gridCell.point[4],gridPoints[0].pos);
             if ((edgeTable[cubeindex] & 512) != 0)
-                vertlist[9] = InterpolateVerts(gridCell.point[1], gridCell.point[5], parentPos);
+                vertlist[9] = InterpolateVerts(gridCell.point[1], gridCell.point[5],gridPoints[0].pos);
             if ((edgeTable[cubeindex] & 1024) != 0)
-                vertlist[10] = InterpolateVerts(gridCell.point[2], gridCell.point[6], parentPos);
+                vertlist[10] = InterpolateVerts(gridCell.point[2], gridCell.point[6], gridPoints[0].pos);
             if ((edgeTable[cubeindex] & 2048) != 0)
-                vertlist[11] = InterpolateVerts(gridCell.point[3], gridCell.point[7], parentPos);
+                vertlist[11] = InterpolateVerts(gridCell.point[3], gridCell.point[7], gridPoints[0].pos);
 
             for (int i = 0; triTable[cubeindex, i] != -1; i += 3) {
                 triangles.Add(new Utilities.Triangle() { corner = new Vector3[3] });
@@ -138,40 +138,49 @@ public class MeshGenerator : MonoBehaviour
 
         int numThreadPerAxis = Mathf.CeilToInt(ChunkManager.GridResolution / ((float)8));
 
-        int maxNbTriangle = (int)Mathf.Pow(ChunkManager.GridResolution, 3) * 5 * 3;
+        int maxNbTriangle = (int)Mathf.Pow(ChunkManager.GridResolution, 3) * 5;
 
-        ComputeBuffer verticesBuffer = new ComputeBuffer(maxNbTriangle, sizeof(float) * 3, ComputeBufferType.Append);
-        verticesBuffer.SetCounterValue(0);
+        ComputeBuffer trianglesBuffer = new ComputeBuffer(maxNbTriangle, sizeof(float) * 3*3, ComputeBufferType.Append);
+        trianglesBuffer.SetCounterValue(0);
         marchingShader.SetBuffer(0, "points", pointsBuffer);
-        marchingShader.SetBuffer(0, "vertices", verticesBuffer);
+        marchingShader.SetBuffer(0, "triangles", trianglesBuffer);
         marchingShader.SetInt("numPointsPerAxis", (ChunkManager.GridResolution + 1));
         marchingShader.SetFloat("Threshold", Threshold);
         marchingShader.Dispatch(0, numThreadPerAxis, numThreadPerAxis, numThreadPerAxis);
 
-        ComputeBuffer verticesCount = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
+        ComputeBuffer triangleCount = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
 
-        ComputeBuffer.CopyCount(verticesBuffer, verticesCount, 0);
+        ComputeBuffer.CopyCount(trianglesBuffer, triangleCount, 0);
 
-        int[] verticesCountArray = { 0 };
-        verticesCount.GetData(verticesCountArray);
+        int[] triCountArray = { 0 };
+        triangleCount.GetData(triCountArray);
 
-        Vector3[] vertices = new Vector3[verticesCountArray[0]];
-        verticesBuffer.GetData(vertices);
+        Utilities.TriangleGPU[] triangles = new Utilities.TriangleGPU[triCountArray[0]];
+        trianglesBuffer.GetData(triangles, 0,0, triCountArray[0]);
 
-        int[] triangleCornerIndex = new int[vertices.Length];
-        for (int i = 0; i < vertices.Length; i++) {
+        int vertexCount = triangles.Length * 3;
+
+        Vector3[] trianglesCorners = new Vector3[vertexCount];
+        for (int i = 0, index = 0; i < triangles.Length; i++, index+=3) {
+            trianglesCorners[index] =  triangles[i].corner3;
+            trianglesCorners[index+1] =  triangles[i].corner2;
+            trianglesCorners[index+2] =  triangles[i].corner1;
+        }
+
+        int[] triangleCornerIndex = new int[vertexCount];
+        for (int i = 0; i < vertexCount; i++) {
             triangleCornerIndex[i] = i;
         }
 
         mesh.name = "MarchingCube";
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        mesh.vertices = vertices;
+        mesh.vertices = trianglesCorners;
         mesh.triangles = triangleCornerIndex;
         mesh.RecalculateNormals();
 
         pointsBuffer.Release();
-        verticesBuffer.Release();
-        verticesCount.Release();
+        trianglesBuffer.Release();
+        triangleCount.Release();
         return mesh;
 
     }

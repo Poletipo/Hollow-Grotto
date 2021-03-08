@@ -13,6 +13,12 @@ public static class Utilities
         public Point[] point;
     }
 
+    public struct TriangleGPU {
+        public Vector3 corner1;
+        public Vector3 corner2;
+        public Vector3 corner3;
+    }
+
     public struct Triangle {
         public Vector3[] corner;
     }

@@ -21,20 +21,28 @@ public class Chunk : MonoBehaviour
 
     private void Start() {
 
-        float start = Time.realtimeSinceStartup;
         MeshFilter = GetComponent<MeshFilter>();
         MeshCollider = GetComponent<MeshCollider>();
 
         
 
-        float end = Time.realtimeSinceStartup;
-        Debug.Log("All: "+ (end - start));
+        //float startC = Time.realtimeSinceStartup;
+        //CreateGrid();
+        //UpdateMesh();
+        //float endC = Time.realtimeSinceStartup;
+        //Debug.Log("Mesh CPU: " + (endC - startC));
     }
 
 
     private void Update() {
         CreateGridGPU();
-        UpdateMesh();
+
+        float start = Time.realtimeSinceStartup;
+        UpdateMeshGPU();
+        float end = Time.realtimeSinceStartup;
+        Debug.Log("Mesh GPU: " + (end - start));
+
+        
     }
 
     void CreateGrid() {
@@ -59,7 +67,6 @@ public class Chunk : MonoBehaviour
                 }
             }
         }
-        Debug.Log(gridPoints[0].pos);
     }
 
     void CreateGridGPU() {
@@ -67,13 +74,13 @@ public class Chunk : MonoBehaviour
         gridPoints = new Utilities.Point[nbPoint];
 
         float gridSize = ((float)ChunkManager.ChunkSize) / (ChunkManager.GridResolution);
-
+        float startC = Time.realtimeSinceStartup;
         int i = 0;
         for (int z = 0; z < (ChunkManager.GridResolution + 1); z++) {
             for (int y = 0; y < (ChunkManager.GridResolution + 1); y++) {
                 for (int x = 0; x < (ChunkManager.GridResolution + 1); x++) {
 
-                    Vector3 position = new Vector3(x , y, z);
+                    Vector3 position = new Vector3(x, y, z);
 
                     gridPoints[i] = new Utilities.Point {
                         pos = position,
@@ -83,29 +90,44 @@ public class Chunk : MonoBehaviour
                 }
             }
         }
-        Debug.Log(gridPoints[0].pos);
+        float endC = Time.realtimeSinceStartup;
+        Debug.Log("GRID CREATE GPU: " + (endC - startC));
+        //Debug.Log(gridPoints[0].pos);
     }
 
 
+
+    void UpdateMeshGPU() {
+        MeshFilter.mesh = null;
+        MeshCollider.sharedMesh = null;
+
+        Mesh mesh = ChunkManager.MeshGenerator.GenerateMeshGPU(gridPoints);
+        //mesh.RecalculateBounds();
+        MeshFilter.mesh = mesh;
+        //MeshCollider.sharedMesh = mesh;
+    }
 
     void UpdateMesh() {
-        Mesh mesh = ChunkManager.MeshGenerator.GenerateMeshGPU(gridPoints);
-        mesh.RecalculateBounds();
+        MeshFilter.mesh = null;
+        MeshCollider.sharedMesh = null;
+        Mesh mesh = ChunkManager.MeshGenerator.GenerateMesh(gridPoints);
+        //mesh.RecalculateBounds();
         MeshFilter.mesh = mesh;
-        MeshCollider.sharedMesh = mesh;
+        //MeshCollider.sharedMesh = mesh;
     }
 
-    private void OnDrawGizmos() {
-        if (gridPoints == null) {
-            return;
-        }
-        Gizmos.color = Color.white;
-        for (int i = 0; i < gridPoints.Length; i++) {
-            Gizmos.color = gridPoints[i].val < ChunkManager.MeshGenerator.Threshold ? Color.black : Color.white;
-            //Gizmos.color = Color.Lerp(Color.white, Color.black, fullGrid.val[i]);
-            //Handles.Label(gridPoints[i].pos, i.ToString());
-            Gizmos.DrawSphere(gridPoints[i].pos, 0.1f);
-        }
-    }
+
+    //private void OnDrawGizmos() {
+    //    if (gridPoints == null) {
+    //        return;
+    //    }
+    //    Gizmos.color = Color.white;
+    //    for (int i = 0; i < gridPoints.Length; i++) {
+    //        Gizmos.color = gridPoints[i].val < ChunkManager.MeshGenerator.Threshold ? Color.black : Color.white;
+    //        //Gizmos.color = Color.Lerp(Color.white, Color.black, fullGrid.val[i]);
+    //        //Handles.Label(gridPoints[i].pos, i.ToString());
+    //        Gizmos.DrawSphere(gridPoints[i].pos, 0.1f);
+    //    }
+    //}
 
 }
