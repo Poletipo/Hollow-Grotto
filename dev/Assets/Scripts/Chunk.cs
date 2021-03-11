@@ -81,20 +81,29 @@ public class Chunk : MonoBehaviour
         
         ComputeShader gridNoiseShader = ChunkManager.NoiseGenerator.gridNoiseShader;
 
+        Vector3[] randSeedOffsets = ChunkManager.NoiseGenerator.SeedValues();
+        ComputeBuffer offsetsBuffer = new ComputeBuffer(randSeedOffsets.Length, sizeof(float) * 3);
+        offsetsBuffer.SetData(randSeedOffsets);
+
+        gridNoiseShader.SetBuffer(0, "randSeedOffsets", offsetsBuffer);
+
         gridNoiseShader.SetBuffer(0,"points", pointsBuffer);
         gridNoiseShader.SetFloat("voxelSize", voxelSize);
         gridNoiseShader.SetFloat("noiseScale", ChunkManager.NoiseGenerator.Scale);
+        gridNoiseShader.SetFloat("octaves", ChunkManager.NoiseGenerator.Octaves);
+        gridNoiseShader.SetFloat("persistence", ChunkManager.NoiseGenerator.Persistence);
         gridNoiseShader.SetInt("numPointsPerAxis", ChunkManager.GridResolution + 1);
         gridNoiseShader.SetVector("noiseOffset", ChunkManager.NoiseGenerator.Offset);
         gridNoiseShader.SetVector("chunkPosition", transform.position);
 
-        int numThreadPerAxis = Mathf.CeilToInt(ChunkManager.GridResolution+1 / ((float)10));
+        int numThreadPerAxis = Mathf.CeilToInt(ChunkManager.GridResolution+1 / ((float)8));
 
         gridNoiseShader.Dispatch(0, numThreadPerAxis, numThreadPerAxis, numThreadPerAxis);
 
         pointsBuffer.GetData(gridPoints);
 
         pointsBuffer.Release();
+        offsetsBuffer.Release();
         float endC = Time.realtimeSinceStartup;
         Debug.Log("GRID CREATE GPU: " + (endC - startC));
     }
@@ -108,18 +117,8 @@ public class Chunk : MonoBehaviour
         Mesh mesh = ChunkManager.MeshGenerator.GenerateMeshGPU(gridPoints);
         //mesh.RecalculateBounds();
         MeshFilter.mesh = mesh;
-        //MeshCollider.sharedMesh = mesh;
+        MeshCollider.sharedMesh = mesh;
     }
-
-    void UpdateMesh() {
-        MeshFilter.mesh = null;
-        MeshCollider.sharedMesh = null;
-        Mesh mesh = ChunkManager.MeshGenerator.GenerateMesh(gridPoints);
-        //mesh.RecalculateBounds();
-        MeshFilter.mesh = mesh;
-        //MeshCollider.sharedMesh = mesh;
-    }
-
 
     //private void OnDrawGizmos() {
     //    if (gridPoints == null) {

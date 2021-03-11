@@ -126,7 +126,7 @@ public class MeshGenerator : MonoBehaviour
         ComputeBuffer pointsBuffer = new ComputeBuffer(gridPoints.Length, sizeof(float) * 4);
         pointsBuffer.SetData(gridPoints);
 
-        int numThreadPerAxis = Mathf.CeilToInt(ChunkManager.GridResolution / ((float)10));
+        int numThreadPerAxis = Mathf.CeilToInt(ChunkManager.GridResolution / ((float)8));
 
         int maxNbTriangle = (int)Mathf.Pow(ChunkManager.GridResolution, 3) * 5;
 

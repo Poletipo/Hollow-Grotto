@@ -29,7 +29,7 @@ int indexFromCoord(int x, int y, int z) {
     return z * numPointsPerAxis * numPointsPerAxis + y * numPointsPerAxis + x;
 }
 
-[numthreads(10,10,10)]
+[numthreads(8,8,8)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
     if (id.x >= numPointsPerAxis - 1 || id.y >= numPointsPerAxis - 1 || id.z >= numPointsPerAxis - 1) {
