@@ -34,6 +34,7 @@ public class Chunk : MonoBehaviour
 
 
     private void Update() {
+        gameObject.name = "Chunk" + Coordonnate;
         transform.position = Coordonnate * ChunkManager.ChunkSize;
         CreateGridGPU();
 
@@ -76,19 +77,18 @@ public class Chunk : MonoBehaviour
         float voxelSize = ((float)ChunkManager.ChunkSize) / (ChunkManager.GridResolution);
         float startC = Time.realtimeSinceStartup;
 
-
-
         ComputeBuffer pointsBuffer = new ComputeBuffer(nbPoint, sizeof(float) * 4);
         
         ComputeShader gridNoiseShader = ChunkManager.NoiseGenerator.gridNoiseShader;
 
         gridNoiseShader.SetBuffer(0,"points", pointsBuffer);
         gridNoiseShader.SetFloat("voxelSize", voxelSize);
+        gridNoiseShader.SetFloat("noiseScale", ChunkManager.NoiseGenerator.Scale);
         gridNoiseShader.SetInt("numPointsPerAxis", ChunkManager.GridResolution + 1);
         gridNoiseShader.SetVector("noiseOffset", ChunkManager.NoiseGenerator.Offset);
         gridNoiseShader.SetVector("chunkPosition", transform.position);
 
-        int numThreadPerAxis = Mathf.CeilToInt(ChunkManager.GridResolution / ((float)8));
+        int numThreadPerAxis = Mathf.CeilToInt(ChunkManager.GridResolution+1 / ((float)10));
 
         gridNoiseShader.Dispatch(0, numThreadPerAxis, numThreadPerAxis, numThreadPerAxis);
 

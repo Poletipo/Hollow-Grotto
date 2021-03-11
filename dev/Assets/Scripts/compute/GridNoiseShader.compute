@@ -10,9 +10,10 @@ struct Point {
 RWStructuredBuffer<Point> points;
 
 int numPointsPerAxis;
+float voxelSize;
+float noiseScale;
 float3 noiseOffset;
 float3 chunkPosition;
-float voxelSize;
 
 int indexFromCoord(int x, int y, int z) {
     return z * numPointsPerAxis * numPointsPerAxis + y * numPointsPerAxis + x;
@@ -28,7 +29,10 @@ void PointsValue (uint3 id : SV_DispatchThreadID)
     float value;
 
     position = id * voxelSize + chunkPosition;
-    value = snoise(position + noiseOffset);
+
+    float3 posValue = (position + noiseOffset) * noiseScale;
+
+    value = snoise(posValue);
 
     
     int index = indexFromCoord(id.x, id.y, id.z);

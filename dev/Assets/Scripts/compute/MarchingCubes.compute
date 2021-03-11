@@ -22,7 +22,7 @@ float Threshold;
 
 float3 InterpolateVerts(Point v1, Point v2) {
     float t = (Threshold - v1.val) / (v2.val - v1.val);
-    return v1.pos + t * (v2.pos - v1.pos);
+    return v1.pos + t * (v2.pos - v1.pos) - points[0].pos;
 }
 
 int indexFromCoord(int x, int y, int z) {

@@ -7,7 +7,7 @@ public class MeshGenerator : MonoBehaviour
 {
     public ComputeShader marchingShader;
     public ChunkManager ChunkManager;
-    [Range(-1.0f, 1.0f)]
+    [Range(-1.1f, 1.0f)]
     public float Threshold = 0.5f;
 
     public Mesh GenerateMesh(Utilities.Point[] gridPoints) {
