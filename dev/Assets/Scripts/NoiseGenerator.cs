@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class NoiseGenerator : MonoBehaviour
 {
+
+    public ComputeShader gridNoiseShader;
+
     public int Seed = 0;
     [Range(0.0f, 1.0f)]
     public float Scale = 1.0f;

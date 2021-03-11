@@ -1,6 +1,6 @@
 ﻿// Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel CSMain
-#include "/MarchTables.compute"
+#include "/includes/MarchTables.compute"
 
 struct Triangle {
     float3 corner1;
@@ -8,31 +8,35 @@ struct Triangle {
     float3 corner3;
 };
 
+struct Point {
+    float3 pos;
+    float val;
+};
+
 AppendStructuredBuffer<Triangle> triangles;
-RWStructuredBuffer<float4> points;
+RWStructuredBuffer<Point> points;
 
 int numPointsPerAxis;
 float Threshold;
 
 
-float3 InterpolateVerts(float4 v1, float4 v2) {
-    //return (v1.xyz + v2.xyz) / 2;
-    float t = (Threshold - v1.w) / (v2.w - v1.w);
-    return v1.xyz + t * (v2.xyz - v1.xyz);
+float3 InterpolateVerts(Point v1, Point v2) {
+    float t = (Threshold - v1.val) / (v2.val - v1.val);
+    return v1.pos + t * (v2.pos - v1.pos);
 }
 
 int indexFromCoord(int x, int y, int z) {
     return z * numPointsPerAxis * numPointsPerAxis + y * numPointsPerAxis + x;
 }
 
-[numthreads(8,8,8)]
+[numthreads(10,10,10)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
     if (id.x >= numPointsPerAxis - 1 || id.y >= numPointsPerAxis - 1 || id.z >= numPointsPerAxis - 1) {
         return;
     }
 
-    float4 cubeCorner[8] = {
+    Point cubeCorner[8] = {
         points[indexFromCoord(id.x, id.y, id.z)],
         points[indexFromCoord(id.x, id.y, id.z + 1)],
         points[indexFromCoord(id.x + 1, id.y, id.z + 1)],
@@ -44,14 +48,14 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     };
 
     int cubeindex = 0;
-    if (cubeCorner[0].w < Threshold) cubeindex |= 1;
-    if (cubeCorner[1].w < Threshold) cubeindex |= 2;
-    if (cubeCorner[2].w < Threshold) cubeindex |= 4;
-    if (cubeCorner[3].w < Threshold) cubeindex |= 8;
-    if (cubeCorner[4].w < Threshold) cubeindex |= 16;
-    if (cubeCorner[5].w < Threshold) cubeindex |= 32;
-    if (cubeCorner[6].w < Threshold) cubeindex |= 64;
-    if (cubeCorner[7].w < Threshold) cubeindex |= 128;
+    if (cubeCorner[0].val < Threshold) cubeindex |= 1;
+    if (cubeCorner[1].val < Threshold) cubeindex |= 2;
+    if (cubeCorner[2].val < Threshold) cubeindex |= 4;
+    if (cubeCorner[3].val < Threshold) cubeindex |= 8;
+    if (cubeCorner[4].val < Threshold) cubeindex |= 16;
+    if (cubeCorner[5].val < Threshold) cubeindex |= 32;
+    if (cubeCorner[6].val < Threshold) cubeindex |= 64;
+    if (cubeCorner[7].val < Threshold) cubeindex |= 128;
 
     if (edgeTable[cubeindex] == 0) {
         return;

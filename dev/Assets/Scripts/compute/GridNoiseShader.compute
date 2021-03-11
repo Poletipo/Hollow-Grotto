@@ -1,0 +1,38 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel PointsValue
+#include "/includes/noise.compute"
+
+struct Point {
+    float3 pos;
+    float val;
+};
+
+RWStructuredBuffer<Point> points;
+
+int numPointsPerAxis;
+float3 noiseOffset;
+float3 chunkPosition;
+float voxelSize;
+
+int indexFromCoord(int x, int y, int z) {
+    return z * numPointsPerAxis * numPointsPerAxis + y * numPointsPerAxis + x;
+}
+
+[numthreads(10,10,10)]
+void PointsValue (uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= numPointsPerAxis || id.y >= numPointsPerAxis || id.z >= numPointsPerAxis) {
+        return;
+    }
+    float3 position;
+    float value;
+
+    position = id * voxelSize + chunkPosition;
+    value = snoise(position + noiseOffset);
+
+    
+    int index = indexFromCoord(id.x, id.y, id.z);
+
+    points[index].pos = position;
+    points[index].val = value;
+}

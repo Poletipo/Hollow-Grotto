@@ -7,7 +7,7 @@ public class MeshGenerator : MonoBehaviour
 {
     public ComputeShader marchingShader;
     public ChunkManager ChunkManager;
-    [Range(0.0f, 1.0f)]
+    [Range(-1.0f, 1.0f)]
     public float Threshold = 0.5f;
 
     public Mesh GenerateMesh(Utilities.Point[] gridPoints) {
@@ -123,20 +123,10 @@ public class MeshGenerator : MonoBehaviour
     public Mesh GenerateMeshGPU(Utilities.Point[] gridPoints) {
         Mesh mesh = new Mesh();
 
-        Vector4[] data = new Vector4[gridPoints.Length];
+        ComputeBuffer pointsBuffer = new ComputeBuffer(gridPoints.Length, sizeof(float) * 4);
+        pointsBuffer.SetData(gridPoints);
 
-        for (int i = 0; i < gridPoints.Length; i++) {
-            data[i].x = gridPoints[i].pos.x;
-            data[i].y = gridPoints[i].pos.y;
-            data[i].z = gridPoints[i].pos.z;
-            data[i].w = gridPoints[i].val;
-        } 
-
-
-        ComputeBuffer pointsBuffer = new ComputeBuffer(data.Length, sizeof(float) * 4);
-        pointsBuffer.SetData(data);
-
-        int numThreadPerAxis = Mathf.CeilToInt(ChunkManager.GridResolution / ((float)8));
+        int numThreadPerAxis = Mathf.CeilToInt(ChunkManager.GridResolution / ((float)10));
 
         int maxNbTriangle = (int)Mathf.Pow(ChunkManager.GridResolution, 3) * 5;
 
