@@ -42,8 +42,6 @@ public class Chunk : MonoBehaviour
         UpdateMeshGPU();
         float end = Time.realtimeSinceStartup;
         Debug.Log("Mesh GPU: " + (end - start));
-
-        
     }
 
     void CreateGrid() {
@@ -94,6 +92,7 @@ public class Chunk : MonoBehaviour
         gridNoiseShader.SetFloat("persistence", ChunkManager.NoiseGenerator.Persistence);
         gridNoiseShader.SetInt("numPointsPerAxis", ChunkManager.GridResolution + 1);
         gridNoiseShader.SetVector("noiseOffset", ChunkManager.NoiseGenerator.Offset);
+        gridNoiseShader.SetVector("axesSize", ChunkManager.NoiseGenerator.axesScale);
         gridNoiseShader.SetVector("chunkPosition", transform.position);
 
         int numThreadPerAxis = Mathf.CeilToInt(ChunkManager.GridResolution+1 / ((float)8));
@@ -117,7 +116,7 @@ public class Chunk : MonoBehaviour
         Mesh mesh = ChunkManager.MeshGenerator.GenerateMeshGPU(gridPoints);
         //mesh.RecalculateBounds();
         MeshFilter.mesh = mesh;
-        MeshCollider.sharedMesh = mesh;
+        //MeshCollider.sharedMesh = mesh;
     }
 
     //private void OnDrawGizmos() {

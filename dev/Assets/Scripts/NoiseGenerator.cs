@@ -10,11 +10,12 @@ public class NoiseGenerator : MonoBehaviour
     public int Seed = 0;
     [Range(0.0f, 1.0f)]
     public float Scale = 1.0f;
-    [Range(0, 10)]
+    [Range(1, 10)]
     public int Octaves = 1;
     [Range(0.0f, 1.0f)]
     public float Persistence = 1;
     public Vector3 Offset;
+    public Vector3 axesScale;
 
 
     public ChunkManager ChunkManager;
