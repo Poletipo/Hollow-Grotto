@@ -10,12 +10,14 @@
     }
     SubShader
     {
+        Tags {"LightMode" = "ForwardBase"}
         Pass
         {
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #include "UnityCG.cginc"
+            #include "UnityCG.cginc" // for UnityObjectToWorldNormal
+            #include "UnityLightingCommon.cginc" // for _LightColor0
 
             struct v2f
             {
@@ -23,6 +25,7 @@
                 float3 coords : TEXCOORD1;
                 float2 uv : TEXCOORD2;
                 float4 pos : SV_POSITION;
+                fixed4 diff : COLOR0;
             };
 
             float _Tiling;
@@ -35,6 +38,11 @@
                 o.coords = pos.xyz * _Tiling;
                 o.objNormal = normal;
                 o.uv = uv;
+
+                half3 worldNormal = UnityObjectToWorldNormal(normal);
+                half nl = max(0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
+                o.diff = nl * _LightColor0;
+                o.diff.rgb += ShadeSH9(half4(worldNormal, 1));
                 return o;
             }
 
@@ -50,13 +58,13 @@
                 blend /= dot(blend,1);
                 // read the three texture projections, for x,y,z axes
                 fixed4 cx = tex2D(_MainTex, i.coords.yz);
-                fixed4 cy = tex2D(_TopTex, i.coords.z);
+                fixed4 cy = tex2D(_TopTex, i.coords.xz);
                 fixed4 cz = tex2D(_MainTex, i.coords.xy);
                 // blend the textures based on weights
                 fixed4 c = cx * blend.x + cy * blend.y + cz * blend.z;
                 // modulate by regular occlusion map
                 c *= tex2D(_OcclusionMap, i.uv);
-
+                c *= i.diff;
                 return c;
             }
             ENDCG
