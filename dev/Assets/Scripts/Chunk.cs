@@ -23,17 +23,8 @@ public class Chunk : MonoBehaviour
         MeshFilter = GetComponent<MeshFilter>();
         MeshCollider = GetComponent<MeshCollider>();
 
-        
-
-        //float startC = Time.realtimeSinceStartup;
-        //CreateGrid();
-        //UpdateMesh();
-        //float endC = Time.realtimeSinceStartup;
-        //Debug.Log("Mesh CPU: " + (endC - startC));
-    }
 
 
-    private void Update() {
         gameObject.name = "Chunk" + Coordonnate;
         transform.position = Coordonnate * ChunkManager.ChunkSize;
         CreateGridGPU();
@@ -42,6 +33,11 @@ public class Chunk : MonoBehaviour
         UpdateMeshGPU();
         float end = Time.realtimeSinceStartup;
         Debug.Log("Mesh GPU: " + (end - start));
+    }
+
+
+    private void Update() {
+        
     }
 
     void CreateGrid() {
