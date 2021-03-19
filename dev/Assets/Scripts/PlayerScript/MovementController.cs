@@ -39,15 +39,20 @@ public class MovementController : MonoBehaviour
     Vector3 contactNormal;
 
 
+    int FixedUpdatecount = 0;
+
     float fallMultiplier = 2.5f;
     float lowJumpMultiplier = 2f;
 
     float dotMaxGroundAngle;
 
-    bool OnGround => groundContactCount > 0;
+    bool onGround;
+    bool desiredJump;
 
     Rigidbody rb;
     private int groundContactCount;
+
+    bool jumped = false;
 
     private void Awake() {
         rb = GetComponent<Rigidbody>();
@@ -56,20 +61,26 @@ public class MovementController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        dotMaxGroundAngle = Mathf.Cos(maxGroundAngle);
-        Debug.Log(dotMaxGroundAngle);
+        dotMaxGroundAngle = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateMove();
+
         UpdateJump();
-        ClearState();
     }
 
-    private void ClearState() {
-        groundContactCount = 0;
+    private void FixedUpdate() {
+        velocity = rb.velocity;
+        
+
+        if (InputJump) {
+            InputJump = false;
+            Jump();
+        }
+        rb.velocity = velocity;
+        onGround = false;
     }
 
     void UpdateMove() {
@@ -86,19 +97,16 @@ public class MovementController : MonoBehaviour
     }
 
     void Jump() {
-
-        float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * jumpHeight);
-        rb.velocity += Vector3.up * jumpSpeed;
+        if (onGround){
+            jumped = true;
+            float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * jumpHeight);
+            velocity.y += Mathf.Max(jumpSpeed - velocity.y, 0f) ;
+        }
     }
 
 
     void UpdateJump() {
 
-        //Debug.Log(OnGround +" , " + groundContactCount + " , " + dotMaxGroundAngle);
-
-        if (InputJump && OnGround) {
-            Jump();
-        }
         //Better Jump
         if (rb.velocity.y < 0) {
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
@@ -108,10 +116,6 @@ public class MovementController : MonoBehaviour
         }
     }
 
-    private void FixedUpdate() {
-        UpdateMoveAcceleration();
-        UpdateJump();
-    }
 
     private void UpdateMoveAcceleration() {
         Vector3 velocity = rb.velocity;
@@ -126,14 +130,6 @@ public class MovementController : MonoBehaviour
         rb.velocity = velocity;
     }
 
-
-    bool IsGrounded() {
-        Ray ray = new Ray(transform.position + Vector3.up * 0.1f, Vector3.down);
-
-        Debug.DrawRay(transform.position + Vector3.up * 0.1f, Vector3.down*1.5f,Color.red);
-        return Physics.Raycast(ray, 1.5f);
-    }
-
     private void OnCollisionEnter(Collision collision) {
         EvaluateCollisions(collision);
     }
@@ -143,20 +139,20 @@ public class MovementController : MonoBehaviour
 
     private void EvaluateCollisions(Collision collision) {
 
+        groundContactCount = 0;
+
         for (int i = 0; i < collision.contactCount; i++) {
 
             Vector3 normal = collision.GetContact(i).normal;
 
             float dotValue = Vector3.Dot(transform.up, normal);
-                Debug.Log(dotValue + " , " + dotMaxGroundAngle);
+            //Debug.Log(dotValue + " , " + dotMaxGroundAngle);
             if(dotValue > dotMaxGroundAngle) {
                 groundContactCount += 1;
                 contactNormal += normal;
             }
         }
 
-
-
-
+        onGround = groundContactCount > 0;
     }
 }
