@@ -67,7 +67,7 @@ public class MovementController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        UpdateMove();
         UpdateJump();
     }
 
@@ -79,8 +79,11 @@ public class MovementController : MonoBehaviour
             InputJump = false;
             Jump();
         }
-        rb.velocity = velocity;
         onGround = false;
+
+        Move();
+
+        rb.velocity = velocity;
     }
 
     void UpdateMove() {
@@ -93,7 +96,7 @@ public class MovementController : MonoBehaviour
         right.y = 0f;
         right.Normalize();
         desiredVelocity =
-            (forward * InputMove.y + right * InputMove.x);
+            (forward * InputMove.y + right * InputMove.x) * maxSpeed;
     }
 
     void Jump() {
@@ -117,17 +120,12 @@ public class MovementController : MonoBehaviour
     }
 
 
-    private void UpdateMoveAcceleration() {
-        Vector3 velocity = rb.velocity;
+    private void Move() {
 
-        velocity.x += desiredVelocity.x * maxAcceleration * Time.deltaTime;
-        velocity.z += desiredVelocity.z * maxAcceleration * Time.deltaTime;
+        float maxSpeedChange = maxAcceleration * Time.deltaTime;
 
-        Vector2 moveVelocity = Vector2.ClampMagnitude(new Vector2(velocity.x, velocity.z), maxSpeed);
-
-        velocity = new Vector3(moveVelocity.x, velocity.y, moveVelocity.y);
-        //Debug.Log(velocity);
-        rb.velocity = velocity;
+        velocity.x = Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
+        velocity.z = Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxSpeedChange);
     }
 
     private void OnCollisionEnter(Collision collision) {
