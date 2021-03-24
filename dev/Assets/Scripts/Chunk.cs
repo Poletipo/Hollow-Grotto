@@ -1,47 +1,48 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
-public class Chunk : MonoBehaviour
-{
+public class Chunk : MonoBehaviour {
     public Vector3Int Coordonnate;
     bool IsModified = false;
 
     Utilities.Point[] gridPoints;
 
-    public ChunkManager ChunkManager;
+    ChunkManager ChunkManager;
 
     MeshFilter MeshFilter;
     MeshRenderer MeshRenderer;
     MeshCollider MeshCollider;
 
 
-    private void Start() {
+    private void Awake() {
+        ChunkManager = FindObjectOfType<ChunkManager>();
         MeshFilter = GetComponent<MeshFilter>();
         MeshCollider = GetComponent<MeshCollider>();
 
+        float start = Time.realtimeSinceStartup;
+        Init(Coordonnate);
+        float end = Time.realtimeSinceStartup;
+        //Debug.Log("Mesh GPU: " + (end - start));
+    }
 
 
+    public void Init(Vector3Int pos) {
+        Coordonnate = pos;
         gameObject.name = "Chunk" + Coordonnate;
+
         transform.position = Coordonnate * ChunkManager.ChunkSize;
         CreateGridGPU();
-
-        float start = Time.realtimeSinceStartup;
         UpdateMeshGPU();
-        float end = Time.realtimeSinceStartup;
-        Debug.Log("Mesh GPU: " + (end - start));
     }
 
 
     private void Update() {
-        
+
     }
 
     void CreateGrid() {
-        int nbPoint = (int)Mathf.Pow((ChunkManager.GridResolution+1), 3);
+        int nbPoint = (int)Mathf.Pow((ChunkManager.GridResolution + 1), 3);
         gridPoints = new Utilities.Point[nbPoint];
 
         float gridSize = ((float)ChunkManager.ChunkSize) / (ChunkManager.GridResolution);
@@ -55,7 +56,8 @@ public class Chunk : MonoBehaviour
                         y * gridSize,
                         z * gridSize) + transform.position;
 
-                    gridPoints[i] = new Utilities.Point { pos = position,
+                    gridPoints[i] = new Utilities.Point {
+                        pos = position,
                         val = ChunkManager.NoiseGenerator.GetValue(position)
                     };
                     i++;
@@ -72,7 +74,7 @@ public class Chunk : MonoBehaviour
         float startC = Time.realtimeSinceStartup;
 
         ComputeBuffer pointsBuffer = new ComputeBuffer(nbPoint, sizeof(float) * 4);
-        
+
         ComputeShader gridNoiseShader = ChunkManager.NoiseGenerator.gridNoiseShader;
 
         Vector3[] randSeedOffsets = ChunkManager.NoiseGenerator.SeedValues();
@@ -81,7 +83,7 @@ public class Chunk : MonoBehaviour
 
         gridNoiseShader.SetBuffer(0, "randSeedOffsets", offsetsBuffer);
 
-        gridNoiseShader.SetBuffer(0,"points", pointsBuffer);
+        gridNoiseShader.SetBuffer(0, "points", pointsBuffer);
         gridNoiseShader.SetFloat("voxelSize", voxelSize);
         gridNoiseShader.SetFloat("noiseScale", ChunkManager.NoiseGenerator.Scale);
         gridNoiseShader.SetFloat("octaves", ChunkManager.NoiseGenerator.Octaves);
@@ -91,7 +93,7 @@ public class Chunk : MonoBehaviour
         gridNoiseShader.SetVector("axesSize", ChunkManager.NoiseGenerator.axesScale);
         gridNoiseShader.SetVector("chunkPosition", transform.position);
 
-        int numThreadPerAxis = Mathf.CeilToInt(ChunkManager.GridResolution+1 / ((float)8));
+        int numThreadPerAxis = Mathf.CeilToInt(ChunkManager.GridResolution + 1 / ((float)8));
 
         gridNoiseShader.Dispatch(0, numThreadPerAxis, numThreadPerAxis, numThreadPerAxis);
 

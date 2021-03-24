@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class FirstPersonCamera : MonoBehaviour
-{
+public class FirstPersonCamera : MonoBehaviour {
     public Transform rotationAxis;
     public Transform YawAxis;
 
@@ -22,23 +19,15 @@ public class FirstPersonCamera : MonoBehaviour
         transform.parent = YawAxis;
     }
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         mouseInput = new Vector2(
             -Input.GetAxis("Mouse Y"),
             Input.GetAxis("Mouse X")
         );
 
         bodyRotation += new Vector3(0, mouseInput.y, 0) * rotationSpeed;
-        viewRotation += new Vector3(mouseInput.x,0, 0) * rotationSpeed;
+        viewRotation += new Vector3(mouseInput.x, 0, 0) * rotationSpeed;
 
     }
 

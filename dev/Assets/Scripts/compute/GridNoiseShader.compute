@@ -3,8 +3,8 @@
 #include "/includes/noise.compute"
 
 struct Point {
-    float3 pos;
-    float val;
+	float3 pos;
+	float val;
 };
 
 RWStructuredBuffer<Point> points;
@@ -20,45 +20,44 @@ float3 chunkPosition;
 float3 axesSize;
 
 int indexFromCoord(int x, int y, int z) {
-    return z * numPointsPerAxis * numPointsPerAxis + y * numPointsPerAxis + x;
+	return z * numPointsPerAxis * numPointsPerAxis + y * numPointsPerAxis + x;
 }
 
-[numthreads(8,8,8)]
-void PointsValue (uint3 id : SV_DispatchThreadID)
+[numthreads(8, 8, 8)]
+void PointsValue(uint3 id : SV_DispatchThreadID)
 {
-    if (id.x >= numPointsPerAxis || id.y >= numPointsPerAxis || id.z >= numPointsPerAxis) {
-        return;
-    }
-    float3 position;
-    float value;
+	if (id.x >= numPointsPerAxis || id.y >= numPointsPerAxis || id.z >= numPointsPerAxis) {
+		return;
+	}
+	float3 position;
+	float value;
 
-    position = id * voxelSize + chunkPosition;
+	position = id * voxelSize + chunkPosition;
 
-    float3 posValue = (position + noiseOffset) * noiseScale;
+	float3 posValue = (position + noiseOffset) * noiseScale;
 
-    //https://adrianb.io/2014/08/09/perlinnoise.html
-    float total = 0;
-    float frequency = 1;
-    float amplitude = 1;
-    float maxValue = 0;  // Used for normalizing result to 0.0 - 1.0
-    for (int i = 0; i < octaves; i++) {
-        float3 posNoise = float3 (posValue.x / axesSize.x * frequency + randSeedOffsets[i].x,
-            posValue.y / axesSize.y * frequency + randSeedOffsets[i].y,
-            posValue.z / axesSize.z * frequency + randSeedOffsets[i].z);
-        total += snoise(posNoise * frequency) * amplitude;
+	//https://adrianb.io/2014/08/09/perlinnoise.html
+	float total = 0;
+	float frequency = 1;
+	float amplitude = 1;
+	float maxValue = 0;  // Used for normalizing result to 0.0 - 1.0
+	for (int i = 0; i < octaves; i++) {
+		float3 posNoise = float3 (posValue.x / axesSize.x * frequency + randSeedOffsets[i].x,
+			posValue.y / axesSize.y * frequency + randSeedOffsets[i].y,
+			posValue.z / axesSize.z * frequency + randSeedOffsets[i].z);
+		total += snoise(posNoise * frequency) * amplitude;
 
-        maxValue += amplitude;
+		maxValue += amplitude;
 
-        amplitude *= persistence;
-        frequency *= 2;
-    }
+		amplitude *= persistence;
+		frequency *= 2;
+	}
 
-    value = total / maxValue;
-    
-    //value = snoise(posValue);
+	value = total / maxValue;
 
-    int index = indexFromCoord(id.x, id.y, id.z);
 
-    points[index].pos = position;
-    points[index].val = value;
+	int index = indexFromCoord(id.x, id.y, id.z);
+
+	points[index].pos = position;
+	points[index].val = value;
 }

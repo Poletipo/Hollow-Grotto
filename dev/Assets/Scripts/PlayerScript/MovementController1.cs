@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class MovementController : MonoBehaviour {
+public class MovementController1 : MonoBehaviour {
 
     [SerializeField, Range(0f, 100f)]
     float maxSpeed = 10f;
@@ -115,13 +115,7 @@ public class MovementController : MonoBehaviour {
     }
 
     void Move() {
-        if (onGround) {
-            rb.AddForce(-contactNormal.normalized * 9.8f);
-        }
-        else {
-            rb.AddForce(Physics.gravity);
-        }
-
+        Debug.Log(onGround);
         Vector3 xAxis = ProjectOnContactPlane(Vector3.right).normalized;
         Vector3 zAxis = ProjectOnContactPlane(Vector3.forward).normalized;
 
@@ -131,14 +125,7 @@ public class MovementController : MonoBehaviour {
         float acceleration = onGround ? maxAcceleration : maxAirAcceleration;
         float maxSpeedChange = acceleration * Time.deltaTime;
 
-        float newX =
-            Mathf.MoveTowards(currentX, desiredVelocity.x, maxSpeedChange);
-        float newZ =
-            Mathf.MoveTowards(currentZ, desiredVelocity.z, maxSpeedChange);
-
-        Debug.DrawRay(transform.position, (xAxis * (newX - currentX) + zAxis * (newZ - currentZ)));
-
-        velocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ);
+        rb.MovePosition(transform.position + InputMove);
     }
 
     void UpdateJump() {
