@@ -14,6 +14,7 @@ public class ChunkManager : MonoBehaviour {
     public float loadDistance = 50;
 
     Dictionary<String, GameObject> ChunkList;
+    List<GameObject> unusedChunks;
 
     GameObject chunkHolder;
     GameObject player;
@@ -22,6 +23,8 @@ public class ChunkManager : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         ChunkList = new Dictionary<string, GameObject>();
+        unusedChunks = new List<GameObject>();
+
         player = GameManager.Instance.Player;
         chunkHolder = GameObject.Find("ChunkHolder");
         LoadChunks();
@@ -36,6 +39,7 @@ public class ChunkManager : MonoBehaviour {
         }
     }
 
+    int Counter = 0;
     void LoadChunks() {
 
         Vector3Int playerChunk = new Vector3Int();
@@ -45,31 +49,49 @@ public class ChunkManager : MonoBehaviour {
 
         int nbChunksDistance = Mathf.Abs(Mathf.CeilToInt(loadDistance / ChunkSize));
 
-        foreach (GameObject item in ChunkList.Values) {
-
-        }
-
-
+        Dictionary<string, GameObject> oldchunks = new Dictionary<string, GameObject>(ChunkList);
+        ChunkList.Clear();
 
         for (int x = -nbChunksDistance; x <= nbChunksDistance; x++) {
             for (int y = -nbChunksDistance; y <= nbChunksDistance; y++) {
                 for (int z = -nbChunksDistance; z <= nbChunksDistance; z++) {
                     Vector3Int chunkPos = playerChunk + new Vector3Int(x, y, z);
+                    String chunkPosKey = chunkPos.ToString();
 
+                    //Debug.Log("Chunk POs " + chunkPosKey);
 
-
-
-
-                    if (!ChunkList.ContainsKey(chunkPos.ToString())) {
-                        GameObject chunk = Instantiate(chunkObject, Vector3.zero, Quaternion.identity);
-                        chunk.GetComponent<Chunk>().Init(chunkPos);
-                        ChunkList.Add(chunkPos.ToString(), chunk);
+                    if (!oldchunks.ContainsKey(chunkPosKey)) {
+                        GameObject chunk;
+                        if (unusedChunks.Count == 0) {
+                            Counter++;
+                            Debug.Log(Counter);
+                            chunk = Instantiate(chunkObject, Vector3.zero, Quaternion.identity);
+                            chunk.GetComponent<Chunk>().Init(chunkPos);
+                        }
+                        else {
+                            chunk = unusedChunks[0];
+                            unusedChunks.RemoveAt(0);
+                            chunk.GetComponent<Chunk>().Init(chunkPos);
+                        }
+                        ChunkList.Add(chunkPosKey, chunk);
                         chunk.transform.parent = chunkHolder.transform;
+
+                    }
+                    else {
+                        //Debug.Log("Should be here if no moving");
+                        ChunkList.Add(chunkPosKey, oldchunks[chunkPosKey]);
+                        oldchunks.Remove(chunkPosKey);
                     }
                 }
             }
         }
 
+        if (oldchunks.Count != 0) {
+            foreach (GameObject item in oldchunks.Values) {
+                unusedChunks.Add(item);
+            }
+            oldchunks.Clear();
+        }
     }
 
 }

@@ -102,12 +102,12 @@ public class Chunk : MonoBehaviour {
         pointsBuffer.Release();
         offsetsBuffer.Release();
         float endC = Time.realtimeSinceStartup;
-        Debug.Log("GRID CREATE GPU: " + (endC - startC));
+        //Debug.Log("GRID CREATE GPU: " + (endC - startC));
     }
 
 
 
-    void UpdateMeshGPU() {
+    public void UpdateMeshGPU() {
         MeshFilter.mesh = null;
         MeshCollider.sharedMesh = null;
 

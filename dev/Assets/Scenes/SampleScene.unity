@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridNoiseShader: {fileID: 7200000, guid: 0398b577c7714f54fb505385569a42e4, type: 3}
-  Seed: 7
+  Seed: 13
   Scale: 0.075
   Octaves: 3
   Persistence: 0.13
@@ -1014,7 +1014,12 @@ PrefabInstance:
     - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: maxSpeed
-      value: 2.4
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
+        type: 3}
+      propertyPath: jumpHeight
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008605, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
