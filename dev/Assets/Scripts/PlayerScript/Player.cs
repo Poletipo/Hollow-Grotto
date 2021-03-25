@@ -22,5 +22,6 @@ public class Player : MonoBehaviour {
         moveInput.y = Input.GetAxisRaw("Vertical");
         mc.InputMove = moveInput;
         mc.InputJump |= Input.GetButton("Jump");
+        mc.InputSprint = Input.GetButton("Sprint");
     }
 }

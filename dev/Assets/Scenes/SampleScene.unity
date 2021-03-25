@@ -149,6 +149,22 @@ MonoBehaviour:
   maxSnapSpeed: 100
   probeDistance: 1
   playerInputSpace: {fileID: 507266858}
+  <InputJump>k__BackingField: 0
+  <InputMove>k__BackingField: {x: 0, y: 0, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
+  desiredVelocity: {x: 0, y: 0, z: 0}
+  contactNormal: {x: 0, y: 0, z: 0}
+  steepNormal: {x: 0, y: 0, z: 0}
+  FixedUpdatecount: 0
+  fallMultiplier: 2.5
+  lowJumpMultiplier: 2
+  dotMaxGroundAngle: 0
+  onGround: 0
+  desiredJump: 0
+  rb: {fileID: 0}
+  groundContactCount: 0
+  steepContactCount: 0
+  jumped: 0
 --- !u!1 &257005455
 GameObject:
   m_ObjectHideFlags: 0
@@ -868,8 +884,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c5db21271a0ad4498fd9f0ebfaf1661, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GridResolution: 15
-  ChunkSize: 10
+  GridResolution: 20
+  ChunkSize: 15
   MeshGenerator: {fileID: 1081300357}
   NoiseGenerator: {fileID: 257005457}
   loadDistance: 20
@@ -1039,12 +1055,17 @@ PrefabInstance:
     - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: maxSpeed
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: jumpHeight
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
+        type: 3}
+      propertyPath: maxSprintSpeed
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008605, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}

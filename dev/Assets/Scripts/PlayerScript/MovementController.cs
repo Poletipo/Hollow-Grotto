@@ -7,7 +7,10 @@ public class MovementController : MonoBehaviour {
     float maxSpeed = 10f;
 
     [SerializeField, Range(0f, 100f)]
-    float maxAcceleration = 10f, maxAirAcceleration = 1f;
+    float maxSprintSpeed = 15f;
+
+    [SerializeField, Range(0f, 100f)]
+    float maxAcceleration = 10f, maxDecceleration = 20f, maxAirAcceleration = 1f;
 
     [SerializeField, Range(0f, 10f)]
     float jumpHeight = 2f;
@@ -28,6 +31,7 @@ public class MovementController : MonoBehaviour {
     Transform playerInputSpace = default;
 
     public bool InputJump { get; set; }
+    public bool InputSprint { get; set; }
     public Vector3 InputMove { get; set; }
 
     Vector3 velocity;
@@ -38,8 +42,8 @@ public class MovementController : MonoBehaviour {
 
     int FixedUpdatecount = 0;
 
-    float fallMultiplier = 2.5f;
-    float lowJumpMultiplier = 2f;
+    public float fallMultiplier = 2.5f;
+    public float lowJumpMultiplier = 2f;
 
     float dotMaxGroundAngle;
 
@@ -98,8 +102,9 @@ public class MovementController : MonoBehaviour {
         Vector3 right = playerInputSpace.right;
         right.y = 0f;
         right.Normalize();
+        float speed = InputSprint ? maxSprintSpeed : maxSpeed;
         desiredVelocity =
-            (forward * InputMove.y + right * InputMove.x) * maxSpeed;
+            (forward * InputMove.y + right * InputMove.x) * speed;
     }
 
     void Jump() {
@@ -129,6 +134,9 @@ public class MovementController : MonoBehaviour {
         float currentZ = Vector3.Dot(velocity, zAxis);
 
         float acceleration = onGround ? maxAcceleration : maxAirAcceleration;
+        if (onGround) {
+            acceleration = InputMove.magnitude > 0 ? maxAcceleration : maxDecceleration;
+        }
         float maxSpeedChange = acceleration * Time.deltaTime;
 
         float newX =
