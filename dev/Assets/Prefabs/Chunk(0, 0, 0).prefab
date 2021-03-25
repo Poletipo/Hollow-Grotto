@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a9dd4545f60599f46aeb0aec5e123c41, type: 2}
+  - {fileID: 2100000, guid: d489d332f59b98b49a4b46a7a14d15bb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -108,4 +108,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Coordonnate: {x: 0, y: 0, z: 0}
-  ChunkManager: {fileID: 0}

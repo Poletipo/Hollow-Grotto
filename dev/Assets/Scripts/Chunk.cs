@@ -36,11 +36,6 @@ public class Chunk : MonoBehaviour {
         UpdateMeshGPU();
     }
 
-
-    private void Update() {
-
-    }
-
     void CreateGrid() {
         int nbPoint = (int)Mathf.Pow((ChunkManager.GridResolution + 1), 3);
         gridPoints = new Utilities.Point[nbPoint];
@@ -112,7 +107,6 @@ public class Chunk : MonoBehaviour {
         MeshCollider.sharedMesh = null;
 
         Mesh mesh = ChunkManager.MeshGenerator.GenerateMeshGPU(gridPoints);
-        //mesh.RecalculateBounds();
         MeshFilter.mesh = mesh;
         MeshCollider.sharedMesh = mesh;
     }
