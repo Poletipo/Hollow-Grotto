@@ -1027,6 +1027,11 @@ PrefabInstance:
       propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5424882966849008602, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: playerInputSpace
@@ -1035,7 +1040,7 @@ PrefabInstance:
     - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: maxAcceleration
-      value: 29.9
+      value: 7.8
       objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
@@ -1050,7 +1055,7 @@ PrefabInstance:
     - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: maxAirAcceleration
-      value: 15.2
+      value: 5.8
       objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
@@ -1065,7 +1070,22 @@ PrefabInstance:
     - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: maxSprintSpeed
-      value: 6
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
+        type: 3}
+      propertyPath: lowJumpMultiplier
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
+        type: 3}
+      propertyPath: fallMultiplier
+      value: 1.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
+        type: 3}
+      propertyPath: maxDecceleration
+      value: 26.3
       objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008605, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}

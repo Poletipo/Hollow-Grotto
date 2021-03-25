@@ -18,10 +18,15 @@ public class Player : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        PlayerInput();
+    }
+
+    void PlayerInput() {
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
         mc.InputMove = moveInput;
         mc.InputJump |= Input.GetButton("Jump");
         mc.InputSprint = Input.GetButton("Sprint");
     }
+
 }

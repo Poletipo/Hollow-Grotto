@@ -55,6 +55,7 @@ public class MovementController : MonoBehaviour {
     private int steepContactCount;
 
     bool jumped = false;
+    float fallingTimer = 0;
 
     private void Awake() {
         rb = GetComponent<Rigidbody>();
@@ -158,6 +159,7 @@ public class MovementController : MonoBehaviour {
             else if (rb.velocity.y > 0 && !InputJump) {
                 rb.velocity += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
             }
+            fallingTimer += Time.deltaTime;
         }
     }
 
@@ -213,5 +215,12 @@ public class MovementController : MonoBehaviour {
 
         onGround = groundContactCount > 0;
 
+        if (onGround && rb.velocity.y <= -1 && fallingTimer > 0.5f) {
+            Debug.Log(rb.velocity.y);
+            rb.velocity /= Mathf.Abs(rb.velocity.y);
+        }
+        if (onGround) {
+            fallingTimer = 0;
+        }
     }
 }

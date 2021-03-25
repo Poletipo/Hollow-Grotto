@@ -1,4 +1,6 @@
-﻿Shader "Custom/triplanarSurface"
+﻿//https://github.com/keijiro/StandardTriplanar/blob/master/Assets/Triplanar/Shaders/StandardTriplanar.shader
+
+Shader "Custom/triplanarSurface"
 {
 	Properties
 	{
@@ -69,9 +71,6 @@
 				fixed4 cz = tex2D(_MainTex, IN.coords.xy);
 				// blend the textures based on weights
 				fixed4 c = (cx * blend.x + cy * blend.y + cz * blend.z) * _Color;
-
-
-
 
 				// Albedo comes from a texture tinted by color
 				//fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;

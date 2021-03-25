@@ -40,7 +40,6 @@ public class ChunkManager : MonoBehaviour {
     }
 
     Vector3Int lastPlayerChunk = new Vector3Int();
-    int Counter = 0;
     void LoadChunks() {
 
         Vector3Int playerChunk = new Vector3Int();
@@ -65,8 +64,6 @@ public class ChunkManager : MonoBehaviour {
                         if (!oldchunks.ContainsKey(chunkPosKey)) {
                             GameObject chunk;
                             if (unusedChunks.Count == 0) {
-                                Counter++;
-                                Debug.Log(Counter);
                                 chunk = Instantiate(chunkObject, Vector3.zero, Quaternion.identity);
                                 chunk.GetComponent<Chunk>().Init(chunkPos);
                             }
