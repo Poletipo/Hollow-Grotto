@@ -28,6 +28,7 @@ public class FirstPersonCamera : MonoBehaviour {
 
         bodyRotation += new Vector3(0, mouseInput.y, 0) * rotationSpeed;
         viewRotation += new Vector3(mouseInput.x, 0, 0) * rotationSpeed;
+        viewRotation.x = Mathf.Clamp(viewRotation.x, -90, 90);
 
     }
 

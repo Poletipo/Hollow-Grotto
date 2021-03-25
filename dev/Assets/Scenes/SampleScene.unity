@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.028301895, g: 0.028301895, b: 0.028301895, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 1.02
+  m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
@@ -35,10 +35,10 @@ RenderSettings:
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
-  m_ReflectionIntensity: 0.27
+  m_ReflectionIntensity: 0.5
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.048676625, g: 0.060942814, b: 0.08286917, a: 0.27}
+  m_IndirectSpecularColor: {r: 0.09014189, g: 0.11285706, b: 0.15346143, a: 0.5}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -121,50 +121,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &11284003 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5424882966849008605, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-    type: 3}
-  m_PrefabInstance: {fileID: 5424882967043583172}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &11284004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 11284003}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 222b34f42869e1145b3451a7aa429bbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxSpeed: 10
-  maxAcceleration: 10
-  maxAirAcceleration: 1
-  jumpHeight: 2
-  maxAirJumps: 0
-  maxGroundAngle: 25
-  maxStairsAngle: 50
-  maxSnapSpeed: 100
-  probeDistance: 1
-  playerInputSpace: {fileID: 507266858}
-  <InputJump>k__BackingField: 0
-  <InputMove>k__BackingField: {x: 0, y: 0, z: 0}
-  velocity: {x: 0, y: 0, z: 0}
-  desiredVelocity: {x: 0, y: 0, z: 0}
-  contactNormal: {x: 0, y: 0, z: 0}
-  steepNormal: {x: 0, y: 0, z: 0}
-  FixedUpdatecount: 0
-  fallMultiplier: 2.5
-  lowJumpMultiplier: 2
-  dotMaxGroundAngle: 0
-  onGround: 0
-  desiredJump: 0
-  rb: {fileID: 0}
-  groundContactCount: 0
-  steepContactCount: 0
-  jumped: 0
 --- !u!1 &257005455
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,7 +221,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.122641504, g: 0.122641504, b: 0.122641504, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -944,28 +900,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2062224749515652270, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
-      propertyPath: m_Range
-      value: 15
+      propertyPath: m_SpotAngle
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 2062224749515652270, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
-      propertyPath: m_Color.r
-      value: 0.85711104
+      propertyPath: m_Intensity
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2062224749515652270, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
-      propertyPath: m_Color.g
-      value: 0.9513804
-      objectReference: {fileID: 0}
-    - target: {fileID: 2062224749515652270, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0.9716981
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966671357746, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.446
+      propertyPath: m_Shadows.m_Type
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008601, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
@@ -1022,71 +968,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008602, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008602, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: playerInputSpace
       value: 
       objectReference: {fileID: 507266858}
-    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: maxAcceleration
-      value: 7.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: maxGroundAngle
-      value: 49.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: maxAirAcceleration
-      value: 5.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: maxSpeed
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: jumpHeight
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: maxSprintSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: lowJumpMultiplier
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: fallMultiplier
-      value: 1.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: maxDecceleration
-      value: 26.3
-      objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008605, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: m_Name

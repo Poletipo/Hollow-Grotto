@@ -216,11 +216,10 @@ public class MovementController : MonoBehaviour {
         onGround = groundContactCount > 0;
 
         if (onGround && rb.velocity.y <= -1 && fallingTimer > 0.5f) {
-            Debug.Log(rb.velocity.y);
             rb.velocity /= Mathf.Abs(rb.velocity.y);
         }
-        if (onGround) {
-            fallingTimer = 0;
-        }
+
+        fallingTimer = onGround ? 0 : fallingTimer;
+
     }
 }
