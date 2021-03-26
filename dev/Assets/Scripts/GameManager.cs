@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public GameObject Player { get; private set; }
+    public GameObject ChunkManager { get; private set; }
 
     private void Initialize() {
 
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour {
 
     private void OnSceneLoaded() {
         Player = GameObject.FindGameObjectWithTag("Player");
+        ChunkManager = GameObject.Find("ChunkManager");
     }
 
 }

@@ -6,7 +6,7 @@ public class Chunk : MonoBehaviour {
     public Vector3Int Coordonnate;
     bool IsModified = false;
 
-    Utilities.Point[] gridPoints;
+    public Utilities.Point[] gridPoints;
 
     ChunkManager ChunkManager;
 
@@ -80,6 +80,7 @@ public class Chunk : MonoBehaviour {
 
         gridNoiseShader.SetBuffer(0, "points", pointsBuffer);
         gridNoiseShader.SetFloat("voxelSize", voxelSize);
+        gridNoiseShader.SetFloat("chunkSize", ChunkManager.ChunkSize);
         gridNoiseShader.SetFloat("noiseScale", ChunkManager.NoiseGenerator.Scale);
         gridNoiseShader.SetFloat("octaves", ChunkManager.NoiseGenerator.Octaves);
         gridNoiseShader.SetFloat("persistence", ChunkManager.NoiseGenerator.Persistence);

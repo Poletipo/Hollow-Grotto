@@ -18,6 +18,7 @@ float persistence;
 float3 noiseOffset;
 float3 chunkPosition;
 float3 axesSize;
+float chunkSize;
 
 int indexFromCoord(int x, int y, int z) {
 	return z * numPointsPerAxis * numPointsPerAxis + y * numPointsPerAxis + x;

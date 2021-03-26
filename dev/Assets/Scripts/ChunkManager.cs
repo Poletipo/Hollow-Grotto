@@ -13,7 +13,7 @@ public class ChunkManager : MonoBehaviour {
 
     public float loadDistance = 50;
 
-    Dictionary<String, GameObject> ChunkList;
+    public Dictionary<String, GameObject> ChunkList;
     List<GameObject> unusedChunks;
 
     GameObject chunkHolder;
