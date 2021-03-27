@@ -7,6 +7,7 @@ public class ChunkManager : MonoBehaviour {
     [Range(1, 250)]
     public int GridResolution = 4;
     public int ChunkSize = 4;
+    public float Threshold = 0;
 
     public MeshGenerator MeshGenerator;
     public NoiseGenerator NoiseGenerator;
@@ -60,7 +61,6 @@ public class ChunkManager : MonoBehaviour {
                         Vector3Int chunkPos = playerChunk + new Vector3Int(x, y, z);
                         String chunkPosKey = chunkPos.ToString();
 
-
                         if (!oldchunks.ContainsKey(chunkPosKey)) {
                             GameObject chunk;
                             if (unusedChunks.Count == 0) {
@@ -77,7 +77,6 @@ public class ChunkManager : MonoBehaviour {
 
                         }
                         else {
-                            //Debug.Log("Should be here if no moving");
                             ChunkList.Add(chunkPosKey, oldchunks[chunkPosKey]);
                             oldchunks.Remove(chunkPosKey);
                         }

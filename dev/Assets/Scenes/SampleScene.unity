@@ -756,8 +756,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   marchingShader: {fileID: 7200000, guid: 60ddfbc733a71264c867de536857216b, type: 3}
-  ChunkManager: {fileID: 1774692108}
-  Threshold: 0.28
 --- !u!4 &1081300358
 Transform:
   m_ObjectHideFlags: 0
@@ -1296,9 +1294,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GridResolution: 20
   ChunkSize: 15
+  Threshold: 0
   MeshGenerator: {fileID: 1081300357}
   NoiseGenerator: {fileID: 257005457}
-  loadDistance: 20
+  loadDistance: 1
   chunkObject: {fileID: 1719428045986001211, guid: 9a3126df124560745b1372be1c4f4cd3,
     type: 3}
 --- !u!4 &1774692109

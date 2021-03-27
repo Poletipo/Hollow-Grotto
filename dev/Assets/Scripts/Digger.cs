@@ -44,14 +44,14 @@ public class Digger : MonoBehaviour {
 
                 if (boxBound.Intersects(item.GetComponent<Collider>().bounds)) {
 
-                    Utilities.Point[] points = item.GetComponent<Chunk>().gridPoints;
+                    Utilities.Point[] points = item.GetComponent<Destructible>().GridPoints;
 
                     for (int i = 0; i < points.Length; i++) {
                         if (boxBound.Contains(points[i].pos)) {
                             points[i].val += 1000;
                         }
                     }
-                    item.GetComponent<Chunk>().UpdateMeshGPU();
+                    item.GetComponent<Destructible>().UpdateMesh();
                 }
             }
         }
@@ -60,7 +60,7 @@ public class Digger : MonoBehaviour {
 
                 if (boxBound.Intersects(item.GetComponent<Collider>().bounds)) {
 
-                    Utilities.Point[] points = item.GetComponent<Chunk>().gridPoints;
+                    Utilities.Point[] points = item.GetComponent<Destructible>().GridPoints;
 
                     for (int i = 0; i < points.Length; i++) {
                         if (Vector3.Distance((points[i].pos), digPostion) <= (DigSize / 2)) {
@@ -68,7 +68,7 @@ public class Digger : MonoBehaviour {
                             //points[i].val -= points[i].val;
                         }
                     }
-                    item.GetComponent<Chunk>().UpdateMeshGPU();
+                    item.GetComponent<Destructible>().UpdateMesh();
                 }
             }
         }

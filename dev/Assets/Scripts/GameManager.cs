@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
@@ -22,11 +23,16 @@ public class GameManager : MonoBehaviour {
     }
 
     public GameObject Player { get; private set; }
-    public GameObject ChunkManager { get; private set; }
+    public ChunkManager ChunkManager { get; private set; }
+    public MeshGenerator MeshGenerator { get; private set; }
+    public List<GameObject> listDestructible;
 
     private void Initialize() {
 
+        listDestructible = new List<GameObject>();
+
         SceneManager.sceneLoaded += OnSceneLoaded;
+
 
         OnSceneLoaded();
     }
@@ -37,7 +43,8 @@ public class GameManager : MonoBehaviour {
 
     private void OnSceneLoaded() {
         Player = GameObject.FindGameObjectWithTag("Player");
-        ChunkManager = GameObject.Find("ChunkManager");
+        ChunkManager = FindObjectOfType<ChunkManager>().GetComponent<ChunkManager>();
+        MeshGenerator = FindObjectOfType<MeshGenerator>().GetComponent<MeshGenerator>();
     }
 
 }
