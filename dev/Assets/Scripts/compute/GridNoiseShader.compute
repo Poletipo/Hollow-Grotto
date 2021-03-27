@@ -53,7 +53,7 @@ void PointsValue(uint3 id : SV_DispatchThreadID)
 		amplitude *= persistence;
 		frequency *= 2;
 	}
-
+	
 	value = total / maxValue;
 
 

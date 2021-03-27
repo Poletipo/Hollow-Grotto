@@ -33,7 +33,6 @@ public class Digger : MonoBehaviour {
     public void Init() {
         boxBound = new Bounds();
         boxBound.size = Vector3.one * DigSize;
-
     }
 
 
@@ -49,7 +48,7 @@ public class Digger : MonoBehaviour {
 
                     for (int i = 0; i < points.Length; i++) {
                         if (boxBound.Contains(points[i].pos)) {
-                            points[i].val -= points[i].val;
+                            points[i].val += 1000;
                         }
                     }
                     item.GetComponent<Chunk>().UpdateMeshGPU();

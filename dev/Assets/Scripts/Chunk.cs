@@ -108,6 +108,7 @@ public class Chunk : MonoBehaviour {
         MeshCollider.sharedMesh = null;
 
         Mesh mesh = ChunkManager.MeshGenerator.GenerateMeshGPU(gridPoints);
+        mesh.RecalculateBounds();
         MeshFilter.mesh = mesh;
         MeshCollider.sharedMesh = mesh;
     }

@@ -49,8 +49,8 @@ public class Player : MonoBehaviour {
 
     void Dig() {
         RaycastHit hit;
-        Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 20, LayerMask.GetMask("Destructible"));
-        Debug.DrawRay(cam.transform.position, cam.transform.forward * 20, Color.red, 20);
+        Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 3, LayerMask.GetMask("Destructible"));
+        Debug.DrawRay(cam.transform.position, cam.transform.forward * 2, Color.red, 20);
         digger.Dig(hit.point);
     }
 
