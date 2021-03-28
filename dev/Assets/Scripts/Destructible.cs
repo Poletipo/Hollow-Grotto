@@ -4,6 +4,10 @@ public class Destructible : MonoBehaviour {
     MeshFilter MeshFilter;
     MeshCollider MeshCollider;
 
+    public delegate void DestructibleEvent(Destructible destructible);
+
+    public DestructibleEvent OnNotColliding;
+
     private Utilities.Point[] _gridPoints;
 
     public Utilities.Point[] GridPoints {
@@ -16,6 +20,7 @@ public class Destructible : MonoBehaviour {
     public float Threshold = 0;
     public int nbVoxelPerAxis = 5;
     public int nbPoint { get; private set; }
+    bool colliding = true;
 
     private void Awake() {
         Setup(Threshold, nbVoxelPerAxis);
@@ -37,11 +42,19 @@ public class Destructible : MonoBehaviour {
     public void UpdateMesh() {
         MeshFilter.mesh = null;
         MeshCollider.sharedMesh = null;
-
         Mesh mesh = GameManager.Instance.MeshGenerator.GenerateMesh(GridPoints, Threshold, nbVoxelPerAxis);
         mesh.RecalculateBounds();
         MeshFilter.mesh = mesh;
         MeshCollider.sharedMesh = mesh;
     }
+
+    private void OnCollisionStay(Collision collision) {
+        if (collision.contactCount == 0 && colliding) {
+            OnNotColliding?.Invoke(this);
+            colliding = false;
+        }
+    }
+
+
 
 }

@@ -25,14 +25,24 @@ public class GameManager : MonoBehaviour {
     public GameObject Player { get; private set; }
     public ChunkManager ChunkManager { get; private set; }
     public MeshGenerator MeshGenerator { get; private set; }
-    public List<GameObject> listDestructible;
+    private List<GameObject> _listDestructible;
+    public List<GameObject> ListDestructible {
+        get {
+            _listDestructible.Clear();
+            Destructible[] dest = FindObjectsOfType<Destructible>();
+            _listDestructible.Capacity = dest.Length;
+
+            for (int i = 0; i < dest.Length; i++) {
+                _listDestructible.Insert(i, dest[i].gameObject);
+            }
+            return _listDestructible;
+        }
+        private set { _listDestructible = value; }
+    }
 
     private void Initialize() {
 
-        listDestructible = new List<GameObject>();
-
         SceneManager.sceneLoaded += OnSceneLoaded;
-
 
         OnSceneLoaded();
     }
@@ -45,6 +55,7 @@ public class GameManager : MonoBehaviour {
         Player = GameObject.FindGameObjectWithTag("Player");
         ChunkManager = FindObjectOfType<ChunkManager>().GetComponent<ChunkManager>();
         MeshGenerator = FindObjectOfType<MeshGenerator>().GetComponent<MeshGenerator>();
+        ListDestructible = new List<GameObject>();
     }
 
 }

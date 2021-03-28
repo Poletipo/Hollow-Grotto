@@ -33,9 +33,9 @@ void PointsValue(uint3 id : SV_DispatchThreadID)
 	float3 position;
 	float value;
 
-	position = id * voxelSize + chunkPosition;
+	position = id * voxelSize;
 
-	float3 posValue = (position + noiseOffset) * noiseScale;
+    float3 posValue = (position + chunkPosition + noiseOffset) * noiseScale;
 
 	//https://adrianb.io/2014/08/09/perlinnoise.html
 	float total = 0;

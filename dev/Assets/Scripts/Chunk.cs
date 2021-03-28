@@ -2,6 +2,7 @@
 
 //[ExecuteInEditMode]
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
+[RequireComponent(typeof(Destructible))]
 public class Chunk : MonoBehaviour {
     public Vector3Int Coordonnate;
     bool IsModified = false;
@@ -26,7 +27,7 @@ public class Chunk : MonoBehaviour {
     }
 
     void CreateChunkGrid() {
-        int nbPoint = (int)Mathf.Pow((destructible.nbVoxelPerAxis + 1), 3);
+        int nbPoint = destructible.nbPoint;
         float voxelSize = ((float)ChunkManager.ChunkSize) / (ChunkManager.GridResolution);
 
         ComputeBuffer pointsBuffer = new ComputeBuffer(nbPoint, sizeof(float) * 4);
