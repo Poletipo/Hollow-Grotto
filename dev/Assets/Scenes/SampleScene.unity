@@ -437,7 +437,7 @@ Transform:
   m_GameObject: {fileID: 380858446}
   m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
   m_LocalPosition: {x: -4.38, y: -0.33, z: 0.45}
-  m_LocalScale: {x: 0.698, y: 0.698, z: 0.698}
+  m_LocalScale: {x: 0.29953972, y: 0.29953972, z: 0.29953972}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 14
@@ -1540,7 +1540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c5db21271a0ad4498fd9f0ebfaf1661, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GridResolution: 20
+  GridResolution: 15
   ChunkSize: 15
   Threshold: 0
   MeshGenerator: {fileID: 1081300357}
@@ -1899,7 +1899,7 @@ PrefabInstance:
     - target: {fileID: 5424882966849008612, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: digSize
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bcfb59840abc3b5459f8ee0dba6b1e62, type: 3}

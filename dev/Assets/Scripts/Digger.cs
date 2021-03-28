@@ -20,7 +20,7 @@ public class Digger : MonoBehaviour {
         }
     }
 
-    private DigShape _diggingShape = DigShape.Box;
+    private DigShape _diggingShape = DigShape.Sphere;
 
     public DigShape DiggingShape {
         get { return _diggingShape; }
@@ -54,7 +54,7 @@ public class Digger : MonoBehaviour {
 
                     for (int i = 0; i < points.Length; i++) {
                         if (boxBound.Contains(points[i].pos)) {
-                            points[i].val += 1000;
+                            points[i].val = item.GetComponent<Destructible>().Threshold;
                         }
                     }
                     item.GetComponent<Destructible>().GridPoints = points;
@@ -65,14 +65,20 @@ public class Digger : MonoBehaviour {
         else if (DiggingShape == DigShape.Sphere) {
             foreach (GameObject item in GameManager.Instance.ListDestructible) {
                 boxBound.center = digPostion;
+                boxBound.size = Vector3.one * DigSize;
                 if (boxBound.Intersects(item.GetComponent<Collider>().bounds)) {
 
                     Utilities.Point[] points = item.GetComponent<Destructible>().GridPoints;
                     Vector3 hitPos = item.transform.InverseTransformPoint(digPostion);
                     boxBound.center = hitPos;
+                    Vector3 size = new Vector3(1 / item.transform.localScale.x, 1 / item.transform.localScale.y,
+                        1 / item.transform.localScale.z);
+                    boxBound.size = Vector3.Scale(boxBound.size, size);
+                    boxBound.center = hitPos;
                     for (int i = 0; i < points.Length; i++) {
-                        if (Vector3.Distance((points[i].pos), hitPos) <= (DigSize / 2)) {
-                            points[i].val += (DigSize / 2) - Vector3.Distance((points[i].pos), hitPos);
+                        if (Vector3.Distance((points[i].pos), hitPos) <= (DigSize * size.x / 2)) {
+                            //points[i].val = item.GetComponent<Destructible>().Threshold;
+                            points[i].val += (DigSize * size.x / 2) - Vector3.Distance((points[i].pos), hitPos);
                             //points[i].val -= points[i].val;
                         }
                     }
