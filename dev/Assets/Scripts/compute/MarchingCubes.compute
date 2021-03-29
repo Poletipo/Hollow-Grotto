@@ -92,9 +92,8 @@ void CSMain (uint3 id : SV_DispatchThreadID)
         tri.corner1 = vertlist[triTable[cubeindex][i]];
         tri.corner2 = vertlist[triTable[cubeindex][i+1]];
         tri.corner3 = vertlist[triTable[cubeindex][i+2]];
-
+        
         triangles.Append(tri);
-
     }
 
 

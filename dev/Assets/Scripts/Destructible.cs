@@ -43,7 +43,11 @@ public class Destructible : MonoBehaviour {
         MeshFilter.mesh = null;
         MeshCollider.sharedMesh = null;
         Mesh mesh = GameManager.Instance.MeshGenerator.GenerateMesh(GridPoints, Threshold, nbVoxelPerAxis);
+
         mesh.RecalculateBounds();
+        //NormalSolver.RecalculateNormals(mesh, 0);
+        mesh.RecalculateNormals();
+        mesh.RecalculateTangents();
         MeshFilter.mesh = mesh;
         MeshCollider.sharedMesh = mesh;
     }
