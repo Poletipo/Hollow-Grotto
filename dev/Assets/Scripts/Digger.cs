@@ -20,12 +20,7 @@ public class Digger : MonoBehaviour {
         }
     }
 
-    private DigShape _diggingShape = DigShape.Sphere;
-
-    public DigShape DiggingShape {
-        get { return _diggingShape; }
-        set { _diggingShape = value; }
-    }
+    public DigShape DiggingShape = DigShape.Sphere;
 
     private void Awake() {
         Init();
