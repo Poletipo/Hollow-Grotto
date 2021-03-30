@@ -39,7 +39,7 @@ public class Digger : MonoBehaviour {
                 boxBound.size = Vector3.one * DigSize;
                 if (boxBound.Intersects(item.GetComponent<Collider>().bounds)) {
 
-                    Utilities.Point[] points = item.GetComponent<Destructible>().GridPoints;
+                    Destructible dest = item.GetComponent<Destructible>();
 
                     Vector3 hitPos = item.transform.InverseTransformPoint(digPostion);
                     boxBound.center = hitPos;
@@ -47,13 +47,13 @@ public class Digger : MonoBehaviour {
                         1 / item.transform.localScale.z);
                     boxBound.size = Vector3.Scale(boxBound.size, size);
 
-                    for (int i = 0; i < points.Length; i++) {
-                        if (boxBound.Contains(points[i].pos)) {
-                            points[i].val = item.GetComponent<Destructible>().Threshold;
+                    for (int i = 0; i < dest.nbPoint; i++) {
+                        if (boxBound.Contains(dest.GridPoints[i].pos)) {
+                            dest.GridPoints[i].val = dest.Threshold;
                         }
                     }
-                    item.GetComponent<Destructible>().GridPoints = points;
-                    item.GetComponent<Destructible>().UpdateMesh();
+                    dest.isModified = true;
+                    dest.UpdateMesh();
                 }
             }
         }
@@ -63,21 +63,22 @@ public class Digger : MonoBehaviour {
                 boxBound.size = Vector3.one * DigSize;
                 if (boxBound.Intersects(item.GetComponent<Collider>().bounds)) {
 
-                    Utilities.Point[] points = item.GetComponent<Destructible>().GridPoints;
+                    Destructible dest = item.GetComponent<Destructible>();
                     Vector3 hitPos = item.transform.InverseTransformPoint(digPostion);
                     boxBound.center = hitPos;
                     Vector3 size = new Vector3(1 / item.transform.localScale.x, 1 / item.transform.localScale.y,
                         1 / item.transform.localScale.z);
                     boxBound.size = Vector3.Scale(boxBound.size, size);
                     boxBound.center = hitPos;
-                    for (int i = 0; i < points.Length; i++) {
-                        if (Vector3.Distance((points[i].pos), hitPos) <= (DigSize * size.x / 2)) {
+                    for (int i = 0; i < dest.nbPoint; i++) {
+                        if (Vector3.Distance((dest.GridPoints[i].pos), hitPos) <= (DigSize * size.x / 2)) {
                             //points[i].val = item.GetComponent<Destructible>().Threshold;
-                            points[i].val += (DigSize * size.x / 2) - Vector3.Distance((points[i].pos), hitPos);
+                            dest.GridPoints[i].val += (DigSize * size.x / 2) - Vector3.Distance((dest.GridPoints[i].pos), hitPos);
                             //points[i].val -= points[i].val;
                         }
                     }
-                    item.GetComponent<Destructible>().UpdateMesh();
+                    dest.isModified = true;
+                    dest.UpdateMesh();
                 }
             }
         }

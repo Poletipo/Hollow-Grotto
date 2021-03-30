@@ -34,12 +34,17 @@ Shader "Custom/triplanarSurface"
 				float2 uv_MainTex;
 				float3 coords;
 				half3 objNormal;
+				float2 uv_Normal;
+				INTERNAL_DATA
+				float3 worldPos;
+				float3 worldNormal;
 			};
 
 			float _Tiling;
 			void  vert(inout appdata_full v, out Input data)
 			{
 				UNITY_INITIALIZE_OUTPUT(Input, data);
+
 				data.coords = v.vertex.xyz * _Tiling;
 				data.objNormal = v.normal.xyz;
 			}
@@ -60,6 +65,15 @@ Shader "Custom/triplanarSurface"
 
 			void surf(Input IN, inout SurfaceOutputStandard o)
 			{
+
+
+				float3 dpdx = ddx(IN.worldPos);
+				float3 dpdy = ddy(IN.worldPos);
+
+				half3 _objNormal = normalize(cross(dpdy, dpdx));
+				//o.Normal = normalize(cross(dpdy, dpdx));
+				o.Normal = WorldNormalVector(IN, _objNormal);
+
 
 				// use absolute value of normal as texture weights
 				half3 blend = pow(abs(IN.objNormal), _Blend);

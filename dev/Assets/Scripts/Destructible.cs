@@ -3,19 +3,13 @@
 public class Destructible : MonoBehaviour {
     MeshFilter MeshFilter;
     MeshCollider MeshCollider;
+    public bool isModified = false;
 
     public delegate void DestructibleEvent(Destructible destructible);
 
     public DestructibleEvent OnNotColliding;
 
-    private Utilities.Point[] _gridPoints;
-
-    public Utilities.Point[] GridPoints {
-        get { return _gridPoints; }
-        set {
-            _gridPoints = value;
-        }
-    }
+    public Utilities.Point[] GridPoints;
 
     public float Threshold = 0;
     public int nbVoxelPerAxis = 5;

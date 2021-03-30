@@ -25,6 +25,19 @@ public class Chunk : MonoBehaviour {
         transform.position = Coordonnate * ChunkManager.ChunkSize;
         CreateChunkGrid();
     }
+    public void Init(Vector3Int pos, float[] gridPoints) {
+
+        Coordonnate = pos;
+        gameObject.name = "Chunk" + Coordonnate;
+
+        transform.position = Coordonnate * ChunkManager.ChunkSize;
+        CreateChunkGrid();
+        for (int i = 0; i < destructible.nbPoint; i++) {
+
+            destructible.GridPoints[i].val = gridPoints[i];
+        }
+        destructible.UpdateMesh();
+    }
 
     void CreateChunkGrid() {
         int nbPoint = destructible.nbPoint;
@@ -59,6 +72,34 @@ public class Chunk : MonoBehaviour {
         destructible.UpdateMesh();
         pointsBuffer.Release();
         offsetsBuffer.Release();
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Alpha0)) {
+            SaveChunk();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha9)) {
+            LoadChunk();
+        }
+    }
+
+    public void SaveChunk() {
+        if (destructible.isModified) {
+            Debug.Log("saving " + gameObject.name);
+            SaveManager.SaveChunk(gameObject);
+        }
+    }
+
+    public void LoadChunk() {
+        Chunk_Data data = SaveManager.LoadChunk(gameObject.name);
+        if (data != null) {
+            Vector3Int coord = new Vector3Int();
+            coord.x = data.Coordonates[0];
+            coord.y = data.Coordonates[1];
+            coord.z = data.Coordonates[2];
+
+            Init(coord, data.gridValues);
+        }
     }
 
 }

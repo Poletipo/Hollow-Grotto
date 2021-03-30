@@ -15,17 +15,8 @@ public class MovementController : MonoBehaviour {
     [SerializeField, Range(0f, 10f)]
     float jumpHeight = 2f;
 
-    [SerializeField, Range(0, 5)]
-    int maxAirJumps = 0;
-
     [SerializeField, Range(0f, 90f)]
-    float maxGroundAngle = 25f, maxStairsAngle = 50f;
-
-    [SerializeField, Range(0f, 100f)]
-    float maxSnapSpeed = 100f;
-
-    [SerializeField, Min(0f)]
-    float probeDistance = 1f;
+    float maxGroundAngle = 25f;
 
     [SerializeField]
     Transform playerInputSpace = default;
@@ -38,9 +29,6 @@ public class MovementController : MonoBehaviour {
     Vector3 desiredVelocity;
     Vector3 contactNormal;
     Vector3 steepNormal;
-
-
-    int FixedUpdatecount = 0;
 
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
