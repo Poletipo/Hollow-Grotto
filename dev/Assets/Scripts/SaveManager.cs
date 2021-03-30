@@ -17,7 +17,6 @@ public static class SaveManager {
 
         bf.Serialize(file, data);
         file.Close();
-
     }
 
     public static Chunk_Data LoadChunk(string chunkName) {
@@ -38,8 +37,40 @@ public static class SaveManager {
         else {
             return null;
         }
-
-
     }
+
+    public static void SavePlayer(GameObject gameObject) {
+        string fileName = "/Player.dat";
+        string path = Application.persistentDataPath + fileName;
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream fs = new FileStream(path, FileMode.Create);
+
+        Player_Data data = new Player_Data(gameObject);
+
+        bf.Serialize(fs, data);
+        fs.Close();
+    }
+
+    public static Player_Data LoadPlayer() {
+
+        string fileName = "/Player.dat";
+        string path = Application.persistentDataPath + fileName;
+
+        if (File.Exists(path)) {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fs = new FileStream(path, FileMode.Open);
+
+            Player_Data data = (Player_Data)bf.Deserialize(fs);
+
+            fs.Close();
+
+            return data;
+        }
+        else {
+            return null;
+        }
+    }
+
 
 }

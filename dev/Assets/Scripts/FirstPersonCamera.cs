@@ -8,14 +8,15 @@ public class FirstPersonCamera : MonoBehaviour {
 
     Camera camera;
     Vector2 mouseInput;
-    Vector3 bodyRotation = new Vector3();
-    Vector3 viewRotation = new Vector3();
+    public Vector3 bodyRotation = new Vector3();
+    public Vector3 viewRotation = new Vector3();
 
     private void Awake() {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         camera = GetComponent<Camera>();
         transform.position = YawAxis.position;
+        transform.rotation = YawAxis.rotation;
         transform.parent = YawAxis;
     }
 

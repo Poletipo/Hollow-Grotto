@@ -84,7 +84,6 @@ public class Chunk : MonoBehaviour {
 
     public void SaveChunk() {
         if (destructible.isModified) {
-            Debug.Log("saving " + gameObject.name);
             SaveManager.SaveChunk(gameObject);
             destructible.isModified = false;
         }
