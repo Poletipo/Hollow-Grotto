@@ -65,12 +65,12 @@ public class ChunkManager : MonoBehaviour {
                             GameObject chunk;
                             if (unusedChunks.Count == 0) {
                                 chunk = Instantiate(chunkObject, Vector3.zero, Quaternion.identity);
-                                chunk.GetComponent<Chunk>().Init(chunkPos);
+                                chunk.GetComponent<Chunk>().LoadChunk(chunkPos);
                             }
                             else {
                                 chunk = unusedChunks[0];
                                 unusedChunks.RemoveAt(0);
-                                chunk.GetComponent<Chunk>().Init(chunkPos);
+                                chunk.GetComponent<Chunk>().LoadChunk(chunkPos);
                             }
                             ChunkList.Add(chunkPosKey, chunk);
                             chunk.transform.parent = chunkHolder.transform;
