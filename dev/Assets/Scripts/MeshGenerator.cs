@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [ExecuteInEditMode]
 public class MeshGenerator : MonoBehaviour {
@@ -35,46 +34,23 @@ public class MeshGenerator : MonoBehaviour {
 
         int vertexCount = triangles.Length * 3;
 
-        Dictionary<Vector3, int> triCornerIndex = new Dictionary<Vector3, int>();
-
-        //List triangle corner = nombre de corner
-        //List index = nombre de coin
-
-        int indexes = 0;
-        for (int i = 0; i < triangles.Length; i++) {
-            if (!triCornerIndex.ContainsKey(triangles[i].corner3)) {
-                triCornerIndex.Add(triangles[i].corner3, indexes);
-                indexes++;
-            }
-            if (!triCornerIndex.ContainsKey(triangles[i].corner2)) {
-                triCornerIndex.Add(triangles[i].corner2, indexes);
-                indexes++;
-            }
-            if (!triCornerIndex.ContainsKey(triangles[i].corner1)) {
-                triCornerIndex.Add(triangles[i].corner1, indexes);
-                indexes++;
-            }
-        }
-
-        Vector3[] trianglesCorners = new Vector3[triCornerIndex.Count];
-        indexes = 0;
-        foreach (var item in triCornerIndex) {
-            trianglesCorners[indexes] = item.Key;
-            indexes++;
+        Vector3[] trianglesCorners = new Vector3[vertexCount];
+        for (int i = 0, index = 0; i < triangles.Length; i++, index += 3) {
+            trianglesCorners[index] = triangles[i].corner3;
+            trianglesCorners[index + 1] = triangles[i].corner2;
+            trianglesCorners[index + 2] = triangles[i].corner1;
         }
 
         int[] triangleCornerIndex = new int[vertexCount];
-        for (int i = 0, index = 0; i < triangles.Length; i++, index += 3) {
-            triangleCornerIndex[index] = triCornerIndex[triangles[i].corner3];
-            triangleCornerIndex[index + 1] = triCornerIndex[triangles[i].corner2];
-            triangleCornerIndex[index + 2] = triCornerIndex[triangles[i].corner1];
+
+        for (int i = 0; i < vertexCount; i++) {
+            triangleCornerIndex[i] = i;
         }
 
         mesh.name = "MarchingCube";
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         mesh.vertices = trianglesCorners;
         mesh.triangles = triangleCornerIndex;
-        mesh.RecalculateNormals();
 
         pointsBuffer.Release();
         trianglesBuffer.Release();
