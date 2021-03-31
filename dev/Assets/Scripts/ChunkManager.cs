@@ -41,7 +41,7 @@ public class ChunkManager : MonoBehaviour {
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha0)) {
-            SaveChunks();
+            SaveModifiedChunks();
         }
 
     }
@@ -70,12 +70,22 @@ public class ChunkManager : MonoBehaviour {
                             GameObject chunk;
                             if (unusedChunks.Count == 0) {
                                 chunk = Instantiate(chunkObject, Vector3.zero, Quaternion.identity);
-                                chunk.GetComponent<Chunk>().LoadChunk(chunkPos);
+                                if (ModifiedChunkList.ContainsKey(chunkPosKey)) {
+                                    chunk.GetComponent<Chunk>().LoadChunk(ModifiedChunkList[chunkPosKey]);
+                                }
+                                else {
+                                    chunk.GetComponent<Chunk>().LoadChunk(chunkPos);
+                                }
                             }
                             else {
                                 chunk = unusedChunks[0];
                                 unusedChunks.RemoveAt(0);
-                                chunk.GetComponent<Chunk>().LoadChunk(chunkPos);
+                                if (ModifiedChunkList.ContainsKey(chunkPosKey)) {
+                                    chunk.GetComponent<Chunk>().LoadChunk(ModifiedChunkList[chunkPosKey]);
+                                }
+                                else {
+                                    chunk.GetComponent<Chunk>().LoadChunk(chunkPos);
+                                }
                             }
                             ChunkList.Add(chunkPosKey, chunk);
                             chunk.transform.parent = chunkHolder.transform;
@@ -99,8 +109,7 @@ public class ChunkManager : MonoBehaviour {
     }
 
 
-    void SaveChunks() {
-        Debug.Log(ModifiedChunkList.Values);
+    void SaveModifiedChunks() {
         foreach (Chunk_Data data in ModifiedChunkList.Values) {
             SaveManager.SaveChunk(data);
         }

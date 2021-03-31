@@ -38,9 +38,6 @@ public static class SaveManager {
         file.Close();
     }
 
-
-
-
     public static Chunk_Data LoadChunk(string chunkName) {
 
         string fileName = "/" + chunkName + ".dat";

@@ -100,4 +100,13 @@ public class Chunk : MonoBehaviour {
         }
     }
 
+    public void LoadChunk(Chunk_Data data) {
+        Vector3Int coord = new Vector3Int();
+        coord.x = data.Coordonates[0];
+        coord.y = data.Coordonates[1];
+        coord.z = data.Coordonates[2];
+
+        Init(coord, data.gridValues);
+    }
+
 }
