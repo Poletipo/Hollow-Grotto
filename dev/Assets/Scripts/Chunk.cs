@@ -74,12 +74,7 @@ public class Chunk : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Alpha0)) {
-            SaveChunk();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha9)) {
-            LoadChunk(Coordonnate);
-        }
+
     }
 
     public void SaveChunk() {

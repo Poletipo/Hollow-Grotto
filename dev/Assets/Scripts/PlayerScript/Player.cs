@@ -77,7 +77,6 @@ public class Player : MonoBehaviour {
             fps.viewRotation = camRot;
             Vector3 rot = new Vector3(0, 0, 0);
             rot.y = data.BodyRotation;
-
             fps.bodyRotation = rot;
 
         }

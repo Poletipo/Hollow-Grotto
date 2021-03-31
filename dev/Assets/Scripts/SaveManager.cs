@@ -19,6 +19,28 @@ public static class SaveManager {
         file.Close();
     }
 
+    public static void SaveChunk(Chunk_Data data) {
+
+        Vector3Int coord = new Vector3Int();
+        coord.x = data.Coordonates[0];
+        coord.y = data.Coordonates[1];
+        coord.z = data.Coordonates[2];
+
+
+        string fileName = "/Chunk" + coord + ".dat";
+        string path = Application.persistentDataPath + fileName;
+        // Create the Binary Formatter.
+        BinaryFormatter bf = new BinaryFormatter();
+        // Stream the file with a File Stream. (Note that File.Create() 'Creates' or 'Overwrites' a file.)
+        FileStream file = new FileStream(path, FileMode.Create);
+
+        bf.Serialize(file, data);
+        file.Close();
+    }
+
+
+
+
     public static Chunk_Data LoadChunk(string chunkName) {
 
         string fileName = "/" + chunkName + ".dat";

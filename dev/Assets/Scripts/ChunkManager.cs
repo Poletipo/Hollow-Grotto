@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 //[ExecuteInEditMode]
@@ -14,7 +13,8 @@ public class ChunkManager : MonoBehaviour {
 
     public float loadDistance = 50;
 
-    public Dictionary<String, GameObject> ChunkList;
+    public Dictionary<string, GameObject> ChunkList;
+    public Dictionary<string, Chunk_Data> ModifiedChunkList;
     List<GameObject> unusedChunks;
 
     GameObject chunkHolder;
@@ -24,6 +24,7 @@ public class ChunkManager : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         ChunkList = new Dictionary<string, GameObject>();
+        ModifiedChunkList = new Dictionary<string, Chunk_Data>();
         unusedChunks = new List<GameObject>();
 
         player = GameManager.Instance.Player;
@@ -38,11 +39,15 @@ public class ChunkManager : MonoBehaviour {
             LoadChunks();
             timer = 0f;
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha0)) {
+            SaveChunks();
+        }
+
     }
 
     Vector3Int lastPlayerChunk = new Vector3Int();
     void LoadChunks() {
-
         Vector3Int playerChunk = new Vector3Int();
         playerChunk.x = Mathf.FloorToInt(player.transform.position.x / ChunkSize);
         playerChunk.y = Mathf.FloorToInt(player.transform.position.y / ChunkSize);
@@ -59,7 +64,7 @@ public class ChunkManager : MonoBehaviour {
                 for (int y = -nbChunksDistance; y <= nbChunksDistance; y++) {
                     for (int z = -nbChunksDistance; z <= nbChunksDistance; z++) {
                         Vector3Int chunkPos = playerChunk + new Vector3Int(x, y, z);
-                        String chunkPosKey = chunkPos.ToString();
+                        string chunkPosKey = chunkPos.ToString();
 
                         if (!oldchunks.ContainsKey(chunkPosKey)) {
                             GameObject chunk;
@@ -92,5 +97,15 @@ public class ChunkManager : MonoBehaviour {
             }
         }
     }
+
+
+    void SaveChunks() {
+        Debug.Log(ModifiedChunkList.Values);
+        foreach (Chunk_Data data in ModifiedChunkList.Values) {
+            SaveManager.SaveChunk(data);
+        }
+        ModifiedChunkList.Clear();
+    }
+
 
 }

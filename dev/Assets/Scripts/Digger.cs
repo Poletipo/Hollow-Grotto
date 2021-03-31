@@ -78,6 +78,11 @@ public class Digger : MonoBehaviour {
                         }
                     }
                     dest.isModified = true;
+                    Chunk ch = item.GetComponent<Chunk>();
+                    if (ch != null) {
+                        GameManager.Instance.ChunkManager.ModifiedChunkList[ch.Coordonnate.ToString()] = new Chunk_Data(item);
+                    }
+
                     dest.UpdateMesh();
                 }
             }
