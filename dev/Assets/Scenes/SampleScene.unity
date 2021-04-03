@@ -365,6 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 273ccaf9459f4b944a9f22a30877b1f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isModified: 0
   Threshold: 0
   nbVoxelPerAxis: 5
 --- !u!64 &380858449
@@ -547,6 +548,8 @@ MonoBehaviour:
   rotationAxis: {fileID: 497622813}
   YawAxis: {fileID: 372268022}
   rotationSpeed: 1
+  bodyRotation: {x: 0, y: 0, z: 0}
+  viewRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &555266266
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,6 +597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 273ccaf9459f4b944a9f22a30877b1f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isModified: 0
   Threshold: 0
   nbVoxelPerAxis: 5
 --- !u!64 &555266269
@@ -1639,7 +1643,7 @@ MonoBehaviour:
   Threshold: 0
   MeshGenerator: {fileID: 1081300357}
   NoiseGenerator: {fileID: 257005457}
-  loadDistance: 20
+  loadDistance: 1
   chunkObject: {fileID: 1719428045986001211, guid: 9a3126df124560745b1372be1c4f4cd3,
     type: 3}
 --- !u!4 &1774692109

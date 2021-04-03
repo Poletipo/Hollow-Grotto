@@ -22,16 +22,19 @@ public class Digger : MonoBehaviour {
 
     public DigShape DiggingShape = DigShape.Sphere;
 
-    private void Awake() {
+    private void Awake()
+    {
         Init();
     }
-    public void Init() {
+    public void Init()
+    {
         boxBound = new Bounds();
         boxBound.size = Vector3.one * DigSize;
     }
 
 
-    public void Dig(Vector3 digPostion) {
+    public void Dig(Vector3 digPostion)
+    {
 
         if (DiggingShape == DigShape.Box) {
             foreach (GameObject item in GameManager.Instance.ListDestructible) {

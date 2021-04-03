@@ -22,7 +22,8 @@ public class ChunkManager : MonoBehaviour {
     public GameObject chunkObject;
 
     // Start is called before the first frame update
-    void Start() {
+    void Start()
+    {
         ChunkList = new Dictionary<string, GameObject>();
         ModifiedChunkList = new Dictionary<string, Chunk_Data>();
         unusedChunks = new List<GameObject>();
@@ -33,7 +34,8 @@ public class ChunkManager : MonoBehaviour {
     }
 
     float timer = 0;
-    private void Update() {
+    private void Update()
+    {
         timer -= Time.deltaTime;
         if (timer <= 0) {
             LoadChunks();
@@ -47,7 +49,8 @@ public class ChunkManager : MonoBehaviour {
     }
 
     Vector3Int lastPlayerChunk = new Vector3Int();
-    void LoadChunks() {
+    void LoadChunks()
+    {
         Vector3Int playerChunk = new Vector3Int();
         playerChunk.x = Mathf.FloorToInt(player.transform.position.x / ChunkSize);
         playerChunk.y = Mathf.FloorToInt(player.transform.position.y / ChunkSize);
@@ -109,7 +112,8 @@ public class ChunkManager : MonoBehaviour {
     }
 
 
-    void SaveModifiedChunks() {
+    void SaveModifiedChunks()
+    {
         foreach (Chunk_Data data in ModifiedChunkList.Values) {
             SaveManager.SaveChunk(data);
         }
