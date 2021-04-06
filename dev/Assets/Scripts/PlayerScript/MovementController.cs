@@ -3,6 +3,26 @@
 [RequireComponent(typeof(Rigidbody))]
 public class MovementController : MonoBehaviour {
 
+    public enum MovementState {
+        Idle,
+        Walking,
+        Running,
+        Falling,
+        Jumping
+    }
+
+    public MovementState MoveState;
+
+    public delegate void MovementEvent(MovementController movementController);
+    public MovementEvent OnIdle;
+    public MovementEvent OnWalking;
+    public MovementEvent OnRunning;
+    public MovementEvent OnFalling;
+    public MovementEvent OnLanding;
+    public MovementEvent OnJumping;
+
+
+
     [SerializeField, Range(0f, 100f)]
     float maxSpeed = 10f;
 
@@ -45,17 +65,20 @@ public class MovementController : MonoBehaviour {
     bool jumped = false;
     float fallingTimer = 0;
 
-    private void Awake() {
+    private void Awake()
+    {
         rb = GetComponent<Rigidbody>();
     }
 
     // Start is called before the first frame update
-    void Start() {
+    void Start()
+    {
         dotMaxGroundAngle = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
     }
 
 
-    void ClearState() {
+    void ClearState()
+    {
         onGround = false;
         groundContactCount = 0;
         steepContactCount = 0;
@@ -63,12 +86,19 @@ public class MovementController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         UpdateMove();
         UpdateJump();
+
+
+
+
+
     }
 
-    private void FixedUpdate() {
+    private void FixedUpdate()
+    {
         velocity = rb.velocity;
 
         if (InputJump) {
@@ -82,7 +112,8 @@ public class MovementController : MonoBehaviour {
         ClearState();
     }
 
-    void UpdateMove() {
+    void UpdateMove()
+    {
         InputMove = Vector2.ClampMagnitude(InputMove, 1f);
 
         Vector3 forward = playerInputSpace.forward;
@@ -96,7 +127,8 @@ public class MovementController : MonoBehaviour {
             (forward * InputMove.y + right * InputMove.x) * speed;
     }
 
-    void Jump() {
+    void Jump()
+    {
         if (onGround) {
             jumped = true;
             float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * jumpHeight);
@@ -104,11 +136,13 @@ public class MovementController : MonoBehaviour {
         }
     }
 
-    Vector3 ProjectOnContactPlane(Vector3 vector) {
+    Vector3 ProjectOnContactPlane(Vector3 vector)
+    {
         return vector - contactNormal * Vector3.Dot(vector, contactNormal);
     }
 
-    void Move() {
+    void Move()
+    {
         if (onGround) {
             rb.AddForce(-contactNormal.normalized * 9.8f);
         }
@@ -138,7 +172,8 @@ public class MovementController : MonoBehaviour {
         velocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ);
     }
 
-    void UpdateJump() {
+    void UpdateJump()
+    {
         if (!onGround) {
             //Better Jump
             if (rb.velocity.y < 0) {
@@ -165,14 +200,17 @@ public class MovementController : MonoBehaviour {
 
     //}
 
-    private void OnCollisionEnter(Collision collision) {
+    private void OnCollisionEnter(Collision collision)
+    {
         EvaluateCollisions(collision);
     }
-    private void OnCollisionStay(Collision collision) {
+    private void OnCollisionStay(Collision collision)
+    {
         EvaluateCollisions(collision);
     }
 
-    private void EvaluateCollisions(Collision collision) {
+    private void EvaluateCollisions(Collision collision)
+    {
 
 
         for (int i = 0; i < collision.contactCount; i++) {

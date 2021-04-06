@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-//[ExecuteInEditMode]
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
 [RequireComponent(typeof(Destructible))]
 public class Chunk : MonoBehaviour {
@@ -10,14 +9,16 @@ public class Chunk : MonoBehaviour {
     ChunkManager ChunkManager;
     Destructible destructible;
 
-    private void Awake() {
+    private void Awake()
+    {
         ChunkManager = GameManager.Instance.ChunkManager;
         destructible = GetComponent<Destructible>();
         destructible.Setup(ChunkManager.Threshold, ChunkManager.GridResolution);
         Init(Coordonnate);
     }
 
-    public void Init(Vector3Int pos) {
+    public void Init(Vector3Int pos)
+    {
 
         Coordonnate = pos;
         gameObject.name = "Chunk" + Coordonnate;
@@ -25,7 +26,8 @@ public class Chunk : MonoBehaviour {
         transform.position = Coordonnate * ChunkManager.ChunkSize;
         CreateChunkGrid();
     }
-    public void Init(Vector3Int pos, float[] gridPoints) {
+    public void Init(Vector3Int pos, float[] gridPoints)
+    {
 
         Coordonnate = pos;
         gameObject.name = "Chunk" + Coordonnate;
@@ -38,7 +40,8 @@ public class Chunk : MonoBehaviour {
         destructible.UpdateMesh();
     }
 
-    void CreateChunkGrid() {
+    void CreateChunkGrid()
+    {
         int nbPoint = destructible.nbPoint;
         float voxelSize = ((float)ChunkManager.ChunkSize) / (ChunkManager.GridResolution);
 
@@ -73,18 +76,21 @@ public class Chunk : MonoBehaviour {
         offsetsBuffer.Release();
     }
 
-    private void Update() {
+    private void Update()
+    {
 
     }
 
-    public void SaveChunk() {
+    public void SaveChunk()
+    {
         if (destructible.isModified) {
             SaveManager.SaveChunk(gameObject);
             destructible.isModified = false;
         }
     }
 
-    public void LoadChunk(Vector3Int coordonate) {
+    public void LoadChunk(Vector3Int coordonate)
+    {
         string Chunkname = "Chunk" + coordonate;
         Chunk_Data data = SaveManager.LoadChunk(Chunkname);
         if (data != null) {
@@ -100,7 +106,8 @@ public class Chunk : MonoBehaviour {
         }
     }
 
-    public void LoadChunk(Chunk_Data data) {
+    public void LoadChunk(Chunk_Data data)
+    {
         Vector3Int coord = new Vector3Int();
         coord.x = data.Coordonates[0];
         coord.y = data.Coordonates[1];

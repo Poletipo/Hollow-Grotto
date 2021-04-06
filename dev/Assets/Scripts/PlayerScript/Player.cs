@@ -2,10 +2,17 @@
 
 public class Player : MonoBehaviour {
 
+    public enum PlayerState {
+        Moving,
+        Digging
+    }
+
+
     Vector2 moveInput;
-    public InputMaster controls;
-    MovementController mc;
+    [HideInInspector]
     public FirstPersonCamera fps;
+    public Animator animator;
+    MovementController mc;
     Camera cam;
     Digger digger;
     public float digSize = 2;
@@ -13,7 +20,8 @@ public class Player : MonoBehaviour {
     public float digInterval = 0.5f;
     float digIntervalTimer = 0;
 
-    private void Awake() {
+    private void Awake()
+    {
         mc = GetComponent<MovementController>();
         cam = Camera.main;
         fps = cam.GetComponent<FirstPersonCamera>();
@@ -21,22 +29,26 @@ public class Player : MonoBehaviour {
         digger.DigSize = digSize;
     }
 
-    private void Start() {
+    private void Start()
+    {
         LoadPlayer();
     }
 
-    private void OnApplicationQuit() {
+    private void OnApplicationQuit()
+    {
         SavePlayer();
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         digIntervalTimer -= Time.deltaTime;
 
         PlayerInput();
     }
 
-    void PlayerInput() {
+    void PlayerInput()
+    {
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
         mc.InputMove = moveInput;
@@ -51,18 +63,22 @@ public class Player : MonoBehaviour {
     }
 
 
-    void Dig() {
+    void Dig()
+    {
         RaycastHit hit;
         Debug.DrawRay(cam.transform.position, cam.transform.forward * 2, Color.red, 20);
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 3, LayerMask.GetMask("Destructible"))) {
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 2.5f, LayerMask.GetMask("Destructible"))) {
             digger.Dig(hit.point);
+            animator.Play("Armature|Dig");
         }
     }
 
-    void SavePlayer() {
+    void SavePlayer()
+    {
         SaveManager.SavePlayer(gameObject);
     }
-    void LoadPlayer() {
+    void LoadPlayer()
+    {
         Player_Data data = SaveManager.LoadPlayer();
         if (data != null) {
             Vector3 pos = new Vector3();
