@@ -7,6 +7,12 @@ public class PlayerHUD : MonoBehaviour {
     [Header("Player")]
     public Player player;
 
+    [Header("Reticule")]
+    public Image Reticule;
+    public Color NormalReticuleColor;
+    public Color DigReticuleColor;
+    public Color InteractReticuleColor;
+
     [Header("Digging UI")]
     public Gradient SliderColor;
     public CanvasGroup DigPivot;
@@ -18,17 +24,30 @@ public class PlayerHUD : MonoBehaviour {
     {
         player.OnDigPercentChange += OnDigPercentChange;
         player.OnDigOverheating += OnDigOverheating;
-        player.OnDigStopOverheating += OnDigStopOverheating;
+        player.OnInRangeChange += OnInRangeChange;
     }
 
-    private void OnDigStopOverheating(Player player)
+    private void OnInRangeChange(Player player)
     {
-        DigOverheatIcon.enabled = false;
+        if (player.InRangeState == Player.InRange.Nothing) {
+            Reticule.color = NormalReticuleColor;
+        }
+        else if (player.InRangeState == Player.InRange.Destructible) {
+            Reticule.color = DigReticuleColor;
+        }
+        else if (player.InRangeState == Player.InRange.Interactible) {
+            Reticule.color = InteractReticuleColor;
+        }
     }
 
     private void OnDigOverheating(Player player)
     {
-        DigOverheatIcon.enabled = true;
+        if (player.IsOverHeating) {
+            DigOverheatIcon.enabled = true;
+        }
+        else {
+            DigOverheatIcon.enabled = false;
+        }
     }
 
     private void OnDigPercentChange(Player player)
@@ -50,6 +69,13 @@ public class PlayerHUD : MonoBehaviour {
     {
         DigPivot.alpha = 0;
     }
+
+
+    private void Update()
+    {
+
+    }
+
 
 
 }

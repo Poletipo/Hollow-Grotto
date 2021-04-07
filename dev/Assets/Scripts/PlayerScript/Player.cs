@@ -6,12 +6,21 @@ public class Player : MonoBehaviour {
         Moving,
         Digging
     }
+
+    public enum InRange {
+        Nothing,
+        Destructible,
+        Interactible
+    }
+
     public delegate void PlayerEvent(Player player);
 
     public PlayerEvent OnDigPercentChange;
     public PlayerEvent OnDigOverheating;
-    public PlayerEvent OnDigStopOverheating;
+    public PlayerEvent OnInRangeChange;
 
+    [Header("Player Parameters")]
+    public float range = 2.5f;
 
     [Header("Animation")]
     public Animator animator;
@@ -24,16 +33,13 @@ public class Player : MonoBehaviour {
     bool canDig = true;
     private bool _isOverHeating = false;
 
+    RaycastHit hit;
+
     public bool IsOverHeating {
         get { return _isOverHeating; }
         set {
-            if (value) {
-                OnDigOverheating?.Invoke(this);
-            }
-            else {
-                OnDigStopOverheating?.Invoke(this);
-            }
             _isOverHeating = value;
+            OnDigOverheating?.Invoke(this);
         }
     }
 
@@ -47,6 +53,17 @@ public class Player : MonoBehaviour {
         }
     }
 
+    private InRange _inRangeState = InRange.Nothing;
+
+    public InRange InRangeState {
+        get { return _inRangeState; }
+        set {
+            OnInRangeChange?.Invoke(this);
+            _inRangeState = value;
+        }
+    }
+
+
 
 
     Vector2 moveInput;
@@ -54,7 +71,7 @@ public class Player : MonoBehaviour {
     public FirstPersonCamera fps;
 
     MovementController mc;
-    Camera cam;
+    public Camera cam;
     Digger digger;
 
 
@@ -88,7 +105,20 @@ public class Player : MonoBehaviour {
             IsOverHeating = false;
         }
 
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range)) {
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Destructible")) {
+                InRangeState = InRange.Destructible;
+            }
+            else if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactible")) {
+                InRangeState = InRange.Destructible;
+            }
+        }
+        else {
+            InRangeState = InRange.Nothing;
+        }
+
         PlayerInput();
+
     }
 
     void PlayerInput()
@@ -110,9 +140,9 @@ public class Player : MonoBehaviour {
     {
         digIntervalTimer = digInterval;
         DigPercent += 5;
-        RaycastHit hit;
+
         animator.Play("Armature|Dig");
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 2.5f, LayerMask.GetMask("Destructible"))) {
+        if (InRangeState == InRange.Destructible) {
             digger.Dig(hit.point);
             DigPercent += 10;
         }

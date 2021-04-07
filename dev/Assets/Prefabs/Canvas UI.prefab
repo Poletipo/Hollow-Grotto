@@ -344,6 +344,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  Reticule: {fileID: 6807764293009113594}
+  NormalReticuleColor: {r: 0.754717, g: 0.754717, b: 0.754717, a: 0.5176471}
+  DigReticuleColor: {r: 0.98308814, g: 1, b: 0.2588235, a: 0.54509807}
+  InteractReticuleColor: {r: 0.14582503, g: 1, b: 0, a: 0.6156863}
   SliderColor:
     serializedVersion: 2
     key0: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
@@ -515,7 +519,7 @@ GameObject:
   - component: {fileID: 6807764293009113593}
   - component: {fileID: 6807764293009113594}
   m_Layer: 5
-  m_Name: Dot
+  m_Name: Reticule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

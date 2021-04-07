@@ -340,6 +340,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e6ac44c0cc2abd4183dc228e548e006, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MoveState: 0
   maxSpeed: 3
   maxSprintSpeed: 5
   maxAcceleration: 7.8
@@ -362,10 +363,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96408cefc9a297e429db50cd7806ba86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fps: {fileID: 0}
+  InRangeState: 0
+  range: 2.5
   animator: {fileID: 1017493688}
   digSize: 4
   digInterval: 0.2
+  DigCooldownSpeed: 20
+  fps: {fileID: 0}
+  cam: {fileID: 0}
 --- !u!114 &979507925
 MonoBehaviour:
   m_ObjectHideFlags: 0
