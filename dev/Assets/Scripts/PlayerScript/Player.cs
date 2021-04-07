@@ -6,19 +6,57 @@ public class Player : MonoBehaviour {
         Moving,
         Digging
     }
+    public delegate void PlayerEvent(Player player);
+
+    public PlayerEvent OnDigPercentChange;
+    public PlayerEvent OnDigOverheating;
+    public PlayerEvent OnDigStopOverheating;
+
+
+    [Header("Animation")]
+    public Animator animator;
+
+    [Header("Dig Parameter")]
+    public float digSize = 2;
+    public float digInterval = 0.5f;
+    public float DigCooldownSpeed = 1.0f;
+    float digIntervalTimer = 0;
+    bool canDig = true;
+    private bool _isOverHeating = false;
+
+    public bool IsOverHeating {
+        get { return _isOverHeating; }
+        set {
+            if (value) {
+                OnDigOverheating?.Invoke(this);
+            }
+            else {
+                OnDigStopOverheating?.Invoke(this);
+            }
+            _isOverHeating = value;
+        }
+    }
+
+    private float _digPercent = 0;
+
+    public float DigPercent {
+        get { return _digPercent; }
+        set {
+            _digPercent = Mathf.Clamp(value, 0.0f, 100.0f);
+            OnDigPercentChange?.Invoke(this);
+        }
+    }
+
 
 
     Vector2 moveInput;
     [HideInInspector]
     public FirstPersonCamera fps;
-    public Animator animator;
+
     MovementController mc;
     Camera cam;
     Digger digger;
-    public float digSize = 2;
 
-    public float digInterval = 0.5f;
-    float digIntervalTimer = 0;
 
     private void Awake()
     {
@@ -26,6 +64,7 @@ public class Player : MonoBehaviour {
         cam = Camera.main;
         fps = cam.GetComponent<FirstPersonCamera>();
         digger = GetComponent<Digger>();
+
         digger.DigSize = digSize;
     }
 
@@ -44,6 +83,11 @@ public class Player : MonoBehaviour {
     {
         digIntervalTimer -= Time.deltaTime;
 
+        DigPercent -= DigCooldownSpeed * Time.deltaTime;
+        if (DigPercent <= 30 && IsOverHeating) {
+            IsOverHeating = false;
+        }
+
         PlayerInput();
     }
 
@@ -55,9 +99,8 @@ public class Player : MonoBehaviour {
         mc.InputJump |= Input.GetButton("Jump");
         mc.InputSprint = Input.GetButton("Sprint");
         if (Input.GetButton("Fire1")) {
-            if (digIntervalTimer <= 0) {
+            if (digIntervalTimer <= 0 && !IsOverHeating) {
                 Dig();
-                digIntervalTimer = digInterval;
             }
         }
     }
@@ -65,11 +108,16 @@ public class Player : MonoBehaviour {
 
     void Dig()
     {
+        digIntervalTimer = digInterval;
+        DigPercent += 5;
         RaycastHit hit;
-        Debug.DrawRay(cam.transform.position, cam.transform.forward * 2, Color.red, 20);
+        animator.Play("Armature|Dig");
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 2.5f, LayerMask.GetMask("Destructible"))) {
             digger.Dig(hit.point);
-            animator.Play("Armature|Dig");
+            DigPercent += 10;
+        }
+        if (DigPercent >= 100) {
+            IsOverHeating = true;
         }
     }
 
