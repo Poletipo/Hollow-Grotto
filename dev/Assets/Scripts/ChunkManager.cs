@@ -82,6 +82,7 @@ public class ChunkManager : MonoBehaviour {
                             }
                             else {
                                 chunk = unusedChunks[0];
+                                chunk.GetComponent<Chunk>().ResetChunk();
                                 unusedChunks.RemoveAt(0);
                                 if (ModifiedChunkList.ContainsKey(chunkPosKey)) {
                                     chunk.GetComponent<Chunk>().LoadChunk(ModifiedChunkList[chunkPosKey]);

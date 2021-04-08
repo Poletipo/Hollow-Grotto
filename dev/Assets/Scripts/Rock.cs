@@ -8,18 +8,15 @@ public class Rock : MonoBehaviour {
     public float rockSize = 5;
     public int nbVoxelPerAxis = 10;
 
-    private void Start() {
+    private void Start()
+    {
         destructible = GetComponent<Destructible>();
         destructible.Setup(0, nbVoxelPerAxis);
-        destructible.OnNotColliding += OnNotColliding;
         CreateGrid();
     }
 
-    private void OnNotColliding(Destructible destructible) {
-        Debug.Log("Go physics!");
-    }
-
-    void CreateGrid() {
+    void CreateGrid()
+    {
         Utilities.Point[] gridPoints = new Utilities.Point[destructible.nbPoint];
         float gridSize = rockSize / nbVoxelPerAxis;
 
@@ -46,7 +43,8 @@ public class Rock : MonoBehaviour {
         destructible.UpdateMesh();
     }
 
-    private void Update() {
+    private void Update()
+    {
 
     }
 

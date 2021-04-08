@@ -7,7 +7,7 @@ public class Destructible : MonoBehaviour {
 
     public delegate void DestructibleEvent(Destructible destructible);
 
-    public DestructibleEvent OnNotColliding;
+    public DestructibleEvent OnMeshUpdate;
 
     public Utilities.Point[] GridPoints;
 
@@ -48,16 +48,7 @@ public class Destructible : MonoBehaviour {
         mesh.RecalculateTangents();
         MeshFilter.mesh = mesh;
         MeshCollider.sharedMesh = mesh;
+        OnMeshUpdate?.Invoke(this);
     }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        if (collision.contactCount == 0 && colliding) {
-            OnNotColliding?.Invoke(this);
-            colliding = false;
-        }
-    }
-
-
 
 }
