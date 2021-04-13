@@ -75,7 +75,7 @@ public class Chunk : MonoBehaviour {
 
     public void ResetChunk()
     {
-        if (SpawnParticles && MeshFilter.mesh.vertexCount > 0) {
+        if (SpawnParticles && MeshFilter.mesh.vertexCount > 4) {
             sh.mesh = MeshFilter.mesh;
             particle.Pause();
             particuleSpawned = false;
@@ -116,6 +116,7 @@ public class Chunk : MonoBehaviour {
 
         pointsBuffer.GetData(destructible.GridPoints);
         destructible.UpdateMesh();
+        destructible.UpdateBound();
         pointsBuffer.Release();
         offsetsBuffer.Release();
     }

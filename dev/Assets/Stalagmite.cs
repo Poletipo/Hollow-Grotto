@@ -52,6 +52,7 @@ public class Stalagmite : MonoBehaviour {
         }
         destructible.GridPoints = gridPoints;
         destructible.UpdateMesh();
+        destructible.UpdateBound();
     }
 
 }

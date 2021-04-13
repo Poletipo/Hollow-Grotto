@@ -139,7 +139,7 @@ public class Player : MonoBehaviour {
     void Dig()
     {
         digIntervalTimer = digInterval;
-        DigPercent += 5;
+        DigPercent += 2;
 
         animator.Play("Armature|Dig");
         if (InRangeState == InRange.Destructible) {

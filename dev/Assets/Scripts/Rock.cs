@@ -41,12 +41,7 @@ public class Rock : MonoBehaviour {
         }
         destructible.GridPoints = gridPoints;
         destructible.UpdateMesh();
+        destructible.UpdateBound();
     }
-
-    private void Update()
-    {
-
-    }
-
 
 }

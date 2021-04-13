@@ -293,6 +293,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isModified: 0
+  mesh: {fileID: 0}
+  Bound:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
   Threshold: 0
   nbVoxelPerAxis: 5
 --- !u!64 &380858449
@@ -525,6 +529,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isModified: 0
+  mesh: {fileID: 0}
+  Bound:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
   Threshold: 0
   nbVoxelPerAxis: 5
 --- !u!64 &524991122
@@ -650,6 +658,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isModified: 0
+  mesh: {fileID: 0}
+  Bound:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
   Threshold: 0
   nbVoxelPerAxis: 5
 --- !u!64 &555266269
@@ -1591,6 +1603,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 979507925, guid: bcfb59840abc3b5459f8ee0dba6b1e62, type: 3}
+      propertyPath: DiggingShape
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1693340107, guid: bcfb59840abc3b5459f8ee0dba6b1e62, type: 3}
       propertyPath: m_Controller
       value: 
@@ -1650,21 +1666,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008602, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008602, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008602, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: playerInputSpace
@@ -1674,6 +1675,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5424882966849008612, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
+        type: 3}
+      propertyPath: digInterval
+      value: 0.22
       objectReference: {fileID: 0}
     - target: {fileID: 7498124978078406553, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
