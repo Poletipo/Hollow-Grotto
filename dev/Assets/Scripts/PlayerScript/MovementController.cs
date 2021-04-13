@@ -62,7 +62,6 @@ public class MovementController : MonoBehaviour {
     private int groundContactCount;
     private int steepContactCount;
 
-    bool jumped = false;
     float fallingTimer = 0;
 
     private void Awake()
@@ -130,7 +129,6 @@ public class MovementController : MonoBehaviour {
     void Jump()
     {
         if (onGround) {
-            jumped = true;
             float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * jumpHeight);
             velocity.y += Mathf.Max(jumpSpeed - velocity.y, 0f);
         }

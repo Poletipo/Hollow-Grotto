@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
 public class Destructible : MonoBehaviour {
     MeshFilter MeshFilter;
     MeshCollider MeshCollider;
@@ -14,7 +15,6 @@ public class Destructible : MonoBehaviour {
     public float Threshold = 0;
     public int nbVoxelPerAxis = 5;
     public int nbPoint { get; private set; }
-    bool colliding = true;
 
     private void Awake()
     {

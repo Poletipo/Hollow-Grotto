@@ -6,22 +6,22 @@ public class FirstPersonCamera : MonoBehaviour {
 
     public float rotationSpeed = 1;
 
-    Camera camera;
     Vector2 mouseInput;
     public Vector3 bodyRotation = new Vector3();
     public Vector3 viewRotation = new Vector3();
 
-    private void Awake() {
+    private void Awake()
+    {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        camera = GetComponent<Camera>();
         transform.position = YawAxis.position;
         transform.rotation = YawAxis.rotation;
         transform.parent = YawAxis;
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         mouseInput = new Vector2(
             -Input.GetAxis("Mouse Y"),
             Input.GetAxis("Mouse X")
@@ -33,7 +33,8 @@ public class FirstPersonCamera : MonoBehaviour {
 
     }
 
-    private void LateUpdate() {
+    private void LateUpdate()
+    {
         rotationAxis.transform.rotation = Quaternion.Euler(bodyRotation);
         YawAxis.transform.localRotation = Quaternion.Euler(viewRotation);
     }

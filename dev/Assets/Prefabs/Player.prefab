@@ -347,7 +347,7 @@ MonoBehaviour:
   maxDecceleration: 26.3
   maxAirAcceleration: 5.8
   jumpHeight: 1.5
-  maxGroundAngle: 49.6
+  maxGroundAngle: 55
   playerInputSpace: {fileID: 0}
   fallMultiplier: 1.75
   lowJumpMultiplier: 1.5
@@ -363,7 +363,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96408cefc9a297e429db50cd7806ba86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InRangeState: 0
   range: 2.5
   animator: {fileID: 1017493688}
   digSize: 4

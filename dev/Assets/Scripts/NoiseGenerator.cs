@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class NoiseGenerator : MonoBehaviour
-{
+public class NoiseGenerator : MonoBehaviour {
 
     public ComputeShader gridNoiseShader;
 
@@ -17,21 +14,17 @@ public class NoiseGenerator : MonoBehaviour
     public Vector3 Offset;
     public Vector3 axesScale;
 
-
     public ChunkManager ChunkManager;
 
-    public float GetValue(Vector3 pos) {
-        //float value = 0.0f;
-        //return Random.Range(0.0f, 1.0f);
+    public void SetSeed()
+    {
 
-        float noiseY = Mathf.PerlinNoise((pos.x + pos.z)  * Scale, (pos.y + pos.x)  * Scale) / 2;
-        float noiseZ = Mathf.PerlinNoise((pos.x + pos.y)  * Scale, (pos.z + pos.y)  * Scale) / 2;
-
-        return noiseY + noiseZ;
     }
 
+
     // https://www.youtube.com/c/SebastianLague/featured
-    public Vector3[] SeedValues() {
+    public Vector3[] SeedValues()
+    {
         var prng = new System.Random(Seed);
         var offsets = new Vector3[Octaves];
         float offsetRange = 1000;

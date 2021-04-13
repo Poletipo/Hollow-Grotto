@@ -4,7 +4,6 @@
 [RequireComponent(typeof(Destructible))]
 public class Chunk : MonoBehaviour {
     public Vector3Int Coordonnate;
-    bool IsModified = false;
 
     public bool particuleSpawned = false;
 

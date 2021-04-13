@@ -4,7 +4,19 @@ using UnityEngine;
 
 public static class SaveManager {
 
-    public static void SaveChunk(GameObject gameObject) {
+    public static bool SaveExist()
+    {
+        string fileName = "/Player.dat";
+        string path = Application.persistentDataPath + fileName;
+
+        if (File.Exists(path)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static void SaveChunk(GameObject gameObject)
+    {
 
         string fileName = "/" + gameObject.name + ".dat";
         string path = Application.persistentDataPath + fileName;
@@ -19,7 +31,8 @@ public static class SaveManager {
         file.Close();
     }
 
-    public static void SaveChunk(Chunk_Data data) {
+    public static void SaveChunk(Chunk_Data data)
+    {
 
         Vector3Int coord = new Vector3Int();
         coord.x = data.Coordonates[0];
@@ -38,7 +51,8 @@ public static class SaveManager {
         file.Close();
     }
 
-    public static Chunk_Data LoadChunk(string chunkName) {
+    public static Chunk_Data LoadChunk(string chunkName)
+    {
 
         string fileName = "/" + chunkName + ".dat";
         string path = Application.persistentDataPath + fileName;
@@ -58,7 +72,8 @@ public static class SaveManager {
         }
     }
 
-    public static void SavePlayer(GameObject gameObject) {
+    public static void SavePlayer(GameObject gameObject)
+    {
         string fileName = "/Player.dat";
         string path = Application.persistentDataPath + fileName;
 
@@ -71,7 +86,8 @@ public static class SaveManager {
         fs.Close();
     }
 
-    public static Player_Data LoadPlayer() {
+    public static Player_Data LoadPlayer()
+    {
 
         string fileName = "/Player.dat";
         string path = Application.persistentDataPath + fileName;
