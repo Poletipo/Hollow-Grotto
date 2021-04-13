@@ -43,12 +43,27 @@ public class Destructible : MonoBehaviour {
         Mesh mesh = GameManager.Instance.MeshGenerator.GenerateMesh(GridPoints, Threshold, nbVoxelPerAxis);
 
         mesh.RecalculateBounds();
+        if (mesh.vertexCount <= 0) {
+            float boundSize = GridPoints[(nbPoint - 1)].pos.x - GridPoints[0].pos.x;
+            Bounds bound = new Bounds(Vector3.one * boundSize / 2 + gameObject.transform.position, Vector3.one * boundSize);
+            mesh.bounds = bound;
+        }
         //NormalSolver.RecalculateNormals(mesh, 0);
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
         MeshFilter.mesh = mesh;
         MeshCollider.sharedMesh = mesh;
         OnMeshUpdate?.Invoke(this);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (Application.isPlaying)
+            if (MeshFilter.mesh.vertexCount <= 0) {
+
+                float boundSize = GridPoints[(nbPoint - 1)].pos.x - GridPoints[0].pos.x;
+                Gizmos.DrawCube(Vector3.one * boundSize / 2 + gameObject.transform.position, Vector3.one * boundSize);
+            }
     }
 
 }

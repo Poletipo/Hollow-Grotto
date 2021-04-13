@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class NoiseGenerator : MonoBehaviour {
 
@@ -13,14 +14,33 @@ public class NoiseGenerator : MonoBehaviour {
     public float Persistence = 1;
     public Vector3 Offset;
     public Vector3 axesScale;
+    public float noiseMul = 10;
 
     public ChunkManager ChunkManager;
 
-    public void SetSeed()
+    private void Awake()
     {
-
+        if (SaveManager.SaveExist()) {
+            World_Data data = SaveManager.LoadWorld();
+            Seed = data.Seed;
+        }
+        else {
+            Seed = RandomSeed();
+        }
+        //SetSeed();
     }
 
+
+    public void SetSeed()
+    {
+        UnityEngine.Random.InitState(Seed);
+        Scale = UnityEngine.Random.Range(0.04f, 0.1f);
+        Persistence = UnityEngine.Random.Range(0.1f, 0.2f);
+        axesScale.x = UnityEngine.Random.Range(0.8f, 2.0f);
+        axesScale.z = axesScale.x;
+        axesScale.y = UnityEngine.Random.Range(0.8f, 2.0f);
+        noiseMul = UnityEngine.Random.Range(4, 10f);
+    }
 
     // https://www.youtube.com/c/SebastianLague/featured
     public Vector3[] SeedValues()
@@ -33,5 +53,12 @@ public class NoiseGenerator : MonoBehaviour {
         }
         return offsets;
     }
+
+
+    public int RandomSeed()
+    {
+        return (int)DateTime.Now.Ticks;
+    }
+
 
 }

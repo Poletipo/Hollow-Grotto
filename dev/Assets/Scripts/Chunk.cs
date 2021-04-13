@@ -5,13 +5,16 @@
 public class Chunk : MonoBehaviour {
     public Vector3Int Coordonnate;
 
-    public bool particuleSpawned = false;
+    bool particuleSpawned = false;
 
     MeshFilter MeshFilter;
     ChunkManager ChunkManager;
     Destructible destructible;
     ParticleSystem particle;
     ParticleSystem.ShapeModule sh;
+
+    public bool SpawnParticles = true;
+
     private void Awake()
     {
         ChunkManager = GameManager.Instance.ChunkManager;
@@ -51,7 +54,7 @@ public class Chunk : MonoBehaviour {
         transform.position = Coordonnate * ChunkManager.ChunkSize;
         CreateChunkGrid();
 
-        CreateParticle();
+        ResetChunk();
         UpdateParticle();
     }
     public void Init(Vector3Int pos, float[] gridPoints)
@@ -66,16 +69,18 @@ public class Chunk : MonoBehaviour {
         }
         destructible.UpdateMesh();
 
-        CreateParticle();
+        ResetChunk();
         UpdateParticle();
     }
 
     public void ResetChunk()
     {
-        sh.mesh = MeshFilter.mesh;
-        particle.Pause();
+        if (SpawnParticles && MeshFilter.mesh.vertexCount > 0) {
+            sh.mesh = MeshFilter.mesh;
+            particle.Pause();
+            particuleSpawned = false;
+        }
         particle.Simulate(0, false, true);
-        particuleSpawned = false;
     }
 
     void CreateChunkGrid()
@@ -99,6 +104,7 @@ public class Chunk : MonoBehaviour {
         gridNoiseShader.SetFloat("noiseScale", ChunkManager.NoiseGenerator.Scale);
         gridNoiseShader.SetFloat("octaves", ChunkManager.NoiseGenerator.Octaves);
         gridNoiseShader.SetFloat("persistence", ChunkManager.NoiseGenerator.Persistence);
+        gridNoiseShader.SetFloat("noiseMulValue", ChunkManager.NoiseGenerator.noiseMul);
         gridNoiseShader.SetInt("numPointsPerAxis", ChunkManager.GridResolution + 1);
         gridNoiseShader.SetVector("noiseOffset", ChunkManager.NoiseGenerator.Offset);
         gridNoiseShader.SetVector("axesSize", ChunkManager.NoiseGenerator.axesScale);
@@ -115,36 +121,32 @@ public class Chunk : MonoBehaviour {
     }
 
 
-    void CreateParticle()
-    {
-        sh.mesh = MeshFilter.mesh;
-        particle.Simulate(0, false, true);
-        particle.Play();
-    }
-
-
     void UpdateParticle()
     {
-        ParticleSystem.Particle[] m_Particles = new ParticleSystem.Particle[particle.main.maxParticles];
-        int partAlive = particle.GetParticles(m_Particles);
-        RaycastHit hit;
+        if (SpawnParticles) {
 
-        for (int i = 0; i < partAlive; i++) {
-            Vector3 partMin = transform.TransformPoint(m_Particles[i].position);
-            partMin.y = transform.position.y;
+            ParticleSystem.Particle[] m_Particles = new ParticleSystem.Particle[particle.main.maxParticles];
+            int partAlive = particle.GetParticles(m_Particles);
+            RaycastHit hit;
 
-            ParticleSystem.Particle particle = m_Particles[i];
-            if (Physics.Linecast(transform.TransformPoint(m_Particles[i].position), partMin, out hit)) {
-                particle.position = transform.InverseTransformPoint(hit.point);
-                m_Particles[i] = particle;
-                particuleSpawned = true;
+            for (int i = 0; i < partAlive; i++) {
+                Vector3 partMin = transform.TransformPoint(m_Particles[i].position);
+                partMin.y = transform.position.y;
+
+                ParticleSystem.Particle particle = m_Particles[i];
+                if (Physics.Linecast(transform.TransformPoint(m_Particles[i].position), partMin, out hit)) {
+                    particle.position = transform.InverseTransformPoint(hit.point);
+                    m_Particles[i] = particle;
+                    particuleSpawned = true;
+                }
+                else {
+                    particle.remainingLifetime = 0;
+                    m_Particles[i] = particle;
+                }
             }
-            else {
-                particle.remainingLifetime = 0;
-                m_Particles[i] = particle;
-            }
+            particle.SetParticles(m_Particles);
+            particle.Play();
         }
-        particle.SetParticles(m_Particles);
     }
 
 

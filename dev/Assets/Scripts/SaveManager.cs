@@ -6,7 +6,7 @@ public static class SaveManager {
 
     public static bool SaveExist()
     {
-        string fileName = "/Player.dat";
+        string fileName = "/World.dat";
         string path = Application.persistentDataPath + fileName;
 
         if (File.Exists(path)) {
@@ -14,6 +14,38 @@ public static class SaveManager {
         }
         return false;
     }
+
+    public static void SaveWorld()
+    {
+        string fileName = "/World.dat";
+        string path = Application.persistentDataPath + fileName;
+        // Create the Binary Formatter.
+        BinaryFormatter bf = new BinaryFormatter();
+        // Stream the file with a File Stream. (Note that File.Create() 'Creates' or 'Overwrites' a file.)
+        FileStream file = new FileStream(path, FileMode.Create);
+
+        World_Data data = new World_Data(GameManager.Instance.ChunkManager.NoiseGenerator);
+
+        bf.Serialize(file, data);
+        file.Close();
+    }
+
+    public static World_Data LoadWorld()
+    {
+        string fileName = "/World.dat";
+        string path = Application.persistentDataPath + fileName;
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream fs = new FileStream(path, FileMode.Open);
+
+        World_Data data = (World_Data)bf.Deserialize(fs);
+
+        fs.Close();
+
+        return data;
+
+    }
+
 
     public static void SaveChunk(GameObject gameObject)
     {
@@ -88,7 +120,6 @@ public static class SaveManager {
 
     public static Player_Data LoadPlayer()
     {
-
         string fileName = "/Player.dat";
         string path = Application.persistentDataPath + fileName;
 

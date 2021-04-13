@@ -166,11 +166,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridNoiseShader: {fileID: 7200000, guid: 0398b577c7714f54fb505385569a42e4, type: 3}
   Seed: 12
-  Scale: 0.075
+  Scale: 0.04
   Octaves: 3
-  Persistence: 0.13
+  Persistence: 0.168
   Offset: {x: 0, y: 0, z: 0}
   axesScale: {x: 1.5, y: 1.1, z: 1.5}
+  noiseMul: 4
   ChunkManager: {fileID: 1774692108}
 --- !u!1 &331637971
 GameObject:
@@ -1648,6 +1649,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5424882966849008602, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5424882966849008602, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5424882966849008602, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008603, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}

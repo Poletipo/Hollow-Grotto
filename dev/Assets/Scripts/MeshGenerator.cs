@@ -5,7 +5,8 @@ using UnityEngine;
 public class MeshGenerator : MonoBehaviour {
     public ComputeShader marchingShader;
 
-    public Mesh GenerateMesh(Utilities.Point[] gridPoints, float Threshold, int nbVoxelPerAxis) {
+    public Mesh GenerateMesh(Utilities.Point[] gridPoints, float Threshold, int nbVoxelPerAxis)
+    {
         Mesh mesh = new Mesh();
 
         ComputeBuffer pointsBuffer = new ComputeBuffer(gridPoints.Length, sizeof(float) * 4);
