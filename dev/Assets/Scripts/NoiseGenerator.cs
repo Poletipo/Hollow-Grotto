@@ -27,7 +27,7 @@ public class NoiseGenerator : MonoBehaviour {
         else {
             Seed = RandomSeed();
         }
-        //SetSeed();
+        SetSeed();
     }
 
 

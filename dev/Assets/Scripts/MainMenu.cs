@@ -16,7 +16,6 @@ public class MainMenu : MonoBehaviour {
     [Header("Quit Warning")]
     public GameObject QuitWarning;
 
-
     private void Awake()
     {
         if (!SaveManager.SaveExist()) {
@@ -27,7 +26,7 @@ public class MainMenu : MonoBehaviour {
 
     public void PlayGame()
     {
-        //load level
+        LevelManager.LoadLevel(LevelManager.Level.MainScene);
     }
 
     public void ShowQuitMenu()
@@ -43,7 +42,7 @@ public class MainMenu : MonoBehaviour {
 
     public void QuitMenu()
     {
-        //Leave game
+        Application.Quit();
     }
 
     public void ShowNewWorld()
@@ -65,7 +64,8 @@ public class MainMenu : MonoBehaviour {
 
     public void CreateNewWorld()
     {
-
+        SaveManager.DeleteWorld();
+        LevelManager.LoadLevel(LevelManager.Level.MainScene);
     }
 
 

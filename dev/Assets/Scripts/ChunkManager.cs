@@ -44,6 +44,10 @@ public class ChunkManager : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Alpha0)) {
             SaveModifiedChunks();
+            SaveManager.SaveWorld();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha9)) {
+            SaveManager.DeleteWorld();
         }
 
     }

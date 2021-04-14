@@ -4,12 +4,17 @@ using UnityEngine;
 
 public static class SaveManager {
 
+
+    static string chunkDirectory = Application.persistentDataPath + "/Chunks";
+    static string worldPath = Application.persistentDataPath + "/World.dat";
+    static string playerPath = Application.persistentDataPath + "/Player.dat";
+
     public static bool SaveExist()
     {
         string fileName = "/World.dat";
         string path = Application.persistentDataPath + fileName;
 
-        if (File.Exists(path)) {
+        if (File.Exists(worldPath)) {
             return true;
         }
         return false;
@@ -17,12 +22,10 @@ public static class SaveManager {
 
     public static void SaveWorld()
     {
-        string fileName = "/World.dat";
-        string path = Application.persistentDataPath + fileName;
         // Create the Binary Formatter.
         BinaryFormatter bf = new BinaryFormatter();
         // Stream the file with a File Stream. (Note that File.Create() 'Creates' or 'Overwrites' a file.)
-        FileStream file = new FileStream(path, FileMode.Create);
+        FileStream file = new FileStream(worldPath, FileMode.Create);
 
         World_Data data = new World_Data(GameManager.Instance.ChunkManager.NoiseGenerator);
 
@@ -32,18 +35,26 @@ public static class SaveManager {
 
     public static World_Data LoadWorld()
     {
-        string fileName = "/World.dat";
-        string path = Application.persistentDataPath + fileName;
-
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream fs = new FileStream(path, FileMode.Open);
+        FileStream fs = new FileStream(worldPath, FileMode.Open);
 
         World_Data data = (World_Data)bf.Deserialize(fs);
 
         fs.Close();
 
         return data;
+    }
 
+    public static void DeleteWorld()
+    {
+
+        string[] chunks = Directory.GetFiles(chunkDirectory);
+
+        for (int i = 0; i < chunks.Length; i++) {
+            File.Delete(chunks[i]);
+        }
+        File.Delete(worldPath);
+        File.Delete(playerPath);
     }
 
 
@@ -66,6 +77,10 @@ public static class SaveManager {
     public static void SaveChunk(Chunk_Data data)
     {
 
+        if (!Directory.Exists(chunkDirectory)) {
+            Directory.CreateDirectory(chunkDirectory);
+        }
+
         Vector3Int coord = new Vector3Int();
         coord.x = data.Coordonates[0];
         coord.y = data.Coordonates[1];
@@ -73,7 +88,7 @@ public static class SaveManager {
 
 
         string fileName = "/Chunk" + coord + ".dat";
-        string path = Application.persistentDataPath + fileName;
+        string path = chunkDirectory + fileName;
         // Create the Binary Formatter.
         BinaryFormatter bf = new BinaryFormatter();
         // Stream the file with a File Stream. (Note that File.Create() 'Creates' or 'Overwrites' a file.)
@@ -87,7 +102,7 @@ public static class SaveManager {
     {
 
         string fileName = "/" + chunkName + ".dat";
-        string path = Application.persistentDataPath + fileName;
+        string path = chunkDirectory + fileName;
 
         if (File.Exists(path)) {
             BinaryFormatter bf = new BinaryFormatter();
@@ -106,11 +121,8 @@ public static class SaveManager {
 
     public static void SavePlayer(GameObject gameObject)
     {
-        string fileName = "/Player.dat";
-        string path = Application.persistentDataPath + fileName;
-
         BinaryFormatter bf = new BinaryFormatter();
-        FileStream fs = new FileStream(path, FileMode.Create);
+        FileStream fs = new FileStream(playerPath, FileMode.Create);
 
         Player_Data data = new Player_Data(gameObject);
 
@@ -120,12 +132,9 @@ public static class SaveManager {
 
     public static Player_Data LoadPlayer()
     {
-        string fileName = "/Player.dat";
-        string path = Application.persistentDataPath + fileName;
-
-        if (File.Exists(path)) {
+        if (File.Exists(playerPath)) {
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream fs = new FileStream(path, FileMode.Open);
+            FileStream fs = new FileStream(playerPath, FileMode.Open);
 
             Player_Data data = (Player_Data)bf.Deserialize(fs);
 

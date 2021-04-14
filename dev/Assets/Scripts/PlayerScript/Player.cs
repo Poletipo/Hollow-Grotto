@@ -91,11 +91,6 @@ public class Player : MonoBehaviour {
         LoadPlayer();
     }
 
-    private void OnApplicationQuit()
-    {
-        SavePlayer();
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -119,6 +114,10 @@ public class Player : MonoBehaviour {
         }
         else {
             InRangeState = InRange.Nothing;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha0)) {
+            SavePlayer();
         }
 
         PlayerInput();
