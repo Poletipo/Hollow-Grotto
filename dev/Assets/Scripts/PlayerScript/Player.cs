@@ -65,7 +65,12 @@ public class Player : MonoBehaviour {
     }
 
 
+    private bool _playerEnabled;
 
+    public bool PlayerEnabled {
+        get { return _playerEnabled; }
+        set { _playerEnabled = value; }
+    }
 
     Vector2 moveInput;
     [HideInInspector]
@@ -126,14 +131,16 @@ public class Player : MonoBehaviour {
 
     void PlayerInput()
     {
-        moveInput.x = Input.GetAxisRaw("Horizontal");
-        moveInput.y = Input.GetAxisRaw("Vertical");
-        mc.InputMove = moveInput;
-        mc.InputJump |= Input.GetButton("Jump");
-        mc.InputSprint = Input.GetButton("Sprint");
-        if (Input.GetButton("Fire1")) {
-            if (digIntervalTimer <= 0 && !IsOverHeating) {
-                Dig();
+        if (PlayerEnabled) {
+            moveInput.x = Input.GetAxisRaw("Horizontal");
+            moveInput.y = Input.GetAxisRaw("Vertical");
+            mc.InputMove = moveInput;
+            mc.InputJump |= Input.GetButton("Jump");
+            mc.InputSprint = Input.GetButton("Sprint");
+            if (Input.GetButton("Fire1")) {
+                if (digIntervalTimer <= 0 && !IsOverHeating) {
+                    Dig();
+                }
             }
         }
     }

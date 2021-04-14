@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour {
 
                 // Prevents having to recreate the manager on scene change
                 // https://docs.unity3d.com/ScriptReference/Object.DontDestroyOnLoad.html
-                DontDestroyOnLoad(_instance);
+                //DontDestroyOnLoad(_instance);
             }
             return _instance;
         }
@@ -40,22 +40,28 @@ public class GameManager : MonoBehaviour {
         private set { _listDestructible = value; }
     }
 
-    private void Initialize() {
+    private void Initialize()
+    {
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         OnSceneLoaded();
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
         OnSceneLoaded();
     }
 
-    private void OnSceneLoaded() {
-        Player = GameObject.FindGameObjectWithTag("Player");
-        ChunkManager = FindObjectOfType<ChunkManager>().GetComponent<ChunkManager>();
-        MeshGenerator = FindObjectOfType<MeshGenerator>().GetComponent<MeshGenerator>();
-        ListDestructible = new List<GameObject>();
+    private void OnSceneLoaded()
+    {
+        if (SceneManager.GetActiveScene().name == LevelManager.Level.MainScene.ToString()) {
+
+            Player = GameObject.FindGameObjectWithTag("Player");
+            ChunkManager = FindObjectOfType<ChunkManager>().GetComponent<ChunkManager>();
+            MeshGenerator = FindObjectOfType<MeshGenerator>().GetComponent<MeshGenerator>();
+            ListDestructible = new List<GameObject>();
+        }
     }
 
 }
