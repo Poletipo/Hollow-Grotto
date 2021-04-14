@@ -7,7 +7,7 @@ public class Rock : MonoBehaviour {
 
     public float rockSize = 5;
     public int nbVoxelPerAxis = 10;
-
+    public GameObject obj;
     private void Start()
     {
         destructible = GetComponent<Destructible>();

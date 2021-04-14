@@ -4,8 +4,6 @@
 [RequireComponent(typeof(Destructible))]
 public class Chunk : MonoBehaviour {
     public Vector3Int Coordonnate;
-
-    MeshFilter MeshFilter;
     ChunkManager ChunkManager;
     Destructible destructible;
 
@@ -15,8 +13,6 @@ public class Chunk : MonoBehaviour {
     {
         ChunkManager = GameManager.Instance.ChunkManager;
         destructible = GetComponent<Destructible>();
-        MeshFilter = GetComponent<MeshFilter>();
-
 
         destructible.OnMeshUpdate += OnMeshUpdate;
 
