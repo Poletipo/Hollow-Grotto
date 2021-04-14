@@ -5,13 +5,9 @@
 public class Chunk : MonoBehaviour {
     public Vector3Int Coordonnate;
 
-    bool particuleSpawned = false;
-
     MeshFilter MeshFilter;
     ChunkManager ChunkManager;
     Destructible destructible;
-    ParticleSystem particle;
-    ParticleSystem.ShapeModule sh;
 
     public bool SpawnParticles = true;
 
@@ -19,31 +15,19 @@ public class Chunk : MonoBehaviour {
     {
         ChunkManager = GameManager.Instance.ChunkManager;
         destructible = GetComponent<Destructible>();
-        particle = GetComponent<ParticleSystem>();
         MeshFilter = GetComponent<MeshFilter>();
 
 
         destructible.OnMeshUpdate += OnMeshUpdate;
 
         destructible.Setup(ChunkManager.Threshold, ChunkManager.GridResolution);
-        sh = particle.shape;
-        sh.enabled = true;
-        sh.shapeType = ParticleSystemShapeType.Mesh;
         Init(Coordonnate);
     }
 
-    private void Update()
-    {
-
-        if (!particuleSpawned) {
-            UpdateParticle();
-        }
-
-    }
 
     private void OnMeshUpdate(Destructible destructible)
     {
-        UpdateParticle();
+
     }
 
     public void Init(Vector3Int pos)
@@ -54,8 +38,6 @@ public class Chunk : MonoBehaviour {
         transform.position = Coordonnate * ChunkManager.ChunkSize;
         CreateChunkGrid();
 
-        ResetChunk();
-        UpdateParticle();
     }
     public void Init(Vector3Int pos, float[] gridPoints)
     {
@@ -68,19 +50,11 @@ public class Chunk : MonoBehaviour {
             destructible.GridPoints[i].val = gridPoints[i];
         }
         destructible.UpdateMesh();
-
-        ResetChunk();
-        UpdateParticle();
     }
 
     public void ResetChunk()
     {
-        if (SpawnParticles && MeshFilter.mesh.vertexCount > 4) {
-            sh.mesh = MeshFilter.mesh;
-            particle.Pause();
-            particuleSpawned = false;
-        }
-        particle.Simulate(0, false, true);
+
     }
 
     void CreateChunkGrid()
@@ -120,36 +94,6 @@ public class Chunk : MonoBehaviour {
         pointsBuffer.Release();
         offsetsBuffer.Release();
     }
-
-
-    void UpdateParticle()
-    {
-        if (SpawnParticles) {
-
-            ParticleSystem.Particle[] m_Particles = new ParticleSystem.Particle[particle.main.maxParticles];
-            int partAlive = particle.GetParticles(m_Particles);
-            RaycastHit hit;
-
-            for (int i = 0; i < partAlive; i++) {
-                Vector3 partMin = transform.TransformPoint(m_Particles[i].position);
-                partMin.y = transform.position.y;
-
-                ParticleSystem.Particle particle = m_Particles[i];
-                if (Physics.Linecast(transform.TransformPoint(m_Particles[i].position), partMin, out hit)) {
-                    particle.position = transform.InverseTransformPoint(hit.point);
-                    m_Particles[i] = particle;
-                    particuleSpawned = true;
-                }
-                else {
-                    particle.remainingLifetime = 0;
-                    m_Particles[i] = particle;
-                }
-            }
-            particle.SetParticles(m_Particles);
-            particle.Play();
-        }
-    }
-
 
     public void SaveChunk()
     {

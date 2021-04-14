@@ -29,6 +29,7 @@ public class Player : MonoBehaviour {
     public float digSize = 2;
     public float digInterval = 0.5f;
     public float DigCooldownSpeed = 1.0f;
+    public bool InfiniteDigging = false;
     float digIntervalTimer = 0;
     bool canDig = true;
     private bool _isOverHeating = false;
@@ -101,6 +102,9 @@ public class Player : MonoBehaviour {
         digIntervalTimer -= Time.deltaTime;
 
         DigPercent -= DigCooldownSpeed * Time.deltaTime;
+        if (InfiniteDigging) {
+            DigPercent = 0;
+        }
         if (DigPercent <= 30 && IsOverHeating) {
             IsOverHeating = false;
         }
