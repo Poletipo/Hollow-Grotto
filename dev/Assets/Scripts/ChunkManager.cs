@@ -20,6 +20,7 @@ public class ChunkManager : MonoBehaviour {
     GameObject chunkHolder;
     GameObject player;
     public GameObject chunkObject;
+    public GameObject Objectif;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +31,9 @@ public class ChunkManager : MonoBehaviour {
 
         player = GameManager.Instance.Player;
         chunkHolder = GameObject.Find("ChunkHolder");
-        LoadChunks();
+        if (!SaveManager.SaveExist()) {
+            GeneratePlayerStart();
+        }
     }
 
     float timer = 0;
@@ -49,7 +52,9 @@ public class ChunkManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha9)) {
             SaveManager.DeleteWorld();
         }
-
+        if (Input.GetKeyDown(KeyCode.Alpha8)) {
+            GenerateObjectif();
+        }
     }
 
     Vector3Int lastPlayerChunk = new Vector3Int();
@@ -64,57 +69,121 @@ public class ChunkManager : MonoBehaviour {
             lastPlayerChunk = playerChunk;
             int nbChunksDistance = Mathf.Abs(Mathf.CeilToInt(loadDistance / ChunkSize));
 
-            Dictionary<string, GameObject> oldchunks = new Dictionary<string, GameObject>(ChunkList);
-            ChunkList.Clear();
-
+            foreach (GameObject item in ChunkList.Values) {
+                item.GetComponent<Chunk>().Unused = true;
+            }
             for (int x = -nbChunksDistance; x <= nbChunksDistance; x++) {
                 for (int y = -nbChunksDistance; y <= nbChunksDistance; y++) {
                     for (int z = -nbChunksDistance; z <= nbChunksDistance; z++) {
                         Vector3Int chunkPos = playerChunk + new Vector3Int(x, y, z);
-                        string chunkPosKey = chunkPos.ToString();
-
-                        if (!oldchunks.ContainsKey(chunkPosKey)) {
-                            GameObject chunk;
-                            if (unusedChunks.Count == 0) {
-                                chunk = Instantiate(chunkObject, Vector3.zero, Quaternion.identity);
-                                if (ModifiedChunkList.ContainsKey(chunkPosKey)) {
-                                    chunk.GetComponent<Chunk>().LoadChunk(ModifiedChunkList[chunkPosKey]);
-                                }
-                                else {
-                                    chunk.GetComponent<Chunk>().LoadChunk(chunkPos);
-                                }
-                            }
-                            else {
-                                chunk = unusedChunks[0];
-                                chunk.GetComponent<Chunk>().ResetChunk();
-                                unusedChunks.RemoveAt(0);
-                                if (ModifiedChunkList.ContainsKey(chunkPosKey)) {
-                                    chunk.GetComponent<Chunk>().LoadChunk(ModifiedChunkList[chunkPosKey]);
-                                }
-                                else {
-                                    chunk.GetComponent<Chunk>().LoadChunk(chunkPos);
-                                }
-                            }
-                            ChunkList.Add(chunkPosKey, chunk);
-                            chunk.transform.parent = chunkHolder.transform;
-
-                        }
-                        else {
-                            ChunkList.Add(chunkPosKey, oldchunks[chunkPosKey]);
-                            oldchunks.Remove(chunkPosKey);
-                        }
+                        LoadChunk(chunkPos);
                     }
                 }
             }
+            MarkedUnusedChunks();
+        }
+    }
 
-            if (oldchunks.Count != 0) {
-                foreach (GameObject item in oldchunks.Values) {
-                    unusedChunks.Add(item);
+
+    public GameObject LoadChunk(Vector3Int chunkCoord)
+    {
+        Vector3Int chunkPos = chunkCoord;
+        string chunkPosKey = chunkPos.ToString();
+        GameObject chunk;
+        //Si le chunk existe pas deja
+        if (!ChunkList.ContainsKey(chunkPosKey)) {
+            //Si il n'y a pas de chunk inutiliser
+            if (unusedChunks.Count == 0) {
+                chunk = Instantiate(chunkObject, Vector3.zero, Quaternion.identity);
+                //Si le chunk a été modifier avant
+                if (ModifiedChunkList.ContainsKey(chunkPosKey)) {
+                    chunk.GetComponent<Chunk>().LoadChunk(ModifiedChunkList[chunkPosKey]);
                 }
-                oldchunks.Clear();
+                //Si le chunk n'a pas été modifier avant
+                else {
+                    chunk.GetComponent<Chunk>().LoadChunk(chunkPos);
+                }
+            }
+            //Si la liste de chunk inutiliser existe
+            else {
+                chunk = unusedChunks[0];
+                chunk.GetComponent<Chunk>().ResetChunk();
+                unusedChunks.RemoveAt(0);
+                //Si le chunk a été modifier avant
+                if (ModifiedChunkList.ContainsKey(chunkPosKey)) {
+                    chunk.GetComponent<Chunk>().LoadChunk(ModifiedChunkList[chunkPosKey]);
+                }
+                //Si le chunk n'a pas été modifier avant
+                else {
+                    chunk.GetComponent<Chunk>().LoadChunk(chunkPos);
+                }
+            }
+            ChunkList.Add(chunkPosKey, chunk);
+            chunk.transform.parent = chunkHolder.transform;
+        }
+        //Si le chunk existe deja
+        else {
+            chunk = ChunkList[chunkPosKey];
+        }
+        chunk.GetComponent<Chunk>().Unused = false;
+        return chunk;
+    }
+
+
+    private void MarkedUnusedChunks()
+    {
+        Dictionary<string, GameObject> oldchunks = new Dictionary<string, GameObject>(ChunkList);
+        ChunkList.Clear();
+
+        foreach (GameObject item in oldchunks.Values) {
+            if (!item.GetComponent<Chunk>().Unused) {
+                ChunkList.Add(item.GetComponent<Chunk>().Coordonnate.ToString(), item);
+            }
+            else {
+                unusedChunks.Add(item);
             }
         }
     }
+
+
+    public void GenerateObjectif()
+    {
+        bool validPos = false;
+        GameObject chunk;
+        while (!validPos) {
+            Debug.Log("Searching...");
+            Vector3Int objChunk = Vector3Int.CeilToInt((player.transform.position + Random.onUnitSphere * 50) / ChunkSize);
+            chunk = LoadChunk(objChunk);
+            chunk.GetComponent<Chunk>().Unused = true;
+            Vector3[] listPos = MeshSpawner.GetSpawnPosition(chunk.GetComponent<MeshFilter>().mesh, chunk.transform, Vector3.up, 20, 1);
+
+            if (listPos.Length > 0) {
+                validPos = true;
+                Instantiate(Objectif, listPos[0] + chunk.transform.position, Quaternion.identity);
+                Debug.Log("FOUND");
+            }
+        }
+    }
+
+    public void GeneratePlayerStart()
+    {
+        bool validPos = false;
+        GameObject chunk;
+        while (!validPos) {
+            Debug.Log("Searching...");
+            Vector3Int objChunk = Vector3Int.CeilToInt((Random.insideUnitSphere * 500) / ChunkSize);
+            chunk = LoadChunk(objChunk);
+            Vector3[] listPos = MeshSpawner.GetSpawnPosition(chunk.GetComponent<MeshFilter>().mesh, chunk.transform, Vector3.up, 20, 50.0f);
+
+            if (listPos.Length > 10) {
+                validPos = true;
+                player.transform.position = listPos[0] + chunk.transform.position + Vector3.up;
+                Debug.Log("FOUND");
+            }
+        }
+    }
+
+
 
 
     void SaveModifiedChunks()
