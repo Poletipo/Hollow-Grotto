@@ -33,6 +33,7 @@ public class Player : MonoBehaviour {
     float digIntervalTimer = 0;
     bool canDig = true;
     private bool _isOverHeating = false;
+    public GameObject Rocks;
 
     RaycastHit hit;
 
@@ -155,6 +156,8 @@ public class Player : MonoBehaviour {
         if (InRangeState == InRange.Destructible) {
             digger.Dig(hit.point);
             DigPercent += 10;
+            Instantiate(Rocks, hit.point, Quaternion.LookRotation(hit.normal));
+
         }
         if (DigPercent >= 100) {
             IsOverHeating = true;

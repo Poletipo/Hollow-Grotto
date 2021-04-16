@@ -23,7 +23,15 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.028301895, g: 0.028301895, b: 0.028301895, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
+<<<<<<< Updated upstream
   m_AmbientIntensity: 0.5
+=======
+<<<<<<< Updated upstream
+  m_AmbientIntensity: 1
+=======
+  m_AmbientIntensity: 0
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
@@ -2056,6 +2064,12 @@ PrefabInstance:
       propertyPath: InfiniteDigging
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5424882966849008612, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
+        type: 3}
+      propertyPath: Rocks
+      value: 
+      objectReference: {fileID: 5428808064164685453, guid: cae45d875b1a09347aa1a495c1f87a59,
+        type: 3}
     - target: {fileID: 7498124978078406553, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
