@@ -2046,16 +2046,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008612, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: digInterval
-      value: 0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 5424882966849008612, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: InfiniteDigging
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7498124978078406553, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: m_Materials.Array.data[1]

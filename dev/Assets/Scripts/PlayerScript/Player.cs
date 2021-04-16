@@ -30,6 +30,7 @@ public class Player : MonoBehaviour {
     public float digInterval = 0.5f;
     public float DigCooldownSpeed = 1.0f;
     public bool InfiniteDigging = false;
+    public GameObject Rocks;
     float digIntervalTimer = 0;
     bool canDig = true;
     private bool _isOverHeating = false;
@@ -154,6 +155,7 @@ public class Player : MonoBehaviour {
         animator.Play("Armature|Dig");
         if (InRangeState == InRange.Destructible) {
             digger.Dig(hit.point);
+            Instantiate(Rocks, hit.point, Quaternion.LookRotation(hit.normal, Vector3.up));
             DigPercent += 10;
         }
         if (DigPercent >= 100) {

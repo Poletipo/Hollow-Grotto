@@ -366,8 +366,10 @@ MonoBehaviour:
   range: 2.5
   animator: {fileID: 1017493688}
   digSize: 4
-  digInterval: 0.2
+  digInterval: 0.22
   DigCooldownSpeed: 20
+  InfiniteDigging: 0
+  Rocks: {fileID: 9154984666984268171, guid: 887f33a6a2364974e8fbf87c18eda7f3, type: 3}
   fps: {fileID: 0}
   cam: {fileID: 0}
 --- !u!114 &979507925
