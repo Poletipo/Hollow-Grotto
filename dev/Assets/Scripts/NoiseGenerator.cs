@@ -37,7 +37,7 @@ public class NoiseGenerator : MonoBehaviour {
         Scale = UnityEngine.Random.Range(0.04f, 0.1f);
         Persistence = UnityEngine.Random.Range(0.1f, 0.2f);
         axesScale.x = UnityEngine.Random.Range(0.8f, 2.0f);
-        axesScale.z = axesScale.x;
+        axesScale.z = UnityEngine.Random.Range(0.8f, 2.0f);
         axesScale.y = UnityEngine.Random.Range(0.8f, 2.0f);
         noiseMul = UnityEngine.Random.Range(4, 10f);
     }

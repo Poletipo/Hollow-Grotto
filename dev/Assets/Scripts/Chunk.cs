@@ -8,6 +8,8 @@ public class Chunk : MonoBehaviour {
     Destructible destructible;
 
     public bool SpawnParticles = true;
+    [HideInInspector]
+    public bool Unused = false;
 
     private void Awake()
     {

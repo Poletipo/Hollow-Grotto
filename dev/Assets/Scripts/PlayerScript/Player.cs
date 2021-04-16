@@ -114,7 +114,7 @@ public class Player : MonoBehaviour {
                 InRangeState = InRange.Destructible;
             }
             else if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactible")) {
-                InRangeState = InRange.Destructible;
+                InRangeState = InRange.Interactible;
             }
         }
         else {
