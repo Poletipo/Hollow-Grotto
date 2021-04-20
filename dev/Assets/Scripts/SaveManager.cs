@@ -48,11 +48,15 @@ public static class SaveManager {
     public static void DeleteWorld()
     {
 
-        string[] chunks = Directory.GetFiles(chunkDirectory);
+        if (Directory.Exists(chunkDirectory)) {
 
-        for (int i = 0; i < chunks.Length; i++) {
-            File.Delete(chunks[i]);
+            string[] chunks = Directory.GetFiles(chunkDirectory);
+
+            for (int i = 0; i < chunks.Length; i++) {
+                File.Delete(chunks[i]);
+            }
         }
+
         File.Delete(worldPath);
         File.Delete(playerPath);
     }

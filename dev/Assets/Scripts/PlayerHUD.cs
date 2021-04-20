@@ -20,11 +20,34 @@ public class PlayerHUD : MonoBehaviour {
     public TextMeshProUGUI DigPercentTxt;
     public Image DigOverheatIcon;
 
+    [Header("Health UI")]
+    public CanvasGroup HealthPivot;
+    public Image HealthSliderFill;
+    public TextMeshProUGUI HealthPercentTxt;
+    public Material HealthRateMat;
+
+    [Header("DigSize UI")]
+    public CanvasGroup DigSizePivot;
+    public TextMeshProUGUI DigSizeTxt;
+
     private void Start()
     {
         player.OnDigPercentChange += OnDigPercentChange;
         player.OnDigOverheating += OnDigOverheating;
         player.OnInRangeChange += OnInRangeChange;
+        player.OnDigSizeChanged += OnDigSizeChanged;
+
+        player.health.OnChanged += OnHealthChanged;
+    }
+
+    private void OnDigSizeChanged(Player player)
+    {
+        DigSizeTxt.text = player.DigSize.ToString() + "m";
+    }
+
+    private void OnHealthChanged(Health health)
+    {
+
     }
 
     private void OnInRangeChange(Player player)
@@ -74,6 +97,7 @@ public class PlayerHUD : MonoBehaviour {
     private void Update()
     {
 
+        HealthRateMat.mainTextureOffset += Vector2.right * (0.5f * Time.deltaTime);
     }
 
 

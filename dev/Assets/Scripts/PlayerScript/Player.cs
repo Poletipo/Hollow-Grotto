@@ -18,6 +18,7 @@ public class Player : MonoBehaviour {
     public PlayerEvent OnDigPercentChange;
     public PlayerEvent OnDigOverheating;
     public PlayerEvent OnInRangeChange;
+    public PlayerEvent OnDigSizeChanged;
 
     [Header("Player Parameters")]
     public float range = 2.5f;
@@ -25,8 +26,9 @@ public class Player : MonoBehaviour {
     [Header("Animation")]
     public Animator animator;
 
+
+
     [Header("Dig Parameter")]
-    public float digSize = 2;
     public float digInterval = 0.5f;
     public float DigCooldownSpeed = 1.0f;
     public bool InfiniteDigging = false;
@@ -34,6 +36,18 @@ public class Player : MonoBehaviour {
     float digIntervalTimer = 0;
     bool canDig = true;
     private bool _isOverHeating = false;
+
+    [Header("Other Parameter")]
+    public Health health;
+    Vector2 moveInput;
+    [HideInInspector]
+    public FirstPersonCamera fps;
+    [HideInInspector]
+    public Camera cam;
+
+    MovementController mc;
+    Digger digger;
+
 
     RaycastHit hit;
 
@@ -73,23 +87,26 @@ public class Player : MonoBehaviour {
         set { _playerEnabled = value; }
     }
 
-    Vector2 moveInput;
-    [HideInInspector]
-    public FirstPersonCamera fps;
+    private float _digSize = 4;
 
-    MovementController mc;
-    public Camera cam;
-    Digger digger;
-
+    public float DigSize {
+        get { return _digSize; }
+        set {
+            _digSize = Mathf.Clamp(value, 1.5f, 8.0f);
+            digger.DigSize = _digSize;
+            OnDigSizeChanged?.Invoke(this);
+        }
+    }
 
     private void Awake()
     {
         mc = GetComponent<MovementController>();
         cam = Camera.main;
+        health = GetComponent<Health>();
         fps = cam.GetComponent<FirstPersonCamera>();
         digger = GetComponent<Digger>();
 
-        digger.DigSize = digSize;
+        digger.DigSize = DigSize;
     }
 
     private void Start()
@@ -133,6 +150,13 @@ public class Player : MonoBehaviour {
     void PlayerInput()
     {
         if (PlayerEnabled) {
+
+            float sw = Input.GetAxis("Mouse ScrollWheel");
+
+            if (sw != 0) {
+                DigSize += 5f * sw;
+            }
+
             moveInput.x = Input.GetAxisRaw("Horizontal");
             moveInput.y = Input.GetAxisRaw("Vertical");
             mc.InputMove = moveInput;
@@ -156,7 +180,7 @@ public class Player : MonoBehaviour {
         if (InRangeState == InRange.Destructible) {
             digger.Dig(hit.point);
             Instantiate(Rocks, hit.point, Quaternion.LookRotation(hit.normal, Vector3.up));
-            DigPercent += 10;
+            DigPercent += DigSize * 2.5f;
         }
         if (DigPercent >= 100) {
             IsOverHeating = true;

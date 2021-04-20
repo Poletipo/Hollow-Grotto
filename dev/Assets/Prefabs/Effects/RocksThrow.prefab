@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2748197038174769858}
   - component: {fileID: 6843831523001048143}
   - component: {fileID: 3888292785603370961}
+  - component: {fileID: 8905642024210181858}
   m_Layer: 0
   m_Name: RocksThrow
   m_TagString: Untagged
@@ -40,7 +41,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9154984666984268171}
   serializedVersion: 6
-  lengthInSec: 1.74
+  lengthInSec: 0.71
   simulationSpeed: 1.5
   stopAction: 0
   cullingMode: 0
@@ -114,9 +115,9 @@ ParticleSystem:
     enabled: 1
     startLifetime:
       serializedVersion: 2
-      minMaxState: 0
-      scalar: 1.35
-      minScalar: 5
+      minMaxState: 3
+      scalar: 0.88
+      minScalar: 0.52
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -4812,3 +4813,15 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &8905642024210181858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9154984666984268171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70d198c219ddbdc49b95ad6fdd2c4f99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 5424882966849008607}
   - component: {fileID: 5424882966849008602}
   - component: {fileID: 5424882966849008606}
+  - component: {fileID: 7884905681495985641}
   - component: {fileID: 5424882966849008603}
   - component: {fileID: 5424882966849008612}
   - component: {fileID: 979507925}
@@ -328,6 +329,22 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7884905681495985641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5424882966849008605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 107c6cff20e95e849830f574492dd4d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHp: 100
+  hp: 100
+  InvincibleTime: 1
+  IsInvincible: 0
 --- !u!114 &5424882966849008603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,6 +387,7 @@ MonoBehaviour:
   DigCooldownSpeed: 20
   InfiniteDigging: 0
   Rocks: {fileID: 9154984666984268171, guid: 887f33a6a2364974e8fbf87c18eda7f3, type: 3}
+  health: {fileID: 0}
   fps: {fileID: 0}
   cam: {fileID: 0}
 --- !u!114 &979507925
