@@ -5,23 +5,32 @@ public class MovementController : MonoBehaviour {
 
     public enum MovementState {
         Idle,
-        Walking,
-        Running,
-        Falling,
-        Jumping
+        Moving,
+        Sliping,
+        Jumping,
+        Falling
     }
-
-    public MovementState MoveState;
 
     public delegate void MovementEvent(MovementController movementController);
     public MovementEvent OnIdle;
-    public MovementEvent OnWalking;
-    public MovementEvent OnRunning;
+    public MovementEvent OnMoving;
+    public MovementEvent OnSliping;
     public MovementEvent OnFalling;
     public MovementEvent OnLanding;
     public MovementEvent OnJumping;
 
+    private MovementState _moveState = MovementState.Idle;
 
+    public MovementState MoveState {
+        get { return _moveState; }
+        set {
+            _moveState = value;
+        }
+    }
+
+    public Vector3 Velocity { get; set; }
+
+    float changeStateTimer = 0;
 
     [SerializeField, Range(0f, 100f)]
     float maxSpeed = 10f;
@@ -56,18 +65,24 @@ public class MovementController : MonoBehaviour {
     float dotMaxGroundAngle;
 
     bool onGround;
-    bool desiredJump;
+    bool isJumping = false;
 
     Rigidbody rb;
     private int groundContactCount;
     private int steepContactCount;
 
+<<<<<<< Updated upstream
     bool jumped = false;
+=======
+    private Vector3 prevPosition;
+
+>>>>>>> Stashed changes
     float fallingTimer = 0;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        prevPosition = transform.position;
     }
 
     // Start is called before the first frame update
@@ -75,7 +90,6 @@ public class MovementController : MonoBehaviour {
     {
         dotMaxGroundAngle = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
     }
-
 
     void ClearState()
     {
@@ -85,16 +99,61 @@ public class MovementController : MonoBehaviour {
         steepNormal = contactNormal = Vector3.zero;
     }
 
+
     // Update is called once per frame
     void Update()
     {
         UpdateMove();
         UpdateJump();
 
+        changeStateTimer += Time.deltaTime;
+    }
 
 
+    private void UpdateState()
+    {
 
+        Velocity = (transform.position - prevPosition) / Time.fixedDeltaTime;
+        prevPosition = transform.position;
+        if (onGround) {
+            if (MoveState == MovementState.Jumping || MoveState == MovementState.Falling) {
+                OnLanding?.Invoke(this);
+            }
 
+            if (Velocity.magnitude > 0.1f && MoveState != MovementState.Moving) {
+                MoveState = MovementState.Moving;
+                OnMoving?.Invoke(this);
+            }
+            else if (Velocity.magnitude <= 0.1f && MoveState != MovementState.Idle) {
+                MoveState = MovementState.Idle;
+                OnIdle?.Invoke(this);
+            }
+            changeStateTimer = 0;
+        }
+        else if (!onGround && steepContactCount > 0) {
+            if (MoveState != MovementState.Sliping) {
+                MoveState = MovementState.Sliping;
+                OnSliping?.Invoke(this);
+            }
+            changeStateTimer = 0;
+        }
+        else if (!onGround && steepContactCount <= 0) {
+            if (Velocity.y < 0.5f && MoveState != MovementState.Falling) {
+                changeStateTimer += Time.fixedDeltaTime;
+                if (changeStateTimer >= 0.5f) {
+                    MoveState = MovementState.Falling;
+                    OnFalling?.Invoke(this);
+                    changeStateTimer = 0;
+                }
+            }
+            else {
+                changeStateTimer = 0;
+            }
+            if (Velocity.y >= 0.5f && MoveState != MovementState.Jumping && isJumping) {
+                MoveState = MovementState.Jumping;
+                OnJumping?.Invoke(this);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -109,6 +168,7 @@ public class MovementController : MonoBehaviour {
         Move();
 
         rb.velocity = velocity;
+        UpdateState();
         ClearState();
     }
 
@@ -130,7 +190,11 @@ public class MovementController : MonoBehaviour {
     void Jump()
     {
         if (onGround) {
+<<<<<<< Updated upstream
             jumped = true;
+=======
+            isJumping = true;
+>>>>>>> Stashed changes
             float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * jumpHeight);
             velocity.y += Mathf.Max(jumpSpeed - velocity.y, 0f);
         }
@@ -186,20 +250,6 @@ public class MovementController : MonoBehaviour {
         }
     }
 
-
-    //private void Move() {
-    //    float acceleration = onGround ? maxAcceleration : maxAirAcceleration;
-    //    float maxSpeedChange = acceleration * Time.deltaTime;
-
-    //    velocity.x = Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
-    //    velocity.z = Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxSpeedChange);
-
-    //    //if (onGround) {
-    //    //    velocity += Physics.gravity;
-    //    //}
-
-    //}
-
     private void OnCollisionEnter(Collision collision)
     {
         EvaluateCollisions(collision);
@@ -211,8 +261,6 @@ public class MovementController : MonoBehaviour {
 
     private void EvaluateCollisions(Collision collision)
     {
-
-
         for (int i = 0; i < collision.contactCount; i++) {
 
             Vector3 normal = collision.GetContact(i).normal;
@@ -228,7 +276,6 @@ public class MovementController : MonoBehaviour {
             }
         }
 
-
         if (groundContactCount <= 0 && steepContactCount > 0) {
             steepNormal.Normalize();
             float dotValue = Vector3.Dot(transform.up, steepNormal);
@@ -240,6 +287,9 @@ public class MovementController : MonoBehaviour {
         }
 
         onGround = groundContactCount > 0;
+        if (onGround) {
+            isJumping = false;
+        }
 
         if (onGround && rb.velocity.y <= -1 && fallingTimer > 0.5f) {
             rb.velocity /= Mathf.Abs(rb.velocity.y);

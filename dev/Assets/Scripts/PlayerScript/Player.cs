@@ -7,7 +7,38 @@ public class Player : MonoBehaviour {
         Digging
     }
 
+<<<<<<< Updated upstream
 
+=======
+    public enum InRange {
+        Nothing,
+        Destructible,
+        Interactible
+    }
+
+    public delegate void PlayerEvent(Player player);
+
+    public PlayerEvent OnDigging;
+    public PlayerEvent OnDigPercentChange;
+    public PlayerEvent OnDigOverheating;
+    public PlayerEvent OnInRangeChange;
+    public PlayerEvent OnDigSizeChanged;
+
+    [Header("Player Parameters")]
+    public float range = 2.5f;
+
+    [Header("Dig Parameter")]
+    public float digInterval = 0.5f;
+    public float DigCooldownSpeed = 1.0f;
+    public bool InfiniteDigging = false;
+    public GameObject Rocks;
+    float digIntervalTimer = 0;
+    bool canDig = true;
+    private bool _isOverHeating = false;
+
+    [Header("Other Parameter")]
+    public Health health;
+>>>>>>> Stashed changes
     Vector2 moveInput;
     [HideInInspector]
     public FirstPersonCamera fps;
@@ -62,12 +93,19 @@ public class Player : MonoBehaviour {
         }
     }
 
-
     void Dig()
     {
+<<<<<<< Updated upstream
         RaycastHit hit;
         Debug.DrawRay(cam.transform.position, cam.transform.forward * 2, Color.red, 20);
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 2.5f, LayerMask.GetMask("Destructible"))) {
+=======
+        digIntervalTimer = digInterval;
+        DigPercent += 2;
+
+        OnDigging?.Invoke(this);
+        if (InRangeState == InRange.Destructible) {
+>>>>>>> Stashed changes
             digger.Dig(hit.point);
             animator.Play("Armature|Dig");
         }
