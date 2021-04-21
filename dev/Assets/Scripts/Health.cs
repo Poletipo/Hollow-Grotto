@@ -10,8 +10,8 @@ public class Health : MonoBehaviour {
     public HealthEvent OnHeal;
     public HealthEvent OnDeath;
 
-    public int maxHp = 5;
-    public int hp = 5;
+    public int maxHp = 100;
+    public int hp = 100;
     public float InvincibleTime = 1;
     public bool IsInvincible = false;
 
@@ -39,7 +39,7 @@ public class Health : MonoBehaviour {
     {
         if (!IsInvincible) {
             if (InvincibleTimer < 0) {
-                this.hp -= hp;
+                this.hp = Mathf.Clamp((this.hp - hp), 0, maxHp);
                 OnHit?.Invoke(this);
                 OnChanged?.Invoke(this);
                 InvincibleTimer = InvincibleTime;

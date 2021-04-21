@@ -149,6 +149,12 @@ public class Player : MonoBehaviour {
 
     void PlayerInput()
     {
+
+        if (Input.GetKeyDown(KeyCode.Alpha7)) {
+            health.Hurt(10);
+        }
+
+
         if (PlayerEnabled) {
 
             float sw = Input.GetAxis("Mouse ScrollWheel");
@@ -208,6 +214,9 @@ public class Player : MonoBehaviour {
             Vector3 rot = new Vector3(0, 0, 0);
             rot.y = data.BodyRotation;
             fps.bodyRotation = rot;
+
+            DigSize = data.DigSize;
+            health.SetHealth(data.Health);
 
         }
     }

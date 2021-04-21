@@ -6,8 +6,11 @@ public class Player_Data {
     public float[] Position;
     public float BodyRotation;
     public float CamRotation;
+    public float DigSize;
+    public int Health;
 
-    public Player_Data(GameObject gameObject) {
+    public Player_Data(GameObject gameObject)
+    {
         Position = new float[3];
         Position[0] = gameObject.transform.position.x;
         Position[1] = gameObject.transform.position.y;
@@ -16,9 +19,12 @@ public class Player_Data {
 
         BodyRotation = gameObject.transform.rotation.eulerAngles.y;
 
-        FirstPersonCamera fps = gameObject.GetComponent<Player>().fps;
+        Player player = gameObject.GetComponent<Player>();
+        FirstPersonCamera fps = player.fps;
         CamRotation = fps.viewRotation.x;
 
+        DigSize = player.DigSize;
+        Health = player.health.hp;
     }
 
 }

@@ -21,10 +21,14 @@ public class PlayerHUD : MonoBehaviour {
     public Image DigOverheatIcon;
 
     [Header("Health UI")]
+    public Gradient HealthTxtColor;
     public CanvasGroup HealthPivot;
     public Image HealthSliderFill;
-    public TextMeshProUGUI HealthPercentTxt;
-    public Material HealthRateMat;
+    public TextMeshProUGUI HealthTxt;
+    public GameObject HealthRate;
+    public Sprite FlatLine;
+    public Vector2 HeartRateSpeedMinMax;
+    private float HeartRateSpeed;
 
     [Header("DigSize UI")]
     public CanvasGroup DigSizePivot;
@@ -38,6 +42,9 @@ public class PlayerHUD : MonoBehaviour {
         player.OnDigSizeChanged += OnDigSizeChanged;
 
         player.health.OnChanged += OnHealthChanged;
+
+
+        HeartRateSpeed = HeartRateSpeedMinMax.y;
     }
 
     private void OnDigSizeChanged(Player player)
@@ -47,6 +54,15 @@ public class PlayerHUD : MonoBehaviour {
 
     private void OnHealthChanged(Health health)
     {
+        float healthPercent = health.hp / (health.maxHp * 1.0f);
+        HeartRateSpeed = Mathf.Lerp(HeartRateSpeedMinMax.x, HeartRateSpeedMinMax.y, healthPercent);
+
+        HealthTxt.text = (healthPercent * 100).ToString();
+        HealthTxt.color = HealthTxtColor.Evaluate(healthPercent);
+
+        if (healthPercent <= 0) {
+            HealthRate.GetComponent<Image>().sprite = FlatLine;
+        }
 
     }
 
@@ -93,11 +109,17 @@ public class PlayerHUD : MonoBehaviour {
         DigPivot.alpha = 0;
     }
 
-
+    float offset = 0;
     private void Update()
     {
 
-        HealthRateMat.mainTextureOffset += Vector2.right * (0.5f * Time.deltaTime);
+        offset += HeartRateSpeed * Time.deltaTime;
+
+        if (offset > 1) {
+            offset = 1 - offset;
+        }
+
+        HealthRate.GetComponent<Image>().material.mainTextureOffset = Vector2.right * offset;
     }
 
 

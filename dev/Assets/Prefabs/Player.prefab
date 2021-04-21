@@ -343,7 +343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHp: 100
   hp: 100
-  InvincibleTime: 1
+  InvincibleTime: 0
   IsInvincible: 0
 --- !u!114 &5424882966849008603
 MonoBehaviour:
@@ -382,7 +382,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   range: 2.5
   animator: {fileID: 1017493688}
-  digSize: 4
   digInterval: 0.22
   DigCooldownSpeed: 20
   InfiniteDigging: 0
