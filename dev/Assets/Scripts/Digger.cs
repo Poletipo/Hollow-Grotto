@@ -40,9 +40,8 @@ public class Digger : MonoBehaviour {
             foreach (GameObject item in GameManager.Instance.ListDestructible) {
                 boxBound.center = digPostion;
                 boxBound.size = Vector3.one * DigSize;
-                if (boxBound.Intersects(item.GetComponent<Collider>().bounds)) {
-
-                    Destructible dest = item.GetComponent<Destructible>();
+                Destructible dest = item.GetComponent<Destructible>();
+                if (boxBound.Intersects(dest.Bound)) {
 
                     Vector3 hitPos = item.transform.InverseTransformPoint(digPostion);
                     boxBound.center = hitPos;
@@ -64,9 +63,8 @@ public class Digger : MonoBehaviour {
             foreach (GameObject item in GameManager.Instance.ListDestructible) {
                 boxBound.center = digPostion;
                 boxBound.size = Vector3.one * DigSize;
-                if (boxBound.Intersects(item.GetComponent<Collider>().bounds)) {
-
-                    Destructible dest = item.GetComponent<Destructible>();
+                Destructible dest = item.GetComponent<Destructible>();
+                if (boxBound.Intersects(dest.Bound)) {
                     Vector3 hitPos = item.transform.InverseTransformPoint(digPostion);
                     boxBound.center = hitPos;
                     Vector3 size = new Vector3(1 / item.transform.localScale.x, 1 / item.transform.localScale.y,

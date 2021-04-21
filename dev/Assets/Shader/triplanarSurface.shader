@@ -19,6 +19,8 @@ Shader "Custom/triplanarSurface"
 			Tags { "RenderType" = "Opaque" }
 			LOD 200
 
+			//CULL Front
+
 			CGPROGRAM
 			// Physically based Standard lighting model, and enable shadows on all light types
 			#pragma surface surf Standard vertex:vert fullforwardshadows addshadow
@@ -67,12 +69,12 @@ Shader "Custom/triplanarSurface"
 			{
 
 
-				float3 dpdx = ddx(IN.worldPos);
-				float3 dpdy = ddy(IN.worldPos);
+				//float3 dpdx = ddx(IN.worldPos);
+				//float3 dpdy = ddy(IN.worldPos);
 
-				half3 _objNormal = normalize(cross(dpdy, dpdx));
-				//o.Normal = normalize(cross(dpdy, dpdx));
-				o.Normal = WorldNormalVector(IN, _objNormal);
+				//half3 _objNormal = normalize(cross(dpdy, dpdx));
+				////o.Normal = normalize(cross(dpdy, dpdx));
+				//o.Normal = WorldNormalVector(IN, _objNormal);
 
 
 				// use absolute value of normal as texture weights

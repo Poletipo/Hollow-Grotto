@@ -1,20 +1,23 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
 public class Destructible : MonoBehaviour {
-    MeshFilter MeshFilter;
+    MeshFilter meshFilter;
     MeshCollider MeshCollider;
     public bool isModified = false;
+    public Mesh mesh;
 
     public delegate void DestructibleEvent(Destructible destructible);
 
-    public DestructibleEvent OnNotColliding;
+    public DestructibleEvent OnMeshUpdate;
 
     public Utilities.Point[] GridPoints;
+
+    public Bounds Bound;
 
     public float Threshold = 0;
     public int nbVoxelPerAxis = 5;
     public int nbPoint { get; private set; }
-    bool colliding = true;
 
     private void Awake()
     {
@@ -30,7 +33,7 @@ public class Destructible : MonoBehaviour {
 
     void Initialize()
     {
-        MeshFilter = GetComponent<MeshFilter>();
+        meshFilter = GetComponent<MeshFilter>();
         MeshCollider = GetComponent<MeshCollider>();
         nbPoint = (int)Mathf.Pow((nbVoxelPerAxis + 1), 3);
         GridPoints = new Utilities.Point[nbPoint];
@@ -38,26 +41,21 @@ public class Destructible : MonoBehaviour {
 
     public void UpdateMesh()
     {
-        MeshFilter.mesh = null;
+        meshFilter.mesh = null;
         MeshCollider.sharedMesh = null;
-        Mesh mesh = GameManager.Instance.MeshGenerator.GenerateMesh(GridPoints, Threshold, nbVoxelPerAxis);
-
-        mesh.RecalculateBounds();
-        //NormalSolver.RecalculateNormals(mesh, 0);
+        mesh = GameManager.Instance.MeshGenerator.GenerateMesh(GridPoints, Threshold, nbVoxelPerAxis);
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
-        MeshFilter.mesh = mesh;
+        meshFilter.mesh = mesh;
         MeshCollider.sharedMesh = mesh;
+        OnMeshUpdate?.Invoke(this);
     }
 
-    private void OnCollisionStay(Collision collision)
+    public void UpdateBound()
     {
-        if (collision.contactCount == 0 && colliding) {
-            OnNotColliding?.Invoke(this);
-            colliding = false;
-        }
+        float boundSize = GridPoints[(nbPoint - 1)].pos.x - GridPoints[0].pos.x;
+        Bound = new Bounds(Vector3.one * boundSize / 2 + transform.position, Vector3.one * boundSize);
+
     }
-
-
 
 }

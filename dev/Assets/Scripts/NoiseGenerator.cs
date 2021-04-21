@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-public class NoiseGenerator : MonoBehaviour
-{
+public class NoiseGenerator : MonoBehaviour {
 
     public ComputeShader gridNoiseShader;
 
@@ -16,22 +14,37 @@ public class NoiseGenerator : MonoBehaviour
     public float Persistence = 1;
     public Vector3 Offset;
     public Vector3 axesScale;
-
+    public float noiseMul = 10;
 
     public ChunkManager ChunkManager;
 
-    public float GetValue(Vector3 pos) {
-        //float value = 0.0f;
-        //return Random.Range(0.0f, 1.0f);
+    private void Awake()
+    {
+        if (SaveManager.SaveExist()) {
+            World_Data data = SaveManager.LoadWorld();
+            Seed = data.Seed;
+        }
+        else {
+            Seed = RandomSeed();
+        }
+        SetSeed();
+    }
 
-        float noiseY = Mathf.PerlinNoise((pos.x + pos.z)  * Scale, (pos.y + pos.x)  * Scale) / 2;
-        float noiseZ = Mathf.PerlinNoise((pos.x + pos.y)  * Scale, (pos.z + pos.y)  * Scale) / 2;
 
-        return noiseY + noiseZ;
+    public void SetSeed()
+    {
+        UnityEngine.Random.InitState(Seed);
+        Scale = UnityEngine.Random.Range(0.04f, 0.1f);
+        Persistence = UnityEngine.Random.Range(0.1f, 0.2f);
+        axesScale.x = UnityEngine.Random.Range(0.8f, 2.0f);
+        axesScale.z = UnityEngine.Random.Range(0.8f, 2.0f);
+        axesScale.y = UnityEngine.Random.Range(0.8f, 2.0f);
+        noiseMul = UnityEngine.Random.Range(4, 10f);
     }
 
     // https://www.youtube.com/c/SebastianLague/featured
-    public Vector3[] SeedValues() {
+    public Vector3[] SeedValues()
+    {
         var prng = new System.Random(Seed);
         var offsets = new Vector3[Octaves];
         float offsetRange = 1000;
@@ -40,5 +53,12 @@ public class NoiseGenerator : MonoBehaviour
         }
         return offsets;
     }
+
+
+    public int RandomSeed()
+    {
+        return (int)DateTime.Now.Ticks;
+    }
+
 
 }

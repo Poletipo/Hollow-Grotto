@@ -4,31 +4,41 @@
 [RequireComponent(typeof(Destructible))]
 public class Chunk : MonoBehaviour {
     public Vector3Int Coordonnate;
-    bool IsModified = false;
-
     ChunkManager ChunkManager;
     Destructible destructible;
+
+    public bool SpawnParticles = true;
+    [HideInInspector]
+    public bool Unused = false;
 
     private void Awake()
     {
         ChunkManager = GameManager.Instance.ChunkManager;
         destructible = GetComponent<Destructible>();
+
+        destructible.OnMeshUpdate += OnMeshUpdate;
+
         destructible.Setup(ChunkManager.Threshold, ChunkManager.GridResolution);
         Init(Coordonnate);
     }
 
-    public void Init(Vector3Int pos)
+
+    private void OnMeshUpdate(Destructible destructible)
     {
 
+    }
+
+    public void Init(Vector3Int pos)
+    {
         Coordonnate = pos;
         gameObject.name = "Chunk" + Coordonnate;
 
         transform.position = Coordonnate * ChunkManager.ChunkSize;
         CreateChunkGrid();
+
     }
     public void Init(Vector3Int pos, float[] gridPoints)
     {
-
         Coordonnate = pos;
         gameObject.name = "Chunk" + Coordonnate;
 
@@ -38,6 +48,11 @@ public class Chunk : MonoBehaviour {
             destructible.GridPoints[i].val = gridPoints[i];
         }
         destructible.UpdateMesh();
+    }
+
+    public void ResetChunk()
+    {
+
     }
 
     void CreateChunkGrid()
@@ -61,6 +76,7 @@ public class Chunk : MonoBehaviour {
         gridNoiseShader.SetFloat("noiseScale", ChunkManager.NoiseGenerator.Scale);
         gridNoiseShader.SetFloat("octaves", ChunkManager.NoiseGenerator.Octaves);
         gridNoiseShader.SetFloat("persistence", ChunkManager.NoiseGenerator.Persistence);
+        gridNoiseShader.SetFloat("noiseMulValue", ChunkManager.NoiseGenerator.noiseMul);
         gridNoiseShader.SetInt("numPointsPerAxis", ChunkManager.GridResolution + 1);
         gridNoiseShader.SetVector("noiseOffset", ChunkManager.NoiseGenerator.Offset);
         gridNoiseShader.SetVector("axesSize", ChunkManager.NoiseGenerator.axesScale);
@@ -72,13 +88,9 @@ public class Chunk : MonoBehaviour {
 
         pointsBuffer.GetData(destructible.GridPoints);
         destructible.UpdateMesh();
+        destructible.UpdateBound();
         pointsBuffer.Release();
         offsetsBuffer.Release();
-    }
-
-    private void Update()
-    {
-
     }
 
     public void SaveChunk()
