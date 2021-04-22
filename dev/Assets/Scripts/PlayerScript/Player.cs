@@ -32,6 +32,7 @@ public class Player : MonoBehaviour {
     float digIntervalTimer = 0;
     bool canDig = true;
     private bool _isOverHeating = false;
+    float DigSizeClick;
 
     [Header("Other Parameter")]
     public Health health;
@@ -109,6 +110,7 @@ public class Player : MonoBehaviour {
     private void Start()
     {
         LoadPlayer();
+        DigSizeClick = DigSize;
     }
 
     // Update is called once per frame
@@ -144,6 +146,8 @@ public class Player : MonoBehaviour {
 
     }
 
+
+
     void PlayerInput()
     {
 
@@ -156,13 +160,15 @@ public class Player : MonoBehaviour {
             float sw = Input.GetAxis("Mouse ScrollWheel");
 
             if (sw != 0) {
-                DigSize += 5f * sw;
+                DigSizeClick = Mathf.Clamp(DigSizeClick + 0.5f * sw, 1.5f, 8f);
+                DigSize = Mathf.Floor(DigSizeClick * 10) / 10.0f;
             }
 
             moveInput.x = Input.GetAxisRaw("Horizontal");
             moveInput.y = Input.GetAxisRaw("Vertical");
             mc.InputMove = moveInput;
             mc.InputJump |= Input.GetButton("Jump");
+
             mc.InputSprint = Input.GetButton("Sprint");
             if (Input.GetButton("Fire1")) {
                 if (digIntervalTimer <= 0 && !IsOverHeating) {
