@@ -92,14 +92,14 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!95 &1017493688
+--- !u!95 &1275241713527679978
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4064748556672234297}
+  m_GameObject: {fileID: 3740776211468801882}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: c91a2038de7262941b9e8c02df9d1fa4, type: 2}
@@ -142,7 +142,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4466377298928914772}
-  - {fileID: 1023366729489449258}
+  - {fileID: 410586220444427593}
   m_Father: {fileID: 5424882966849008601}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -229,6 +229,7 @@ GameObject:
   - component: {fileID: 5424882966849008603}
   - component: {fileID: 5424882966849008612}
   - component: {fileID: 979507925}
+  - component: {fileID: 7252575557596878612}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -357,7 +358,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e6ac44c0cc2abd4183dc228e548e006, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveState: 0
   maxSpeed: 3
   maxSprintSpeed: 5
   maxAcceleration: 7.8
@@ -381,7 +381,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 2.5
-  animator: {fileID: 1017493688}
   digInterval: 0.22
   DigCooldownSpeed: 20
   InfiniteDigging: 0
@@ -402,6 +401,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DiggingShape: 1
+--- !u!114 &7252575557596878612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5424882966849008605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d7a60259ffd97a4fad29be952784a94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1275241713527679978}
 --- !u!1 &7216734394664135738
 GameObject:
   m_ObjectHideFlags: 0
@@ -494,7 +506,7 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!1001 &5424882966456543792
+--- !u!1001 &4667986732432166483
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -561,22 +573,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rigged_Hands
       objectReference: {fileID: 0}
-    - target: {fileID: 2542210109152263593, guid: 1955291689888e24987a67c343bbc7c1,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 6bab318ffd89cb240a2354edcc3fe067, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1955291689888e24987a67c343bbc7c1, type: 3}
---- !u!1 &4064748556672234297 stripped
+--- !u!1 &3740776211468801882 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 1955291689888e24987a67c343bbc7c1,
     type: 3}
-  m_PrefabInstance: {fileID: 5424882966456543792}
+  m_PrefabInstance: {fileID: 4667986732432166483}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1023366729489449258 stripped
+--- !u!4 &410586220444427593 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 1955291689888e24987a67c343bbc7c1,
     type: 3}
-  m_PrefabInstance: {fileID: 5424882966456543792}
+  m_PrefabInstance: {fileID: 4667986732432166483}
   m_PrefabAsset: {fileID: 0}

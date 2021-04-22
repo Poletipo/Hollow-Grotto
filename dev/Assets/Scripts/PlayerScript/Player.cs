@@ -15,6 +15,7 @@ public class Player : MonoBehaviour {
 
     public delegate void PlayerEvent(Player player);
 
+    public PlayerEvent OnDigging;
     public PlayerEvent OnDigPercentChange;
     public PlayerEvent OnDigOverheating;
     public PlayerEvent OnInRangeChange;
@@ -22,11 +23,6 @@ public class Player : MonoBehaviour {
 
     [Header("Player Parameters")]
     public float range = 2.5f;
-
-    [Header("Animation")]
-    public Animator animator;
-
-
 
     [Header("Dig Parameter")]
     public float digInterval = 0.5f;
@@ -182,7 +178,7 @@ public class Player : MonoBehaviour {
         digIntervalTimer = digInterval;
         DigPercent += 2;
 
-        animator.Play("Armature|Dig");
+        OnDigging?.Invoke(this);
         if (InRangeState == InRange.Destructible) {
             digger.Dig(hit.point);
             Instantiate(Rocks, hit.point, Quaternion.LookRotation(hit.normal, Vector3.up));
