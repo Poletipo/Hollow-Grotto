@@ -279,7 +279,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -2609809028551464901, guid: 0228c102a860f314093cc763ebc0d33c, type: 3}
+  - {fileID: 2100000, guid: b46e0b5cccba336438865e70e0e1610e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -573,6 +573,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rigged_Hands
       objectReference: {fileID: 0}
+    - target: {fileID: 2542210109152263593, guid: 1955291689888e24987a67c343bbc7c1,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: b46e0b5cccba336438865e70e0e1610e, type: 2}
+    - target: {fileID: 2542210109152263593, guid: 1955291689888e24987a67c343bbc7c1,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6bab318ffd89cb240a2354edcc3fe067, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1955291689888e24987a67c343bbc7c1, type: 3}
 --- !u!1 &3740776211468801882 stripped

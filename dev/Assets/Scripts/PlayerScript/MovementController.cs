@@ -53,6 +53,7 @@ public class MovementController : MonoBehaviour {
     public bool InputJump { get; set; }
     public bool InputSprint { get; set; }
     public Vector3 InputMove { get; set; }
+    public float FallingSpeed { get; private set; }
 
     Vector3 velocity;
     Vector3 desiredVelocity;
@@ -107,9 +108,9 @@ public class MovementController : MonoBehaviour {
 
     private void UpdateState()
     {
-
         Velocity = (transform.position - prevPosition) / Time.fixedDeltaTime;
         prevPosition = transform.position;
+
         if (onGround) {
             if (MoveState == MovementState.Jumping || MoveState == MovementState.Falling) {
                 OnLanding?.Invoke(this);
@@ -124,13 +125,20 @@ public class MovementController : MonoBehaviour {
                 OnIdle?.Invoke(this);
             }
             changeStateTimer = 0;
+            FallingSpeed = 0;
         }
         else if (!onGround && steepContactCount > 0) {
+
+            if (MoveState == MovementState.Jumping || MoveState == MovementState.Falling) {
+                OnLanding?.Invoke(this);
+            }
+
             if (MoveState != MovementState.Sliping) {
                 MoveState = MovementState.Sliping;
                 OnSliping?.Invoke(this);
             }
             changeStateTimer = 0;
+            FallingSpeed = 0;
         }
         else if (!onGround && steepContactCount <= 0) {
             if (Velocity.y < 0.5f && MoveState != MovementState.Falling) {
@@ -147,6 +155,11 @@ public class MovementController : MonoBehaviour {
             if (Velocity.y >= 0.5f && MoveState != MovementState.Jumping && isJumping) {
                 MoveState = MovementState.Jumping;
                 OnJumping?.Invoke(this);
+            }
+
+
+            if (FallingSpeed > Velocity.y) {
+                FallingSpeed = Velocity.y;
             }
         }
     }

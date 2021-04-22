@@ -97,6 +97,7 @@ public class Player : MonoBehaviour {
     private void Awake()
     {
         mc = GetComponent<MovementController>();
+        mc.OnLanding += OnLanding;
         cam = Camera.main;
         health = GetComponent<Health>();
         fps = cam.GetComponent<FirstPersonCamera>();
@@ -150,7 +151,6 @@ public class Player : MonoBehaviour {
             health.Hurt(10);
         }
 
-
         if (PlayerEnabled) {
 
             float sw = Input.GetAxis("Mouse ScrollWheel");
@@ -169,9 +169,13 @@ public class Player : MonoBehaviour {
                     Dig();
                 }
             }
+
+            if (Input.GetButtonDown("Heal")) {
+                Heal();
+            }
+
         }
     }
-
 
     void Dig()
     {
@@ -186,6 +190,18 @@ public class Player : MonoBehaviour {
         }
         if (DigPercent >= 100) {
             IsOverHeating = true;
+        }
+    }
+
+    private void Heal()
+    {
+        health.Heal(10);
+    }
+
+    private void OnLanding(MovementController movementController)
+    {
+        if (movementController.FallingSpeed <= -20) {
+            health.Hurt((int)(-(movementController.FallingSpeed) - 10));
         }
     }
 
