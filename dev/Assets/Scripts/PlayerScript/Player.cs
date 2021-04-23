@@ -20,6 +20,8 @@ public class Player : MonoBehaviour {
     public PlayerEvent OnDigOverheating;
     public PlayerEvent OnInRangeChange;
     public PlayerEvent OnDigSizeChanged;
+    public PlayerEvent OnListenSonar;
+    public PlayerEvent OnStopListenSonar;
 
     [Header("Player Parameters")]
     public float range = 2.5f;
@@ -179,6 +181,15 @@ public class Player : MonoBehaviour {
             if (Input.GetButtonDown("Heal")) {
                 Heal();
             }
+
+            if (Input.GetButtonDown("Sonar")) {
+                OnListenSonar?.Invoke(this);
+            }
+            else if (Input.GetButtonUp("Sonar")) {
+                OnStopListenSonar?.Invoke(this);
+            }
+
+
 
         }
     }
