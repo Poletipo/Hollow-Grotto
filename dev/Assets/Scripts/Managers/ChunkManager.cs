@@ -183,10 +183,7 @@ public class ChunkManager : MonoBehaviour {
         }
     }
 
-
-
-
-    void SaveModifiedChunks()
+    public void SaveModifiedChunks()
     {
         foreach (Chunk_Data data in ModifiedChunkList.Values) {
             SaveManager.SaveChunk(data);

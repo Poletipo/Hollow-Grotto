@@ -48,7 +48,7 @@ public class Player : MonoBehaviour {
     Digger digger;
 
 
-    RaycastHit hit;
+    public RaycastHit hit;
 
     public bool IsOverHeating {
         get { return _isOverHeating; }
@@ -73,8 +73,14 @@ public class Player : MonoBehaviour {
     public InRange InRangeState {
         get { return _inRangeState; }
         set {
-            OnInRangeChange?.Invoke(this);
+
+            InRange temp = InRangeState;
             _inRangeState = value;
+
+            if (temp != value) {
+                OnInRangeChange?.Invoke(this);
+            }
+
         }
     }
 
@@ -128,12 +134,17 @@ public class Player : MonoBehaviour {
             IsOverHeating = false;
         }
 
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range)) {
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range, ~LayerMask.NameToLayer("Object"))) {
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Destructible")) {
                 InRangeState = InRange.Destructible;
             }
             else if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactible")) {
-                InRangeState = InRange.Interactible;
+                if (hit.collider.GetComponent<Interactible>().Active) {
+                    InRangeState = InRange.Interactible;
+                }
+            }
+            else {
+                InRangeState = InRange.Nothing;
             }
         }
         else {
@@ -147,8 +158,6 @@ public class Player : MonoBehaviour {
         PlayerInput();
 
     }
-
-
 
     void PlayerInput()
     {
@@ -178,8 +187,8 @@ public class Player : MonoBehaviour {
                 }
             }
 
-            if (Input.GetButtonDown("Heal")) {
-                Heal();
+            if (Input.GetButtonDown("Interact") && InRangeState == InRange.Interactible) {
+                hit.collider.GetComponent<Interactible>().Interact();
             }
 
             if (Input.GetButtonDown("Sonar")) {
@@ -210,11 +219,6 @@ public class Player : MonoBehaviour {
         }
     }
 
-    private void Heal()
-    {
-        health.Heal(10);
-    }
-
     private void OnLanding(MovementController movementController)
     {
         if (movementController.FallingSpeed <= -20) {
@@ -222,7 +226,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    void SavePlayer()
+    public void SavePlayer()
     {
         SaveManager.SavePlayer(gameObject);
     }

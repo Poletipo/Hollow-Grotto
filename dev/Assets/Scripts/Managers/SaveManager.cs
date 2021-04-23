@@ -22,9 +22,7 @@ public static class SaveManager {
 
     public static void SaveWorld()
     {
-        // Create the Binary Formatter.
         BinaryFormatter bf = new BinaryFormatter();
-        // Stream the file with a File Stream. (Note that File.Create() 'Creates' or 'Overwrites' a file.)
         FileStream file = new FileStream(worldPath, FileMode.Create);
 
         World_Data data = new World_Data(GameManager.Instance.ChunkManager.NoiseGenerator);
@@ -47,7 +45,6 @@ public static class SaveManager {
 
     public static void DeleteWorld()
     {
-
         if (Directory.Exists(chunkDirectory)) {
 
             string[] chunks = Directory.GetFiles(chunkDirectory);
@@ -64,12 +61,9 @@ public static class SaveManager {
 
     public static void SaveChunk(GameObject gameObject)
     {
-
         string fileName = "/" + gameObject.name + ".dat";
         string path = Application.persistentDataPath + fileName;
-        // Create the Binary Formatter.
         BinaryFormatter bf = new BinaryFormatter();
-        // Stream the file with a File Stream. (Note that File.Create() 'Creates' or 'Overwrites' a file.)
         FileStream file = new FileStream(path, FileMode.Create);
 
         Chunk_Data data = new Chunk_Data(gameObject);

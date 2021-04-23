@@ -2,12 +2,31 @@
 using UnityEngine;
 
 public class Objective : MonoBehaviour {
+
     public ParticleSystem Sonar;
     public GameObject RobotHead;
     public ParticleSystem Smoke;
     public TextMeshProUGUI SaveTxt;
 
-    bool Fixed = false;
+    private bool _fixed = false;
+    public int healthRefill = 3;
+
+    public bool Fixed {
+        get { return _fixed; }
+        set {
+            if (value) {
+                _fixed = value;
+                FixObjective();
+            }
+        }
+    }
+
+    private void FixObjective()
+    {
+        Smoke.Stop();
+        GameManager.Instance.ChunkManager.GenerateObjectif();
+    }
+
     private GameObject player;
 
     private void Start()
@@ -16,7 +35,6 @@ public class Objective : MonoBehaviour {
         player.GetComponent<Player>().OnListenSonar += OnSonarOn;
         player.GetComponent<Player>().OnStopListenSonar += OnSonarOff;
     }
-
 
     private void Update()
     {

@@ -34,6 +34,10 @@ public class PlayerHUD : MonoBehaviour {
     public CanvasGroup DigSizePivot;
     public TextMeshProUGUI DigSizeTxt;
 
+    [Header("Interact UI")]
+    public CanvasGroup InteractPivot;
+    public TextMeshProUGUI InteractTxt;
+
     private void Start()
     {
         player.OnDigPercentChange += OnDigPercentChange;
@@ -70,12 +74,19 @@ public class PlayerHUD : MonoBehaviour {
     {
         if (player.InRangeState == Player.InRange.Nothing) {
             Reticule.color = NormalReticuleColor;
+            InteractPivot.alpha = 0;
         }
         else if (player.InRangeState == Player.InRange.Destructible) {
             Reticule.color = DigReticuleColor;
         }
         else if (player.InRangeState == Player.InRange.Interactible) {
             Reticule.color = InteractReticuleColor;
+
+            InteractPivot.alpha = 1;
+
+            if (player.hit.collider.GetComponent<Interactible>() != null) {
+                InteractTxt.text = player.hit.collider.GetComponent<Interactible>().Action.ToString();
+            }
         }
     }
 
