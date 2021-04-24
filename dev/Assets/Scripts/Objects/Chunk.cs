@@ -7,6 +7,7 @@ public class Chunk : MonoBehaviour {
     ChunkManager ChunkManager;
     Destructible destructible;
 
+    public GameObject stalagmite;
     public bool SpawnParticles = true;
     [HideInInspector]
     public bool Unused = false;

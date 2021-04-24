@@ -33,6 +33,7 @@ public class ChunkManager : MonoBehaviour {
         chunkHolder = GameObject.Find("ChunkHolder");
         if (!SaveManager.SaveExist()) {
             GeneratePlayerStart();
+            GenerateObjectif();
         }
     }
 
@@ -43,17 +44,6 @@ public class ChunkManager : MonoBehaviour {
         if (timer <= 0) {
             LoadChunks();
             timer = 0f;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha0)) {
-            SaveModifiedChunks();
-            SaveManager.SaveWorld();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha9)) {
-            SaveManager.DeleteWorld();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha8)) {
-            GenerateObjectif();
         }
     }
 

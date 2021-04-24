@@ -117,12 +117,12 @@ public static class SaveManager {
         }
     }
 
-    public static void SavePlayer(GameObject gameObject)
+    public static void SavePlayer()
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream fs = new FileStream(playerPath, FileMode.Create);
 
-        Player_Data data = new Player_Data(gameObject);
+        Player_Data data = new Player_Data(GameManager.Instance.Player);
 
         bf.Serialize(fs, data);
         fs.Close();

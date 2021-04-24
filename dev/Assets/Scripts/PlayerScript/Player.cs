@@ -151,10 +151,6 @@ public class Player : MonoBehaviour {
             InRangeState = InRange.Nothing;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha0)) {
-            SavePlayer();
-        }
-
         PlayerInput();
 
     }
@@ -226,10 +222,6 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void SavePlayer()
-    {
-        SaveManager.SavePlayer(gameObject);
-    }
     void LoadPlayer()
     {
         Player_Data data = SaveManager.LoadPlayer();

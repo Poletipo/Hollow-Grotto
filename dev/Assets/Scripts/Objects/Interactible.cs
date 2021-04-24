@@ -16,23 +16,30 @@ public class Interactible : MonoBehaviour {
     {
         if (Action == Interaction.Repair) {
             objective.Fixed = true;
-            Active = false;
-            GameManager.Instance.Player.GetComponent<Player>().InRangeState = Player.InRange.Nothing;
+            Deactivate();
         }
         else if (Action == Interaction.Heal) {
+            objective.HealthRefill--;
             GameManager.Instance.Player.GetComponent<Player>().health.Heal(10);
+            if (objective.HealthRefill <= 0) {
+                Deactivate();
+            }
         }
         else if (Action == Interaction.Save) {
             SaveManager.SaveWorld();
             GameManager.Instance.ChunkManager.SaveModifiedChunks();
-            GameManager.Instance.Player.GetComponent<Player>().SavePlayer();
-            GameManager.Instance.Player.GetComponent<Player>().InRangeState = Player.InRange.Nothing;
+            SaveManager.SavePlayer();
             objective.SaveTxt.text = "Game Saved!";
-            Active = false;
+            Deactivate();
+
             StartCoroutine(ReActivateSave());
         }
+    }
 
-        Debug.Log(Action);
+    private void Deactivate()
+    {
+        Active = false;
+        GameManager.Instance.Player.GetComponent<Player>().InRangeState = Player.InRange.Nothing;
     }
 
     IEnumerator ReActivateSave()

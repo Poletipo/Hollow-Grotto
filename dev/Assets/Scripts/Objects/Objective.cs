@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Objective : MonoBehaviour {
 
@@ -7,9 +8,23 @@ public class Objective : MonoBehaviour {
     public GameObject RobotHead;
     public ParticleSystem Smoke;
     public TextMeshProUGUI SaveTxt;
+    public Image HealthSlider;
+    public Light Light;
 
     private bool _fixed = false;
-    public int healthRefill = 3;
+    private int _healthRefill = 3;
+
+
+    public int HealthRefill {
+        get { return _healthRefill; }
+        set {
+
+            _healthRefill = value;
+
+            HealthSlider.fillAmount = _healthRefill / 3.0f;
+
+        }
+    }
 
     public bool Fixed {
         get { return _fixed; }
@@ -24,6 +39,7 @@ public class Objective : MonoBehaviour {
     private void FixObjective()
     {
         Smoke.Stop();
+        Light.color = new Color(0.3f, 0.8f, 1);
         GameManager.Instance.ChunkManager.GenerateObjectif();
     }
 
