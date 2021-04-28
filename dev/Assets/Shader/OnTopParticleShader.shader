@@ -8,11 +8,14 @@ Shader "Particles/Alpha Blended Foreground" {
 	}
 
 		Category{
-			Tags { "Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" "PreviewType" = "Plane" }
-			ZTest Always
+			Tags { "Queue" = "Transparent"
+			"IgnoreProjector" = "True"
+			"RenderType" = "Transparent"
+			"PreviewType" = "Plane" }
+
+			//ColorMask RGB
+			Cull Off Lighting Off ZTest Always ZWrite Off
 			Blend SrcAlpha OneMinusSrcAlpha
-			ColorMask RGB
-			Cull Off Lighting Off ZWrite Off
 
 			SubShader {
 				Pass {
@@ -55,10 +58,6 @@ Shader "Particles/Alpha Blended Foreground" {
 						UNITY_SETUP_INSTANCE_ID(v);
 						UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 						o.vertex = UnityObjectToClipPos(v.vertex);
-						#ifdef SOFTPARTICLES_ON
-						o.projPos = ComputeScreenPos(o.vertex);
-						COMPUTE_EYEDEPTH(o.projPos.z);
-						#endif
 						o.color = v.color * _TintColor;
 						o.texcoord = TRANSFORM_TEX(v.texcoord,_MainTex);
 						UNITY_TRANSFER_FOG(o,o.vertex);

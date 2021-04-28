@@ -208,7 +208,7 @@ public class Player : MonoBehaviour {
         if (InRangeState == InRange.Destructible) {
             digger.Dig(hit.point);
             Instantiate(Rocks, hit.point, Quaternion.LookRotation(hit.normal, Vector3.up));
-            DigPercent += DigSize * 2.5f;
+            DigPercent += DigSize * 2.25f;
         }
         if (DigPercent >= 100) {
             IsOverHeating = true;

@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
 public class MoleSuitMenu : MonoBehaviour {
-    Camera cam;
+    private Camera cam;
 
 
-    bool isSelected = false;
-    Vector3 suitRotation;
-    RaycastHit hit;
+    private bool isSelected = false;
+    private Vector3 suitRotation;
+    private RaycastHit hit;
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +23,6 @@ public class MoleSuitMenu : MonoBehaviour {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit, 10)) {
                 if (hit.collider.gameObject == gameObject) {
-                    Debug.Log("MOle SUIT");
                     isSelected = true;
                 }
             }
