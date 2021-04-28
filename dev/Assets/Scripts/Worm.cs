@@ -3,8 +3,8 @@
 public class Worm : MonoBehaviour {
 
     public Transform playerTransform;
-    float turnSpeed = 0.5f;
-    float speed = 8;
+    public float turnSpeed = 0.5f;
+    public float speed = 20;
 
     // Start is called before the first frame update
     void Start()

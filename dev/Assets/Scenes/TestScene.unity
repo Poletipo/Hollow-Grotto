@@ -291,7 +291,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 694859945}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.58, y: 3.31, z: 1.72}
+  m_LocalPosition: {x: -42.5, y: 3.31, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -516,6 +516,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 694859949}
+  turnSpeed: 0.5
+  speed: 20
 --- !u!136 &1867678221
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -586,7 +588,7 @@ Transform:
   m_GameObject: {fileID: 1867678219}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.69190216, y: 3.70088, z: -1.1020641}
-  m_LocalScale: {x: 1, y: 0.51222, z: 4.0570183}
+  m_LocalScale: {x: 20.028, y: 10.258742, z: 81.25396}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
