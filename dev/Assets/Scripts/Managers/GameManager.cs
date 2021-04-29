@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public GameObject Player { get; private set; }
+    public GameObject Worm { get; private set; }
     public ChunkManager ChunkManager { get; private set; }
     public MeshGenerator MeshGenerator { get; private set; }
     private List<GameObject> _listDestructible;
@@ -58,6 +59,7 @@ public class GameManager : MonoBehaviour {
         if (SceneManager.GetActiveScene().name == LevelManager.Level.MainScene.ToString()) {
 
             Player = GameObject.FindGameObjectWithTag("Player");
+            Worm = GameObject.FindGameObjectWithTag("Enemy");
             ChunkManager = FindObjectOfType<ChunkManager>().GetComponent<ChunkManager>();
             MeshGenerator = FindObjectOfType<MeshGenerator>().GetComponent<MeshGenerator>();
             ListDestructible = new List<GameObject>();

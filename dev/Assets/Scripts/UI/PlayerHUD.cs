@@ -6,6 +6,7 @@ public class PlayerHUD : MonoBehaviour {
 
     [Header("Player")]
     public Player player;
+    private GameObject worm;
 
     [Header("Reticule")]
     public Image Reticule;
@@ -38,6 +39,10 @@ public class PlayerHUD : MonoBehaviour {
     public CanvasGroup InteractPivot;
     public TextMeshProUGUI InteractTxt;
 
+    [Header("Interact UI")]
+    public float WarningDistance = 50;
+    public GameObject WarningRadar;
+
     private void Start()
     {
         player.OnDigPercentChange += OnDigPercentChange;
@@ -47,7 +52,7 @@ public class PlayerHUD : MonoBehaviour {
 
         player.health.OnChanged += OnHealthChanged;
 
-
+        worm = GameManager.Instance.Worm;
         HeartRateSpeed = HeartRateSpeedMinMax.y;
     }
 
@@ -131,6 +136,31 @@ public class PlayerHUD : MonoBehaviour {
         }
 
         HealthRate.GetComponent<Image>().material.mainTextureOffset = Vector2.right * offset;
+
+
+        float dist = Vector3.Distance(worm.transform.position, player.transform.position);
+
+
+        if (dist <= WarningDistance) {
+            float fillAmount = ((WarningDistance - dist) / WarningDistance) / 2.0f;
+            WarningRadar.GetComponent<Image>().fillAmount = fillAmount;
+            Vector2 WormPos2D = new Vector2(worm.transform.position.x, worm.transform.position.z);
+            Vector2 playerPos2D = new Vector2(player.transform.position.x, player.transform.position.z);
+            Vector2 playerDir2D = new Vector2(player.transform.forward.x, player.transform.forward.z);
+
+            Vector2 direction = WormPos2D - playerPos2D;
+            float warningAngle = Vector2.SignedAngle(playerDir2D, direction);
+            Debug.Log(warningAngle);
+
+            float offset = 180 * fillAmount;
+
+            Vector3 warningRotation = Vector3.forward * (warningAngle + offset);
+
+            WarningRadar.transform.rotation = Quaternion.Euler(warningRotation);
+        }
+        else {
+            WarningRadar.GetComponent<Image>().fillAmount = 0;
+        }
     }
 
 
