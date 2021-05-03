@@ -17,6 +17,7 @@ public class ChunkManager : MonoBehaviour {
     public Dictionary<string, Chunk_Data> ModifiedChunkList;
     List<GameObject> unusedChunks;
 
+    GameObject objectifChunk;
     GameObject chunkHolder;
     GameObject player;
     public GameObject chunkObject;
@@ -60,7 +61,9 @@ public class ChunkManager : MonoBehaviour {
             int nbChunksDistance = Mathf.Abs(Mathf.CeilToInt(loadDistance / ChunkSize));
 
             foreach (GameObject item in ChunkList.Values) {
-                item.GetComponent<Chunk>().Unused = true;
+                if (item != objectifChunk) {
+                    item.GetComponent<Chunk>().Unused = true;
+                }
             }
             for (int x = -nbChunksDistance; x <= nbChunksDistance; x++) {
                 for (int y = -nbChunksDistance; y <= nbChunksDistance; y++) {
@@ -141,7 +144,6 @@ public class ChunkManager : MonoBehaviour {
         bool validPos = false;
         GameObject chunk;
         while (!validPos) {
-            Debug.Log("Searching...");
             Vector3Int objChunk = Vector3Int.CeilToInt((player.transform.position + Random.onUnitSphere * 50) / ChunkSize);
             chunk = LoadChunk(objChunk);
             chunk.GetComponent<Chunk>().Unused = true;
@@ -149,8 +151,11 @@ public class ChunkManager : MonoBehaviour {
 
             if (listPos.Length > 0) {
                 validPos = true;
-                Instantiate(Objectif, listPos[0] + chunk.transform.position, Quaternion.identity);
-                Debug.Log("FOUND");
+                GameObject tempObj = Instantiate(Objectif, listPos[0] + chunk.transform.position, Quaternion.identity);
+                chunk.GetComponent<Chunk>().objectives.Add(tempObj);
+                objectifChunk = chunk;
+                chunk.GetComponent<Chunk>().Unused = false;
+                GameManager.Instance.ChunkManager.ModifiedChunkList[chunk.GetComponent<Chunk>().Coordonnate.ToString()] = new Chunk_Data(chunk);
             }
         }
     }
@@ -160,7 +165,6 @@ public class ChunkManager : MonoBehaviour {
         bool validPos = false;
         GameObject chunk;
         while (!validPos) {
-            Debug.Log("Searching...");
             Vector3Int objChunk = Vector3Int.CeilToInt((Random.insideUnitSphere * 500) / ChunkSize);
             chunk = LoadChunk(objChunk);
             Vector3[] listPos = MeshSpawner.GetSpawnPosition(chunk.GetComponent<MeshFilter>().mesh, chunk.transform, Vector3.up, 20, 50.0f);
@@ -168,7 +172,6 @@ public class ChunkManager : MonoBehaviour {
             if (listPos.Length > 10) {
                 validPos = true;
                 player.transform.position = listPos[0] + chunk.transform.position + Vector3.up;
-                Debug.Log("FOUND");
             }
         }
     }
@@ -176,6 +179,9 @@ public class ChunkManager : MonoBehaviour {
     public void SaveModifiedChunks()
     {
         foreach (Chunk_Data data in ModifiedChunkList.Values) {
+            if (data.objectives.Length > 0) {
+                Debug.Log(data.objectives[0].isFixed);
+            }
             SaveManager.SaveChunk(data);
         }
         ModifiedChunkList.Clear();

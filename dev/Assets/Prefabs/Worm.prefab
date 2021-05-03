@@ -51,11 +51,11 @@ MonoBehaviour:
   playerTransform: {fileID: 0}
   digPosition: {fileID: 5159650009939283044}
   turnSpeed: 0.1
-  closeTurnSpeed: 0.1
+  closeTurnSpeed: 0.05
   farTurnSpeed: 2
-  speed: 10
+  speed: 15
   closeDistance: 50
-  farDistance: 100
+  farDistance: 150
 --- !u!114 &6864395346642378840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,6 +305,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SonarEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 7741884524049121837, guid: 9590a5728b0d2fc4885ba4ef12e4f95d,
+        type: 3}
+      propertyPath: minDistance
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8754785076108405653, guid: 9590a5728b0d2fc4885ba4ef12e4f95d,
         type: 3}

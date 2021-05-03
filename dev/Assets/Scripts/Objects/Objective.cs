@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class Objective : MonoBehaviour {
 
-    public ParticleSystem Sonar;
+    public Sonar Sonar;
     public GameObject RobotHead;
     public ParticleSystem Smoke;
     public TextMeshProUGUI SaveTxt;
@@ -22,15 +22,15 @@ public class Objective : MonoBehaviour {
             _healthRefill = value;
 
             HealthSlider.fillAmount = _healthRefill / 3.0f;
-
         }
     }
 
     public bool Fixed {
         get { return _fixed; }
         set {
+            _fixed = value;
             if (value) {
-                _fixed = value;
+                Debug.Log(" Fixed? : " + _fixed);
                 FixObjective();
             }
         }
@@ -40,6 +40,7 @@ public class Objective : MonoBehaviour {
     {
         Smoke.Stop();
         Light.color = new Color(0.3f, 0.8f, 1);
+        Sonar.isActive = false;
         GameManager.Instance.ChunkManager.GenerateObjectif();
     }
 
@@ -48,30 +49,26 @@ public class Objective : MonoBehaviour {
     private void Start()
     {
         player = GameManager.Instance.Player;
-        player.GetComponent<Player>().OnListenSonar += OnSonarOn;
-        player.GetComponent<Player>().OnStopListenSonar += OnSonarOff;
     }
 
     private void Update()
     {
-        float dist = Vector3.Distance(transform.position, GameManager.Instance.Player.transform.position);
-        float SonarSize = Mathf.Clamp((dist / 50.0f), 1, 9999999999999999);
-        Sonar.transform.localScale = Vector3.one * SonarSize;
-
         Vector3 toLook = new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z);
         RobotHead.transform.rotation = Quaternion.LookRotation(transform.position - toLook, Vector3.up);
     }
 
-    private void OnSonarOn(Player player)
+    public void LoadObjective(Objective_Data data)
     {
-        if (!Fixed) {
-            Sonar.Play();
-        }
+        Vector3 pos = new Vector3();
+        pos.x = data.Position[0];
+        pos.y = data.Position[1];
+        pos.z = data.Position[2];
+        transform.position = pos;
+
+        Fixed = data.isFixed;
+        HealthRefill = data.healthRefill;
     }
 
-    private void OnSonarOff(Player player)
-    {
-        Sonar.Stop();
-    }
+
 
 }

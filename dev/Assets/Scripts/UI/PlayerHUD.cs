@@ -150,7 +150,6 @@ public class PlayerHUD : MonoBehaviour {
 
             Vector2 direction = WormPos2D - playerPos2D;
             float warningAngle = Vector2.SignedAngle(playerDir2D, direction);
-            Debug.Log(warningAngle);
 
             float offset = 180 * fillAmount;
 

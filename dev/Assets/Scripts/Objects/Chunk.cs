@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(MeshCollider))]
 [RequireComponent(typeof(Destructible))]
@@ -6,6 +7,8 @@ public class Chunk : MonoBehaviour {
     public Vector3Int Coordonnate;
     ChunkManager ChunkManager;
     Destructible destructible;
+
+    public List<GameObject> objectives { get; set; }
 
     public GameObject stalagmite;
     public bool SpawnParticles = true;
@@ -15,9 +18,12 @@ public class Chunk : MonoBehaviour {
     private void Awake()
     {
         ChunkManager = GameManager.Instance.ChunkManager;
-        destructible = GetComponent<Destructible>();
 
+        objectives = new List<GameObject>();
+
+        destructible = GetComponent<Destructible>();
         destructible.OnMeshUpdate += OnMeshUpdate;
+
 
         destructible.Setup(ChunkManager.Threshold, ChunkManager.GridResolution);
         Init(Coordonnate);
@@ -53,7 +59,11 @@ public class Chunk : MonoBehaviour {
 
     public void ResetChunk()
     {
+        foreach (GameObject item in objectives) {
+            Destroy(item);
+        }
 
+        objectives.Clear();
     }
 
     void CreateChunkGrid()
@@ -94,25 +104,12 @@ public class Chunk : MonoBehaviour {
         offsetsBuffer.Release();
     }
 
-    public void SaveChunk()
-    {
-        if (destructible.isModified) {
-            SaveManager.SaveChunk(gameObject);
-            destructible.isModified = false;
-        }
-    }
-
     public void LoadChunk(Vector3Int coordonate)
     {
         string Chunkname = "Chunk" + coordonate;
         Chunk_Data data = SaveManager.LoadChunk(Chunkname);
         if (data != null) {
-            Vector3Int coord = new Vector3Int();
-            coord.x = data.Coordonates[0];
-            coord.y = data.Coordonates[1];
-            coord.z = data.Coordonates[2];
-
-            Init(coord, data.gridValues);
+            LoadChunk(data);
         }
         else {
             Init(coordonate);
@@ -127,6 +124,12 @@ public class Chunk : MonoBehaviour {
         coord.z = data.Coordonates[2];
 
         Init(coord, data.gridValues);
+        objectives.Clear();
+        foreach (Objective_Data item in data.objectives) {
+            GameObject objectif = Instantiate(GameManager.Instance.ChunkManager.Objectif);
+            objectif.GetComponent<Objective>().LoadObjective(item);
+            objectives.Add(objectif);
+        }
     }
 
 }

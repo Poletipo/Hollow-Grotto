@@ -4,9 +4,11 @@
 public class Chunk_Data {
 
     public int[] Coordonates;
+    public Objective_Data[] objectives;
     public float[] gridValues;
 
-    public Chunk_Data(GameObject gameObject) {
+    public Chunk_Data(GameObject gameObject)
+    {
         Coordonates = new int[3];
         Coordonates[0] = gameObject.GetComponent<Chunk>().Coordonnate.x;
         Coordonates[1] = gameObject.GetComponent<Chunk>().Coordonnate.y;
@@ -18,6 +20,10 @@ public class Chunk_Data {
             gridValues[i] = gameObject.GetComponent<Destructible>().GridPoints[i].val;
         }
 
+        objectives = new Objective_Data[gameObject.GetComponent<Chunk>().objectives.Count];
+        for (int i = 0; i < objectives.Length; i++) {
+            objectives[i] = new Objective_Data(gameObject.GetComponent<Chunk>().objectives[i]);
+        }
     }
 
 }

@@ -28,7 +28,6 @@ public class Worm : MonoBehaviour {
         digger.DigSize = 6;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isMoving) {

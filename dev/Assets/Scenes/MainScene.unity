@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.028301895, g: 0.028301895, b: 0.028301895, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 0.82
+  m_AmbientIntensity: 0
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
@@ -650,6 +650,11 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 2131343624}
+    - target: {fileID: 846477608766893385, guid: 834686e49cf82b340b5f26a091406181,
+        type: 3}
+      propertyPath: WarningDistance
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 3353142247042211459, guid: 834686e49cf82b340b5f26a091406181,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -1556,7 +1561,7 @@ PrefabInstance:
     - target: {fileID: 474545306594976770, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.48
+      value: 9.1
       objectReference: {fileID: 0}
     - target: {fileID: 474545306594976770, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
@@ -1566,7 +1571,7 @@ PrefabInstance:
     - target: {fileID: 474545306594976770, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -20.99
+      value: -15.1
       objectReference: {fileID: 0}
     - target: {fileID: 474545306594976770, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
@@ -1625,18 +1630,18 @@ PrefabInstance:
       objectReference: {fileID: 497622813}
     - target: {fileID: 474545306594976798, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
-      propertyPath: closeTurnSpeed
-      value: 0.05
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 474545306594976798, guid: 8309ab11647260d45901cc148fe965d5,
+    - target: {fileID: 2263153192599602597, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
-      propertyPath: speed
-      value: 15
+      propertyPath: useDistance
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 474545306594976798, guid: 8309ab11647260d45901cc148fe965d5,
+    - target: {fileID: 8107190149756915101, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
-      propertyPath: farDistance
-      value: 150
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8309ab11647260d45901cc148fe965d5, type: 3}
