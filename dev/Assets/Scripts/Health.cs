@@ -17,6 +17,10 @@ public class Health : MonoBehaviour {
 
     public float InvincibleTimer { get; set; }
 
+    private void Start()
+    {
+        SetHealth(hp);
+    }
 
     public int SetHealth(int hp)
     {

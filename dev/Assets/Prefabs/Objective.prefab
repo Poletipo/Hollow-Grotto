@@ -326,6 +326,7 @@ MonoBehaviour:
   HealthSlider: {fileID: 7870620975061518620}
   Light: {fileID: 6562130287062901885}
   repairInteract: {fileID: 7157890220968765238}
+  healInteract: {fileID: 5900194702415619430}
 --- !u!64 &8930711767591742988
 MeshCollider:
   m_ObjectHideFlags: 0

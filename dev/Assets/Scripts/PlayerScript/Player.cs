@@ -242,7 +242,6 @@ public class Player : MonoBehaviour {
 
             DigSize = data.DigSize;
             health.SetHealth(data.Health);
-
         }
     }
 

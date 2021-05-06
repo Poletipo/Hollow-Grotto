@@ -62,10 +62,7 @@ public class ChunkManager : MonoBehaviour {
     Vector3Int lastPlayerChunk = new Vector3Int();
     void LoadChunks()
     {
-        Vector3Int playerChunk = new Vector3Int();
-        playerChunk.x = Mathf.FloorToInt(player.transform.position.x / ChunkSize);
-        playerChunk.y = Mathf.FloorToInt(player.transform.position.y / ChunkSize);
-        playerChunk.z = Mathf.FloorToInt(player.transform.position.z / ChunkSize);
+        Vector3Int playerChunk = Utilities.GetChunkCoordonate(player.transform.position);
 
         if (lastPlayerChunk != playerChunk) {
             lastPlayerChunk = playerChunk;
@@ -163,11 +160,6 @@ public class ChunkManager : MonoBehaviour {
                 validPos = true;
                 GameObject tempObj = Instantiate(Objectif, listPos[0] + chunk.transform.position, Quaternion.identity);
                 chunk.GetComponent<Chunk>().objectives.Add(tempObj);
-
-                if (objectifChunk != null) {
-                    Debug.Log(objectifChunk.GetComponent<Chunk>().objectives[0].GetComponent<Objective>().Fixed);
-                    GameManager.Instance.ChunkManager.ModifiedChunkList[objectifChunk.GetComponent<Chunk>().Coordonnate.ToString()] = new Chunk_Data(objectifChunk);
-                }
 
                 objectifChunk = chunk;
                 chunk.GetComponent<Chunk>().Unused = false;

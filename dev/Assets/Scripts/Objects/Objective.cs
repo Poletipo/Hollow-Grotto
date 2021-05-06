@@ -12,6 +12,7 @@ public class Objective : MonoBehaviour {
     public Light Light;
 
     public Interactible repairInteract;
+    public Interactible healInteract;
 
     private bool _fixed = false;
     private int _healthRefill = 3;
@@ -20,9 +21,10 @@ public class Objective : MonoBehaviour {
     public int HealthRefill {
         get { return _healthRefill; }
         set {
-
             _healthRefill = value;
-
+            if (value <= 0) {
+                healInteract.Active = false;
+            }
             HealthSlider.fillAmount = _healthRefill / 3.0f;
         }
     }
@@ -32,7 +34,6 @@ public class Objective : MonoBehaviour {
         set {
             _fixed = value;
             if (value) {
-                Debug.Log(" Fixed? : " + _fixed);
                 FixObjective();
             }
         }
@@ -51,10 +52,7 @@ public class Objective : MonoBehaviour {
         Smoke.Stop();
         Light.color = new Color(0.3f, 0.8f, 1);
         Sonar.isActive = false;
-
     }
-
-
 
     private GameObject player;
 
@@ -71,7 +69,6 @@ public class Objective : MonoBehaviour {
 
     public void LoadObjective(Objective_Data data)
     {
-        Debug.Log("Load Objective" + data.isFixed);
         Vector3 pos = new Vector3();
         pos.x = data.Position[0];
         pos.y = data.Position[1];

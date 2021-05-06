@@ -34,6 +34,8 @@ public class Interactible : MonoBehaviour {
 
             StartCoroutine(ReActivateSave());
         }
+        Vector3Int coord = Utilities.GetChunkCoordonate(objective.gameObject.transform.position);
+        GameManager.Instance.ChunkManager.ModifiedChunkList[coord.ToString()] = new Chunk_Data(GameManager.Instance.ChunkManager.LoadChunk(coord));
     }
 
     private void Deactivate()
