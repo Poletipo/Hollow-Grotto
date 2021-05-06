@@ -42,7 +42,6 @@ public class Chunk : MonoBehaviour {
 
         transform.position = Coordonnate * ChunkManager.ChunkSize;
         CreateChunkGrid();
-
     }
     public void Init(Vector3Int pos, float[] gridPoints)
     {

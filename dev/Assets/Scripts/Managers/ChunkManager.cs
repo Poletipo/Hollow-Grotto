@@ -36,6 +36,17 @@ public class ChunkManager : MonoBehaviour {
             GeneratePlayerStart();
             GenerateObjectif();
         }
+        else {
+
+            Chunk_Data data = SaveManager.LoadObjectifChunk();
+            Vector3Int coord = new Vector3Int();
+            coord.x = data.Coordonates[0];
+            coord.y = data.Coordonates[1];
+            coord.z = data.Coordonates[2];
+
+            objectifChunk = LoadChunk(coord);
+            objectifChunk.GetComponent<Chunk>().Unused = false;
+        }
     }
 
     float timer = 0;
@@ -61,10 +72,9 @@ public class ChunkManager : MonoBehaviour {
             int nbChunksDistance = Mathf.Abs(Mathf.CeilToInt(loadDistance / ChunkSize));
 
             foreach (GameObject item in ChunkList.Values) {
-                if (item != objectifChunk) {
-                    item.GetComponent<Chunk>().Unused = true;
-                }
+                item.GetComponent<Chunk>().Unused = true;
             }
+            objectifChunk.GetComponent<Chunk>().Unused = false;
             for (int x = -nbChunksDistance; x <= nbChunksDistance; x++) {
                 for (int y = -nbChunksDistance; y <= nbChunksDistance; y++) {
                     for (int z = -nbChunksDistance; z <= nbChunksDistance; z++) {
@@ -153,6 +163,12 @@ public class ChunkManager : MonoBehaviour {
                 validPos = true;
                 GameObject tempObj = Instantiate(Objectif, listPos[0] + chunk.transform.position, Quaternion.identity);
                 chunk.GetComponent<Chunk>().objectives.Add(tempObj);
+
+                if (objectifChunk != null) {
+                    Debug.Log(objectifChunk.GetComponent<Chunk>().objectives[0].GetComponent<Objective>().Fixed);
+                    GameManager.Instance.ChunkManager.ModifiedChunkList[objectifChunk.GetComponent<Chunk>().Coordonnate.ToString()] = new Chunk_Data(objectifChunk);
+                }
+
                 objectifChunk = chunk;
                 chunk.GetComponent<Chunk>().Unused = false;
                 GameManager.Instance.ChunkManager.ModifiedChunkList[chunk.GetComponent<Chunk>().Coordonnate.ToString()] = new Chunk_Data(chunk);
@@ -179,11 +195,9 @@ public class ChunkManager : MonoBehaviour {
     public void SaveModifiedChunks()
     {
         foreach (Chunk_Data data in ModifiedChunkList.Values) {
-            if (data.objectives.Length > 0) {
-                Debug.Log(data.objectives[0].isFixed);
-            }
             SaveManager.SaveChunk(data);
         }
+        SaveManager.SaveObjectifChunk(objectifChunk);
         ModifiedChunkList.Clear();
     }
 

@@ -11,6 +11,8 @@ public class Objective : MonoBehaviour {
     public Image HealthSlider;
     public Light Light;
 
+    public Interactible repairInteract;
+
     private bool _fixed = false;
     private int _healthRefill = 3;
 
@@ -44,6 +46,16 @@ public class Objective : MonoBehaviour {
         GameManager.Instance.ChunkManager.GenerateObjectif();
     }
 
+    private void SetFixObjective()
+    {
+        Smoke.Stop();
+        Light.color = new Color(0.3f, 0.8f, 1);
+        Sonar.isActive = false;
+
+    }
+
+
+
     private GameObject player;
 
     private void Start()
@@ -59,13 +71,18 @@ public class Objective : MonoBehaviour {
 
     public void LoadObjective(Objective_Data data)
     {
+        Debug.Log("Load Objective" + data.isFixed);
         Vector3 pos = new Vector3();
         pos.x = data.Position[0];
         pos.y = data.Position[1];
         pos.z = data.Position[2];
         transform.position = pos;
 
-        Fixed = data.isFixed;
+        _fixed = data.isFixed;
+        if (data.isFixed) {
+            SetFixObjective();
+            repairInteract.Active = false;
+        }
         HealthRefill = data.healthRefill;
     }
 

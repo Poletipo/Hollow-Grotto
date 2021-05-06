@@ -60,4 +60,10 @@ public class Sonar : MonoBehaviour {
     }
 
 
+    private void OnDestroy()
+    {
+        player.OnListenSonar -= OnSonarOn;
+        player.OnStopListenSonar -= OnSonarOff;
+    }
+
 }

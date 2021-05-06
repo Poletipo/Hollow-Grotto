@@ -6,6 +6,7 @@ public static class SaveManager {
 
 
     static string chunkDirectory = Application.persistentDataPath + "/Chunks";
+    static string objChunkDirectory = Application.persistentDataPath + "/Chunks";
     static string worldPath = Application.persistentDataPath + "/World.dat";
     static string playerPath = Application.persistentDataPath + "/Player.dat";
 
@@ -59,10 +60,10 @@ public static class SaveManager {
     }
 
 
-    public static void SaveChunk(GameObject gameObject)
+    public static void SaveObjectifChunk(GameObject gameObject)
     {
-        string fileName = "/" + gameObject.name + ".dat";
-        string path = Application.persistentDataPath + fileName;
+        string fileName = "/ObjectiveChunk.dat";
+        string path = chunkDirectory + fileName;
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = new FileStream(path, FileMode.Create);
 
@@ -71,6 +72,29 @@ public static class SaveManager {
         bf.Serialize(file, data);
         file.Close();
     }
+
+    public static Chunk_Data LoadObjectifChunk()
+    {
+
+        string fileName = "/ObjectiveChunk.dat";
+        string path = chunkDirectory + fileName;
+
+        if (File.Exists(path)) {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Open);
+
+            Chunk_Data data = (Chunk_Data)bf.Deserialize(stream);
+
+            stream.Close();
+
+            return data;
+        }
+        else {
+            return null;
+        }
+    }
+
+
 
     public static void SaveChunk(Chunk_Data data)
     {
