@@ -29,7 +29,9 @@ public class Interactible : MonoBehaviour {
             SaveManager.SaveWorld();
             GameManager.Instance.ChunkManager.SaveModifiedChunks();
             SaveManager.SavePlayer();
+            SaveManager.SaveWorm();
             objective.SaveTxt.text = "Game Saved!";
+            objective.SaveTxt.color = Color.green;
             Deactivate();
 
             StartCoroutine(ReActivateSave());
@@ -48,6 +50,7 @@ public class Interactible : MonoBehaviour {
     {
         yield return new WaitForSeconds(4);
         objective.SaveTxt.text = "Save Game?";
+        objective.SaveTxt.color = Color.white;
         Active = true;
     }
 

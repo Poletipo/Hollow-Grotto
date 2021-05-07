@@ -9,6 +9,7 @@ public static class SaveManager {
     static string objChunkDirectory = Application.persistentDataPath + "/Chunks";
     static string worldPath = Application.persistentDataPath + "/World.dat";
     static string playerPath = Application.persistentDataPath + "/Player.dat";
+    static string wormPath = Application.persistentDataPath + "/Worm.dat";
 
     public static bool SaveExist()
     {
@@ -57,6 +58,7 @@ public static class SaveManager {
 
         File.Delete(worldPath);
         File.Delete(playerPath);
+        File.Delete(wormPath);
     }
 
 
@@ -159,6 +161,34 @@ public static class SaveManager {
             FileStream fs = new FileStream(playerPath, FileMode.Open);
 
             Player_Data data = (Player_Data)bf.Deserialize(fs);
+
+            fs.Close();
+
+            return data;
+        }
+        else {
+            return null;
+        }
+    }
+
+    public static void SaveWorm()
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream fs = new FileStream(wormPath, FileMode.Create);
+
+        Worm_Data data = new Worm_Data(GameManager.Instance.Worm);
+
+        bf.Serialize(fs, data);
+        fs.Close();
+    }
+
+    public static Worm_Data LoadWorm()
+    {
+        if (File.Exists(wormPath)) {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fs = new FileStream(wormPath, FileMode.Open);
+
+            Worm_Data data = (Worm_Data)bf.Deserialize(fs);
 
             fs.Close();
 

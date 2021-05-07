@@ -35,6 +35,7 @@ public class ChunkManager : MonoBehaviour {
         if (!SaveManager.SaveExist()) {
             GeneratePlayerStart();
             GenerateObjectif();
+            GenerateSnake();
         }
         else {
 
@@ -49,7 +50,12 @@ public class ChunkManager : MonoBehaviour {
         }
     }
 
-    float timer = 0;
+    private void GenerateSnake()
+    {
+        GameManager.Instance.Worm.transform.position = (player.transform.position + Random.onUnitSphere * 500);
+    }
+
+    private float timer = 0;
     private void Update()
     {
         timer -= Time.deltaTime;
@@ -59,10 +65,11 @@ public class ChunkManager : MonoBehaviour {
         }
     }
 
-    Vector3Int lastPlayerChunk = new Vector3Int();
+    private Vector3Int lastPlayerChunk = new Vector3Int();
+    private Vector3Int playerChunk;
     void LoadChunks()
     {
-        Vector3Int playerChunk = Utilities.GetChunkCoordonate(player.transform.position);
+        playerChunk = Utilities.GetChunkCoordonate(player.transform.position);
 
         if (lastPlayerChunk != playerChunk) {
             lastPlayerChunk = playerChunk;

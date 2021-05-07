@@ -56,6 +56,7 @@ MonoBehaviour:
   speed: 15
   closeDistance: 50
   farDistance: 150
+  unfocusTime: {x: 20, y: 60}
 --- !u!114 &6864395346642378840
 MonoBehaviour:
   m_ObjectHideFlags: 0

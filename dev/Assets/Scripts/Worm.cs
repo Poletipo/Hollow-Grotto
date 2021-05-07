@@ -13,6 +13,7 @@ public class Worm : MonoBehaviour {
     public float speed = 20;
     public float closeDistance = 30;
     public float farDistance = 50;
+    public Vector2 unfocusTime;
     float stopTime;
     float stopTimer;
     bool isTurning = false;
@@ -26,6 +27,7 @@ public class Worm : MonoBehaviour {
         target = playerTransform.position;
         digger = GetComponent<Digger>();
         digger.DigSize = 6;
+        LoadWorm();
     }
 
     void Update()
@@ -49,7 +51,7 @@ public class Worm : MonoBehaviour {
             isMoving = false;
             stopTimer = 0;
             target = playerTransform.position + Random.onUnitSphere * 100;
-            stopTime = Random.Range(5.0f, 10.0f);
+            stopTime = Random.Range(unfocusTime.x, unfocusTime.y);
             isTurning = true;
             turnSpeed = farTurnSpeed;
         }
@@ -63,7 +65,24 @@ public class Worm : MonoBehaviour {
         if (dist <= GameManager.Instance.ChunkManager.ChunkSize) {
             digger.Dig(digPosition.position);
         }
+    }
 
+    public void LoadWorm()
+    {
+        Worm_Data data = SaveManager.LoadWorm();
+        if (data != null) {
+            Vector3 pos = new Vector3();
+            pos.x = data.Position[0];
+            pos.y = data.Position[1];
+            pos.z = data.Position[2];
+            transform.position = pos;
 
+            Quaternion rot = new Quaternion();
+            rot.x = data.Rotation[0];
+            rot.y = data.Rotation[1];
+            rot.z = data.Rotation[2];
+            rot.w = data.Rotation[3];
+            transform.rotation = rot;
+        }
     }
 }
