@@ -62,7 +62,7 @@ public class Worm : MonoBehaviour {
 
         transform.position += transform.forward * speed * Time.deltaTime;
 
-        if (dist <= GameManager.Instance.ChunkManager.ChunkSize) {
+        if (dist <= (GameManager.Instance.ChunkManager.ChunkSize * 2 - 5)) {
             digger.Dig(digPosition.position);
         }
     }
@@ -85,4 +85,5 @@ public class Worm : MonoBehaviour {
             transform.rotation = rot;
         }
     }
+
 }

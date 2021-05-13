@@ -8,6 +8,7 @@ public class Player_Data {
     public float CamRotation;
     public float DigSize;
     public int Health;
+    public int FixedRobotCount;
 
     public Player_Data(GameObject gameObject)
     {
@@ -23,6 +24,7 @@ public class Player_Data {
         FirstPersonCamera fps = player.fps;
         CamRotation = fps.viewRotation.x;
 
+        FixedRobotCount = player.FixedRobotCount;
         DigSize = player.DigSize;
         Health = player.health.hp;
     }

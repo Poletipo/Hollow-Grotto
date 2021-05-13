@@ -16,6 +16,7 @@ public class Interactible : MonoBehaviour {
     {
         if (Action == Interaction.Repair) {
             objective.Fixed = true;
+            GameManager.Instance.Player.GetComponent<Player>().FixedRobotCount += 1;
             Deactivate();
         }
         else if (Action == Interaction.Heal) {

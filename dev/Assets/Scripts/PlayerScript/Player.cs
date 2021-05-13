@@ -47,7 +47,7 @@ public class Player : MonoBehaviour {
     MovementController mc;
     Digger digger;
 
-
+    public int FixedRobotCount { get; set; } = 0;
     public RaycastHit hit;
 
     public bool IsOverHeating {
@@ -109,10 +109,16 @@ public class Player : MonoBehaviour {
         mc.OnLanding += OnLanding;
         cam = Camera.main;
         health = GetComponent<Health>();
+        health.OnDeath += OnDeath;
         fps = cam.GetComponent<FirstPersonCamera>();
         digger = GetComponent<Digger>();
 
         digger.DigSize = DigSize;
+    }
+
+    private void OnDeath(Health health)
+    {
+        PlayerEnabled = false;
     }
 
     private void Start()
@@ -158,10 +164,6 @@ public class Player : MonoBehaviour {
     void PlayerInput()
     {
 
-        if (Input.GetKeyDown(KeyCode.Alpha7)) {
-            health.Hurt(10);
-        }
-
         if (PlayerEnabled) {
 
             float sw = Input.GetAxis("Mouse ScrollWheel");
@@ -193,22 +195,19 @@ public class Player : MonoBehaviour {
             else if (Input.GetButtonUp("Sonar")) {
                 OnStopListenSonar?.Invoke(this);
             }
-
-
-
         }
     }
 
     void Dig()
     {
         digIntervalTimer = digInterval;
-        DigPercent += 2;
+        DigPercent += 1.5F;
 
         OnDigging?.Invoke(this);
         if (InRangeState == InRange.Destructible) {
             digger.Dig(hit.point);
             Instantiate(Rocks, hit.point, Quaternion.LookRotation(hit.normal, Vector3.up));
-            DigPercent += DigSize * 2.25f;
+            DigPercent += DigSize * 2.15f;
         }
         if (DigPercent >= 100) {
             IsOverHeating = true;
@@ -242,6 +241,9 @@ public class Player : MonoBehaviour {
 
             DigSize = data.DigSize;
             health.SetHealth(data.Health);
+
+            FixedRobotCount = data.FixedRobotCount;
+
         }
     }
 

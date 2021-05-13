@@ -43,17 +43,28 @@ public class PlayerHUD : MonoBehaviour {
     public float WarningDistance = 50;
     public GameObject WarningRadar;
 
+
+    private CanvasGroup canvasGroup;
+
     private void Start()
     {
+        canvasGroup = GetComponent<CanvasGroup>();
+
         player.OnDigPercentChange += OnDigPercentChange;
         player.OnDigOverheating += OnDigOverheating;
         player.OnInRangeChange += OnInRangeChange;
         player.OnDigSizeChanged += OnDigSizeChanged;
 
         player.health.OnChanged += OnHealthChanged;
+        player.health.OnDeath += OnDeath;
 
         worm = GameManager.Instance.Worm;
         HeartRateSpeed = HeartRateSpeedMinMax.y;
+    }
+
+    private void OnDeath(Health health)
+    {
+        canvasGroup.alpha = 0;
     }
 
     private void OnDigSizeChanged(Player player)
@@ -161,7 +172,4 @@ public class PlayerHUD : MonoBehaviour {
             WarningRadar.GetComponent<Image>().fillAmount = 0;
         }
     }
-
-
-
 }
