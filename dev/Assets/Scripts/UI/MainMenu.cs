@@ -9,12 +9,16 @@ public class MainMenu : MonoBehaviour {
     public Button WorldBtn;
     public Button PlayBtn;
     public Button QuitBtn;
+    public Button InfoBtn;
 
     [Header("New World Warning")]
     public GameObject NewWorldWarning;
 
     [Header("Quit Warning")]
     public GameObject QuitWarning;
+
+    [Header("Info screen")]
+    public GameObject InfoScreen;
 
     private void Awake()
     {
@@ -68,18 +72,30 @@ public class MainMenu : MonoBehaviour {
         LevelManager.LoadLevel(LevelManager.Level.MainScene);
     }
 
+    public void ShowInfoMenu()
+    {
+        DisableFGButton();
+        InfoScreen.SetActive(true);
+    }
+    public void HideInfoMenu()
+    {
+        EnableFGButton();
+        InfoScreen.SetActive(false);
+    }
 
     void DisableFGButton()
     {
         PlayBtn.enabled = false;
         WorldBtn.enabled = false;
         QuitBtn.enabled = false;
+        InfoBtn.enabled = false;
     }
     void EnableFGButton()
     {
         PlayBtn.enabled = true;
         WorldBtn.enabled = true;
         QuitBtn.enabled = true;
+        InfoBtn.enabled = true;
     }
 
 
