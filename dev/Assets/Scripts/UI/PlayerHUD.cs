@@ -44,6 +44,7 @@ public class PlayerHUD : MonoBehaviour {
     public GameObject WarningRadar;
 
 
+    private float healtRateOffset = 0;
     private CanvasGroup canvasGroup;
 
     private void Start()
@@ -60,6 +61,56 @@ public class PlayerHUD : MonoBehaviour {
 
         worm = GameManager.Instance.Worm;
         HeartRateSpeed = HeartRateSpeedMinMax.y;
+    }
+
+    public void ShowDigging(float percent)
+    {
+        DigSliderFill.fillAmount = percent / 100.0f;
+        Color digSliderColor = SliderColor.Evaluate(percent / 100.0f);
+        DigSliderFill.color = digSliderColor;
+        DigPercentTxt.text = percent.ToString("F1") + "%";
+        DigPercentTxt.color = digSliderColor;
+        DigPivot.alpha = 1;
+    }
+
+    public void HideDigging()
+    {
+        DigPivot.alpha = 0;
+    }
+
+    private void Update()
+    {
+        healtRateOffset += HeartRateSpeed * Time.deltaTime;
+
+        if (healtRateOffset > 1) {
+            healtRateOffset = 1 - healtRateOffset;
+        }
+
+        HealthRate.GetComponent<Image>().material.mainTextureOffset = Vector2.right * healtRateOffset;
+
+
+        float dist = Vector3.Distance(worm.transform.position, player.transform.position);
+
+
+        if (dist <= WarningDistance) {
+            float fillAmount = ((WarningDistance - dist) / WarningDistance) / 2.0f;
+            WarningRadar.GetComponent<Image>().fillAmount = fillAmount;
+            Vector2 WormPos2D = new Vector2(worm.transform.position.x, worm.transform.position.z);
+            Vector2 playerPos2D = new Vector2(player.transform.position.x, player.transform.position.z);
+            Vector2 playerDir2D = new Vector2(player.transform.forward.x, player.transform.forward.z);
+
+            Vector2 direction = WormPos2D - playerPos2D;
+            float warningAngle = Vector2.SignedAngle(playerDir2D, direction);
+
+            float offset = 180 * fillAmount;
+
+            Vector3 warningRotation = Vector3.forward * (warningAngle + offset);
+
+            WarningRadar.transform.rotation = Quaternion.Euler(warningRotation);
+        }
+        else {
+            WarningRadar.GetComponent<Image>().fillAmount = 0;
+        }
     }
 
     private void OnDeath(Health health)
@@ -83,7 +134,6 @@ public class PlayerHUD : MonoBehaviour {
         if (healthPercent <= 0) {
             HealthRate.GetComponent<Image>().sprite = FlatLine;
         }
-
     }
 
     private void OnInRangeChange(Player player)
@@ -121,55 +171,4 @@ public class PlayerHUD : MonoBehaviour {
         ShowDigging(player.DigPercent);
     }
 
-    public void ShowDigging(float percent)
-    {
-        DigSliderFill.fillAmount = percent / 100.0f;
-        Color digSliderColor = SliderColor.Evaluate(percent / 100.0f);
-        DigSliderFill.color = digSliderColor;
-        DigPercentTxt.text = percent.ToString("F1") + "%";
-        DigPercentTxt.color = digSliderColor;
-        DigPivot.alpha = 1;
-    }
-
-    public void HideDigging()
-    {
-        DigPivot.alpha = 0;
-    }
-
-    float offset = 0;
-    private void Update()
-    {
-
-        offset += HeartRateSpeed * Time.deltaTime;
-
-        if (offset > 1) {
-            offset = 1 - offset;
-        }
-
-        HealthRate.GetComponent<Image>().material.mainTextureOffset = Vector2.right * offset;
-
-
-        float dist = Vector3.Distance(worm.transform.position, player.transform.position);
-
-
-        if (dist <= WarningDistance) {
-            float fillAmount = ((WarningDistance - dist) / WarningDistance) / 2.0f;
-            WarningRadar.GetComponent<Image>().fillAmount = fillAmount;
-            Vector2 WormPos2D = new Vector2(worm.transform.position.x, worm.transform.position.z);
-            Vector2 playerPos2D = new Vector2(player.transform.position.x, player.transform.position.z);
-            Vector2 playerDir2D = new Vector2(player.transform.forward.x, player.transform.forward.z);
-
-            Vector2 direction = WormPos2D - playerPos2D;
-            float warningAngle = Vector2.SignedAngle(playerDir2D, direction);
-
-            float offset = 180 * fillAmount;
-
-            Vector3 warningRotation = Vector3.forward * (warningAngle + offset);
-
-            WarningRadar.transform.rotation = Quaternion.Euler(warningRotation);
-        }
-        else {
-            WarningRadar.GetComponent<Image>().fillAmount = 0;
-        }
-    }
 }

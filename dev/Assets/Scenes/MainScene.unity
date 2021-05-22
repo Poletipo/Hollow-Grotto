@@ -650,6 +650,11 @@ PrefabInstance:
       propertyPath: m_Alpha
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2799830389659652118, guid: 3a2687e9bc40e384493e914c835b2a46,
+        type: 3}
+      propertyPath: m_BlocksRaycasts
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2845613124073856187, guid: 3a2687e9bc40e384493e914c835b2a46,
         type: 3}
       propertyPath: HUD
@@ -723,7 +728,7 @@ PrefabInstance:
     - target: {fileID: 6661010120437404553, guid: 3a2687e9bc40e384493e914c835b2a46,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6661010120437404553, guid: 3a2687e9bc40e384493e914c835b2a46,
         type: 3}
@@ -794,6 +799,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GameOverUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 6661010120437404661, guid: 3a2687e9bc40e384493e914c835b2a46,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a2687e9bc40e384493e914c835b2a46, type: 3}
@@ -965,9 +975,9 @@ MonoBehaviour:
   GridResolution: 15
   ChunkSize: 15
   Threshold: 0
+  loadDistance: 20
   MeshGenerator: {fileID: 1081300357}
   NoiseGenerator: {fileID: 257005457}
-  loadDistance: 20
   chunkObject: {fileID: 1719428045986001211, guid: 9a3126df124560745b1372be1c4f4cd3,
     type: 3}
   Objectif: {fileID: 3878134600436963470, guid: 345cfff433ead8049b9446d6b5b76b41,
@@ -1096,7 +1106,7 @@ PrefabInstance:
     - target: {fileID: 6661010120437404553, guid: fee0315385244d140b9f9d6e1142f5a0,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 6661010120437404553, guid: fee0315385244d140b9f9d6e1142f5a0,
         type: 3}
@@ -1225,7 +1235,7 @@ PrefabInstance:
     - target: {fileID: 474545306594976770, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 474545306594976770, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
@@ -1247,11 +1257,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Worm
       objectReference: {fileID: 0}
-    - target: {fileID: 474545306594976793, guid: 8309ab11647260d45901cc148fe965d5,
-        type: 3}
-      propertyPath: m_TagString
-      value: Enemy
-      objectReference: {fileID: 0}
     - target: {fileID: 474545306594976798, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
       propertyPath: playerTransform
@@ -1259,18 +1264,43 @@ PrefabInstance:
       objectReference: {fileID: 497622813}
     - target: {fileID: 474545306594976798, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
-      propertyPath: m_Enabled
-      value: 1
+      propertyPath: unfocusTargetDistance
+      value: 200
       objectReference: {fileID: 0}
-    - target: {fileID: 2263153192599602597, guid: 8309ab11647260d45901cc148fe965d5,
+    - target: {fileID: 474545306594976798, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
-      propertyPath: useDistance
-      value: 1
+      propertyPath: unfocusTime.x
+      value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 8107190149756915101, guid: 8309ab11647260d45901cc148fe965d5,
+    - target: {fileID: 474545306594976798, guid: 8309ab11647260d45901cc148fe965d5,
         type: 3}
-      propertyPath: playOnAwake
-      value: 0
+      propertyPath: unfocusTime.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5666999029578443945, guid: 8309ab11647260d45901cc148fe965d5,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[0].time
+      value: 0.22204413
+      objectReference: {fileID: 0}
+    - target: {fileID: 5666999029578443945, guid: 8309ab11647260d45901cc148fe965d5,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[1].time
+      value: 0.31908825
+      objectReference: {fileID: 0}
+    - target: {fileID: 5666999029578443945, guid: 8309ab11647260d45901cc148fe965d5,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[1].value
+      value: 0.35729218
+      objectReference: {fileID: 0}
+    - target: {fileID: 5666999029578443945, guid: 8309ab11647260d45901cc148fe965d5,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[2].time
+      value: 0.52123314
+      objectReference: {fileID: 0}
+    - target: {fileID: 5666999029578443945, guid: 8309ab11647260d45901cc148fe965d5,
+        type: 3}
+      propertyPath: rolloffCustomCurve.m_Curve.Array.data[2].value
+      value: 0.16674805
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8309ab11647260d45901cc148fe965d5, type: 3}
@@ -1403,7 +1433,7 @@ PrefabInstance:
     - target: {fileID: 5424882966849008601, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5424882966849008601, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}

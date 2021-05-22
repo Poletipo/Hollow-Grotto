@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class GameOver : MonoBehaviour {
 
-
     [Header("Game Over UI")]
     public Button MainMenuBtn;
     public TextMeshProUGUI FixedRobotCount;
@@ -22,17 +21,6 @@ public class GameOver : MonoBehaviour {
         GameManager.Instance.Player.GetComponent<Health>().OnDeath += OnDeath;
     }
 
-    private void OnDeath(Health health)
-    {
-        StartCoroutine(OnDeathCoroutine());
-    }
-
-    IEnumerator OnDeathCoroutine()
-    {
-        yield return new WaitForSeconds(0.2f);
-        ShowGameOver();
-    }
-
     private void ShowGameOver()
     {
         SaveManager.DeleteWorld();
@@ -47,6 +35,7 @@ public class GameOver : MonoBehaviour {
         FixedRobotCount.text = player.FixedRobotCount.ToString();
 
         canvasGroup.alpha = 1;
+        canvasGroup.blocksRaycasts = true;
         MainMenuBtn.enabled = true;
 
         Time.timeScale = 0;
@@ -55,6 +44,17 @@ public class GameOver : MonoBehaviour {
     public void MainMenu()
     {
         LevelManager.LoadLevel(LevelManager.Level.MainMenu);
+    }
+
+    private void OnDeath(Health health)
+    {
+        StartCoroutine(OnDeathCoroutine());
+    }
+
+    IEnumerator OnDeathCoroutine()
+    {
+        yield return new WaitForSeconds(0.2f);
+        ShowGameOver();
     }
 
 }

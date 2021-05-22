@@ -1,27 +1,29 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-//[ExecuteInEditMode]
 public class ChunkManager : MonoBehaviour {
+    [Header("Chunks Parameters")]
     [Range(1, 250)]
     public int GridResolution = 4;
     public int ChunkSize = 4;
     public float Threshold = 0;
+    public float loadDistance = 50;
 
+    [Header("Generators")]
     public MeshGenerator MeshGenerator;
     public NoiseGenerator NoiseGenerator;
 
-    public float loadDistance = 50;
+    [Header("Objects")]
+    public GameObject chunkObject;
+    public GameObject Objectif;
 
     public Dictionary<string, GameObject> ChunkList;
     public Dictionary<string, Chunk_Data> ModifiedChunkList;
-    List<GameObject> unusedChunks;
+    private List<GameObject> unusedChunks;
 
-    GameObject objectifChunk;
-    GameObject chunkHolder;
-    GameObject player;
-    public GameObject chunkObject;
-    public GameObject Objectif;
+    private GameObject objectifChunk;
+    private GameObject chunkHolder;
+    private GameObject player;
 
     // Start is called before the first frame update
     void Start()

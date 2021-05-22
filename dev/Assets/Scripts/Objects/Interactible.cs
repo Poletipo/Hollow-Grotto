@@ -55,5 +55,4 @@ public class Interactible : MonoBehaviour {
         Active = true;
     }
 
-
 }

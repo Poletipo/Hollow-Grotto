@@ -3,8 +3,6 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour {
 
-    bool worldExist = true;
-
     [Header("Main Menu UI")]
     public Button WorldBtn;
     public Button PlayBtn;
@@ -19,6 +17,8 @@ public class MainMenu : MonoBehaviour {
 
     [Header("Info screen")]
     public GameObject InfoScreen;
+
+    private bool worldExist = true;
 
     private void Awake()
     {
@@ -97,8 +97,5 @@ public class MainMenu : MonoBehaviour {
         QuitBtn.enabled = true;
         InfoBtn.enabled = true;
     }
-
-
-
 
 }

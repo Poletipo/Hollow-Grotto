@@ -17,7 +17,7 @@ public class FirstPersonCamera : MonoBehaviour {
         Cursor.visible = false;
         transform.position = YawAxis.position;
         transform.rotation = YawAxis.rotation;
-        transform.parent = YawAxis;
+        //transform.parent = YawAxis;
         player = GameManager.Instance.Player.GetComponent<Player>();
     }
 
@@ -41,5 +41,9 @@ public class FirstPersonCamera : MonoBehaviour {
     {
         rotationAxis.transform.rotation = Quaternion.Euler(bodyRotation);
         YawAxis.transform.localRotation = Quaternion.Euler(viewRotation);
+
+        transform.rotation = YawAxis.rotation;
+        transform.position = YawAxis.position;
+
     }
 }

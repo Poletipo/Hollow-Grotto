@@ -2,30 +2,35 @@
 
 public class Worm : MonoBehaviour {
 
+    [Header("Positions")]
     public Transform playerTransform;
     public Transform digPosition;
 
     private Vector3 target;
-
+    [Header("Worm Parameters")]
     public float turnSpeed = 0.5f;
     public float closeTurnSpeed = 0.5f;
     public float farTurnSpeed = 0.5f;
     public float speed = 20;
     public float closeDistance = 30;
     public float farDistance = 50;
+    public float unfocusTargetDistance = 150;
     public Vector2 unfocusTime;
-    float stopTime;
-    float stopTimer;
-    bool isTurning = false;
-    bool isMoving = true;
+
+    private float stopTime;
+    private float stopTimer;
+    private bool isTurning = false;
+    private bool isMoving = true;
 
     private Digger digger;
+    private AudioSource audioSource;
+    private bool roaring = false;
 
-    // Start is called before the first frame update
     void Start()
     {
         target = playerTransform.position;
         digger = GetComponent<Digger>();
+        audioSource = GetComponent<AudioSource>();
         digger.DigSize = 6;
         LoadWorm();
     }
@@ -50,11 +55,20 @@ public class Worm : MonoBehaviour {
         else if (!isTurning && dist >= farDistance) {
             isMoving = false;
             stopTimer = 0;
-            target = playerTransform.position + Random.onUnitSphere * 100;
+            target = playerTransform.position + Random.onUnitSphere * unfocusTargetDistance;
             stopTime = Random.Range(unfocusTime.x, unfocusTime.y);
             isTurning = true;
             turnSpeed = farTurnSpeed;
+            roaring = false;
         }
+
+
+        if (!roaring && dist < 100 + 10 && target == playerTransform.position) {
+            audioSource.Play(0);
+            roaring = true;
+        }
+
+
 
         Quaternion targetRotation = Quaternion.LookRotation(target - transform.position);
         float str = Mathf.Min(turnSpeed * Time.deltaTime, 1);
@@ -85,5 +99,4 @@ public class Worm : MonoBehaviour {
             transform.rotation = rot;
         }
     }
-
 }

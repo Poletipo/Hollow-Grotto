@@ -5,12 +5,14 @@ public class Sonar : MonoBehaviour {
     Player player;
 
     public bool isActive = true;
+    public bool useSound = true;
     public bool useDistance = false;
-    private bool isEmmiting = false;
     public float minDistance = 50;
 
     private Vector3 originalSize;
-    float dist = 0;
+    private float dist = 0;
+    private bool isEmmiting = false;
+    private AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +23,8 @@ public class Sonar : MonoBehaviour {
 
         sonar = GetComponent<ParticleSystem>();
         originalSize = transform.localScale;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -49,6 +53,7 @@ public class Sonar : MonoBehaviour {
             }
             else if (!useDistance) {
                 sonar.Play();
+                audioSource.Play(0);
             }
         }
     }
@@ -57,6 +62,7 @@ public class Sonar : MonoBehaviour {
     {
         sonar.Stop();
         isEmmiting = false;
+        audioSource.Pause();
     }
 
 

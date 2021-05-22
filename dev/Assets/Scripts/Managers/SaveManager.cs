@@ -4,9 +4,7 @@ using UnityEngine;
 
 public static class SaveManager {
 
-
     static string chunkDirectory = Application.persistentDataPath + "/Chunks";
-    static string objChunkDirectory = Application.persistentDataPath + "/Chunks";
     static string worldPath = Application.persistentDataPath + "/World.dat";
     static string playerPath = Application.persistentDataPath + "/Player.dat";
     static string wormPath = Application.persistentDataPath + "/Worm.dat";

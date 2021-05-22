@@ -31,10 +31,10 @@ public class Player : MonoBehaviour {
     public float DigCooldownSpeed = 1.0f;
     public bool InfiniteDigging = false;
     public GameObject Rocks;
-    float digIntervalTimer = 0;
-    bool canDig = true;
+
+    private float digIntervalTimer = 0;
     private bool _isOverHeating = false;
-    float DigSizeClick;
+    private float DigSizeClick;
 
     [Header("Other Parameter")]
     public Health health;
@@ -44,8 +44,8 @@ public class Player : MonoBehaviour {
     [HideInInspector]
     public Camera cam;
 
-    MovementController mc;
-    Digger digger;
+    private MovementController mc;
+    private Digger digger;
 
     public int FixedRobotCount { get; set; } = 0;
     public RaycastHit hit;
@@ -80,10 +80,8 @@ public class Player : MonoBehaviour {
             if (temp != value) {
                 OnInRangeChange?.Invoke(this);
             }
-
         }
     }
-
 
     private bool _playerEnabled;
 
@@ -116,18 +114,12 @@ public class Player : MonoBehaviour {
         digger.DigSize = DigSize;
     }
 
-    private void OnDeath(Health health)
-    {
-        PlayerEnabled = false;
-    }
-
     private void Start()
     {
         LoadPlayer();
         DigSizeClick = DigSize;
     }
 
-    // Update is called once per frame
     void Update()
     {
         digIntervalTimer -= Time.deltaTime;
@@ -214,13 +206,6 @@ public class Player : MonoBehaviour {
         }
     }
 
-    private void OnLanding(MovementController movementController)
-    {
-        if (movementController.FallingSpeed <= -20) {
-            health.Hurt((int)(-(movementController.FallingSpeed) - 10));
-        }
-    }
-
     void LoadPlayer()
     {
         Player_Data data = SaveManager.LoadPlayer();
@@ -247,5 +232,15 @@ public class Player : MonoBehaviour {
         }
     }
 
+    private void OnDeath(Health health)
+    {
+        PlayerEnabled = false;
+    }
 
+    private void OnLanding(MovementController movementController)
+    {
+        if (movementController.FallingSpeed <= -20) {
+            health.Hurt((int)(-(movementController.FallingSpeed) - 10));
+        }
+    }
 }

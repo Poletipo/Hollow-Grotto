@@ -12,9 +12,8 @@ public class PauseMenu : MonoBehaviour {
     [Header("HUD")]
     public GameObject HUD;
 
-    CanvasGroup canvasGroup;
-
-    bool isOpen = true;
+    private bool isOpen = true;
+    private CanvasGroup canvasGroup;
 
     private void Awake()
     {
@@ -65,7 +64,6 @@ public class PauseMenu : MonoBehaviour {
         LevelManager.LoadLevel(LevelManager.Level.MainMenu);
     }
 
-
     public void ShowMainMenuMenu()
     {
         DisableButtons();
@@ -76,7 +74,6 @@ public class PauseMenu : MonoBehaviour {
         EnableButtons();
         MainMenuWarning.SetActive(false);
     }
-
 
     void EnableButtons()
     {
