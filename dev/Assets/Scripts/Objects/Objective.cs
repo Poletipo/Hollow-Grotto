@@ -16,6 +16,7 @@ public class Objective : MonoBehaviour {
 
     private bool _fixed = false;
     private int _healthRefill = 3;
+    private AudioSource audioSource;
 
 
     public int HealthRefill {
@@ -44,6 +45,7 @@ public class Objective : MonoBehaviour {
         Smoke.Stop();
         Light.color = new Color(0.3f, 0.8f, 1);
         Sonar.isActive = false;
+        audioSource.Play();
         GameManager.Instance.ChunkManager.GenerateObjectif();
     }
 
@@ -59,6 +61,7 @@ public class Objective : MonoBehaviour {
     private void Start()
     {
         player = GameManager.Instance.Player;
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()

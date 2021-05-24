@@ -24,6 +24,7 @@ public class Player : MonoBehaviour {
     public PlayerEvent OnListenSonar;
     public PlayerEvent OnStopListenSonar;
     public PlayerEvent OnGrappleTimerChange;
+    public PlayerEvent OnFixedRobotCountChange;
 
     [Header("Player Parameters")]
     public float range = 2.5f;
@@ -58,7 +59,15 @@ public class Player : MonoBehaviour {
     private Digger digger;
 
 
-    public int FixedRobotCount { get; set; } = 0;
+    private int _fixedRobotCount = 0;
+    public int FixedRobotCount {
+        get { return _fixedRobotCount; }
+        set {
+            _fixedRobotCount = value;
+            OnFixedRobotCountChange?.Invoke(this);
+        }
+    }
+
     public RaycastHit hit;
 
 

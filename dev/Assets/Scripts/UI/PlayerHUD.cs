@@ -49,6 +49,9 @@ public class PlayerHUD : MonoBehaviour {
     public CanvasGroup GrapplePivot;
     public Image GrappleSliderFill;
 
+    [Header("Robot Count UI")]
+    public TextMeshProUGUI RobotCountTxt;
+
     private float healtRateOffset = 0;
     private CanvasGroup canvasGroup;
 
@@ -60,6 +63,7 @@ public class PlayerHUD : MonoBehaviour {
         player.OnDigOverheating += OnDigOverheating;
         player.OnInRangeChange += OnInRangeChange;
         player.OnDigSizeChanged += OnDigSizeChanged;
+        player.OnFixedRobotCountChange += OnFixedRobotCountChange;
 
         player.OnGrappleTimerChange += OnGrappleTimerChange;
 
@@ -69,6 +73,11 @@ public class PlayerHUD : MonoBehaviour {
 
         worm = GameManager.Instance.Worm;
         HeartRateSpeed = HeartRateSpeedMinMax.y;
+    }
+
+    private void OnFixedRobotCountChange(Player player)
+    {
+        RobotCountTxt.text = player.FixedRobotCount.ToString();
     }
 
     private void OnHit(Health health)
@@ -174,6 +183,7 @@ public class PlayerHUD : MonoBehaviour {
         }
         else if (player.InRangeState == Player.InRange.Destructible) {
             Reticule.color = DigReticuleColor;
+            InteractPivot.alpha = 0;
         }
         else if (player.InRangeState == Player.InRange.Interactible) {
             Reticule.color = InteractReticuleColor;
@@ -186,6 +196,7 @@ public class PlayerHUD : MonoBehaviour {
         }
         else if (player.InRangeState == Player.InRange.Grapple) {
             Reticule.color = GrappleReticuleColor;
+            InteractPivot.alpha = 0;
         }
     }
 
