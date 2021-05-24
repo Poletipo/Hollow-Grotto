@@ -261,7 +261,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void LoadPlayer()
+    private void LoadPlayer()
     {
         Player_Data data = SaveManager.LoadPlayer();
         if (data != null) {
