@@ -73,6 +73,10 @@ public class PlayerHUD : MonoBehaviour {
 
         worm = GameManager.Instance.Worm;
         HeartRateSpeed = HeartRateSpeedMinMax.y;
+
+        //Fix bug of build that value dont change on start
+        OnFixedRobotCountChange(player);
+        OnDigSizeChanged(player);
     }
 
     private void OnFixedRobotCountChange(Player player)

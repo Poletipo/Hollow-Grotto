@@ -13,10 +13,6 @@ public class GameManager : MonoBehaviour {
                 GameObject managerObject = Instantiate(gameManagerGameObject);
                 _instance = managerObject.GetComponent<GameManager>();
                 _instance.Initialize();
-
-                // Prevents having to recreate the manager on scene change
-                // https://docs.unity3d.com/ScriptReference/Object.DontDestroyOnLoad.html
-                //DontDestroyOnLoad(_instance);
             }
             return _instance;
         }

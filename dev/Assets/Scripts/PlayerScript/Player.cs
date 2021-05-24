@@ -123,7 +123,6 @@ public class Player : MonoBehaviour {
 
 
     private float _digSize = 4;
-
     public float DigSize {
         get { return _digSize; }
         set {
@@ -262,7 +261,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    void LoadPlayer()
+    public void LoadPlayer()
     {
         Player_Data data = SaveManager.LoadPlayer();
         if (data != null) {
