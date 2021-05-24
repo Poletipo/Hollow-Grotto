@@ -10,7 +10,8 @@ public class Player : MonoBehaviour {
     public enum InRange {
         Nothing,
         Destructible,
-        Interactible
+        Interactible,
+        Grapple
     }
 
     public delegate void PlayerEvent(Player player);
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour {
     public PlayerEvent OnDigSizeChanged;
     public PlayerEvent OnListenSonar;
     public PlayerEvent OnStopListenSonar;
+    public PlayerEvent OnGrappleTimerChange;
 
     [Header("Player Parameters")]
     public float range = 2.5f;
@@ -33,8 +35,13 @@ public class Player : MonoBehaviour {
     public GameObject Rocks;
 
     private float digIntervalTimer = 0;
-    private bool _isOverHeating = false;
     private float DigSizeClick;
+
+    [Header("grappling Parameter")]
+    public bool InfiniteGrapple;
+    public float grappleInterval = 5f;
+    public float grappleCooldownSpeed = 1.0f;
+
 
     [Header("Other Parameter")]
     public Health health;
@@ -43,13 +50,28 @@ public class Player : MonoBehaviour {
     public FirstPersonCamera fps;
     [HideInInspector]
     public Camera cam;
+    public AudioClip digSound;
 
     private MovementController mc;
+    private AudioSource audioSource;
+    private GrapplingHook grapplingHook;
     private Digger digger;
+
 
     public int FixedRobotCount { get; set; } = 0;
     public RaycastHit hit;
 
+
+    private float _grappleTimer = 999;
+    public float GrappleTimer {
+        get { return _grappleTimer; }
+        set {
+            _grappleTimer = value;
+            OnGrappleTimerChange?.Invoke(this);
+        }
+    }
+
+    private bool _isOverHeating = false;
     public bool IsOverHeating {
         get { return _isOverHeating; }
         set {
@@ -58,8 +80,8 @@ public class Player : MonoBehaviour {
         }
     }
 
-    private float _digPercent = 0;
 
+    private float _digPercent = 0;
     public float DigPercent {
         get { return _digPercent; }
         set {
@@ -68,8 +90,8 @@ public class Player : MonoBehaviour {
         }
     }
 
-    private InRange _inRangeState = InRange.Nothing;
 
+    private InRange _inRangeState = InRange.Nothing;
     public InRange InRangeState {
         get { return _inRangeState; }
         set {
@@ -83,12 +105,13 @@ public class Player : MonoBehaviour {
         }
     }
 
-    private bool _playerEnabled;
 
+    private bool _playerEnabled;
     public bool PlayerEnabled {
         get { return _playerEnabled; }
         set { _playerEnabled = value; }
     }
+
 
     private float _digSize = 4;
 
@@ -110,7 +133,8 @@ public class Player : MonoBehaviour {
         health.OnDeath += OnDeath;
         fps = cam.GetComponent<FirstPersonCamera>();
         digger = GetComponent<Digger>();
-
+        audioSource = GetComponent<AudioSource>();
+        grapplingHook = GetComponent<GrapplingHook>();
         digger.DigSize = DigSize;
     }
 
@@ -132,6 +156,15 @@ public class Player : MonoBehaviour {
             IsOverHeating = false;
         }
 
+
+        if (InfiniteGrapple) {
+            GrappleTimer = grappleInterval;
+        }
+        if (GrappleTimer < grappleInterval) {
+            GrappleTimer += grappleCooldownSpeed * Time.deltaTime;
+        }
+
+
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range, ~LayerMask.NameToLayer("Object"))) {
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Destructible")) {
                 InRangeState = InRange.Destructible;
@@ -145,12 +178,14 @@ public class Player : MonoBehaviour {
                 InRangeState = InRange.Nothing;
             }
         }
+        else if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, grapplingHook.range) && GrappleTimer >= grappleInterval) {
+            InRangeState = InRange.Grapple;
+        }
         else {
             InRangeState = InRange.Nothing;
         }
 
         PlayerInput();
-
     }
 
     void PlayerInput()
@@ -176,6 +211,17 @@ public class Player : MonoBehaviour {
                     Dig();
                 }
             }
+            if (Input.GetButtonDown("Fire2")) {
+                if (InRangeState != InRange.Nothing && GrappleTimer >= grappleInterval) {
+                    grapplingHook.Grapple(hit.point);
+                }
+            }
+            else if (Input.GetButtonUp("Fire2") && grapplingHook.isGrappled) {
+                GrappleTimer = 0;
+                grapplingHook.UnGrapple();
+            }
+
+
 
             if (Input.GetButtonDown("Interact") && InRangeState == InRange.Interactible) {
                 hit.collider.GetComponent<Interactible>().Interact();
@@ -199,7 +245,8 @@ public class Player : MonoBehaviour {
         if (InRangeState == InRange.Destructible) {
             digger.Dig(hit.point);
             Instantiate(Rocks, hit.point, Quaternion.LookRotation(hit.normal, Vector3.up));
-            DigPercent += DigSize * 2.15f;
+            DigPercent += DigSize * 2.5f;
+            audioSource.PlayOneShot(digSound);
         }
         if (DigPercent >= 100) {
             IsOverHeating = true;
@@ -228,7 +275,6 @@ public class Player : MonoBehaviour {
             health.SetHealth(data.Health);
 
             FixedRobotCount = data.FixedRobotCount;
-
         }
     }
 

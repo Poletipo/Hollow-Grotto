@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
 
 public class FirstPersonCamera : MonoBehaviour {
+    [Header("FPS Parameters")]
     public Transform rotationAxis;
     public Transform YawAxis;
-    Player player;
-
     public float rotationSpeed = 1;
 
-    Vector2 mouseInput;
+    [HideInInspector]
     public Vector3 bodyRotation = new Vector3();
+    [HideInInspector]
     public Vector3 viewRotation = new Vector3();
+
+    private Vector2 mouseInput;
+    private Player player;
 
     private void Awake()
     {
@@ -17,7 +20,6 @@ public class FirstPersonCamera : MonoBehaviour {
         Cursor.visible = false;
         transform.position = YawAxis.position;
         transform.rotation = YawAxis.rotation;
-        //transform.parent = YawAxis;
         player = GameManager.Instance.Player.GetComponent<Player>();
     }
 

@@ -1353,48 +1353,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 979507925, guid: bcfb59840abc3b5459f8ee0dba6b1e62, type: 3}
-      propertyPath: DiggingShape
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1693340107, guid: bcfb59840abc3b5459f8ee0dba6b1e62, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 9fd6485ad69941d4789faac3732d958d, type: 2}
-    - target: {fileID: 2059159485, guid: bcfb59840abc3b5459f8ee0dba6b1e62, type: 3}
-      propertyPath: m_Range
-      value: 5.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 2062224749515652270, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_SpotAngle
-      value: 120
-      objectReference: {fileID: 0}
-    - target: {fileID: 2062224749515652270, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_Range
-      value: 36.84
-      objectReference: {fileID: 0}
-    - target: {fileID: 2062224749515652270, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_Cookie
+    - target: {fileID: 1761437348, guid: bcfb59840abc3b5459f8ee0dba6b1e62, type: 3}
+      propertyPath: cam
       value: 
-      objectReference: {fileID: 2800000, guid: 0f840af479f40bd42a90d7543cc02790, type: 3}
-    - target: {fileID: 2062224749515652270, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_Shadows.m_Strength
-      value: 0.468
-      objectReference: {fileID: 0}
-    - target: {fileID: 4466377298928914772, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.202
-      objectReference: {fileID: 0}
-    - target: {fileID: 4466377298928914772, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.077
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 507266857}
     - target: {fileID: 5424882966849008601, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1459,17 +1425,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7498124978078406553, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: m_Materials.Array.data[1]
-      value: 
-      objectReference: {fileID: -2609809028551464901, guid: 0228c102a860f314093cc763ebc0d33c,
-        type: 3}
-    - target: {fileID: 7884905681495985641, guid: bcfb59840abc3b5459f8ee0dba6b1e62,
-        type: 3}
-      propertyPath: InvincibleTime
-      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bcfb59840abc3b5459f8ee0dba6b1e62, type: 3}

@@ -13,6 +13,7 @@ public class PlayerHUD : MonoBehaviour {
     public Color NormalReticuleColor;
     public Color DigReticuleColor;
     public Color InteractReticuleColor;
+    public Color GrappleReticuleColor;
 
     [Header("Digging UI")]
     public Gradient SliderColor;
@@ -30,6 +31,7 @@ public class PlayerHUD : MonoBehaviour {
     public Sprite FlatLine;
     public Vector2 HeartRateSpeedMinMax;
     private float HeartRateSpeed;
+    public CanvasGroup HurtOverlayCG;
 
     [Header("DigSize UI")]
     public CanvasGroup DigSizePivot;
@@ -39,10 +41,13 @@ public class PlayerHUD : MonoBehaviour {
     public CanvasGroup InteractPivot;
     public TextMeshProUGUI InteractTxt;
 
-    [Header("Interact UI")]
+    [Header("Warning UI")]
     public float WarningDistance = 50;
     public GameObject WarningRadar;
 
+    [Header("Grapple UI")]
+    public CanvasGroup GrapplePivot;
+    public Image GrappleSliderFill;
 
     private float healtRateOffset = 0;
     private CanvasGroup canvasGroup;
@@ -56,11 +61,33 @@ public class PlayerHUD : MonoBehaviour {
         player.OnInRangeChange += OnInRangeChange;
         player.OnDigSizeChanged += OnDigSizeChanged;
 
+        player.OnGrappleTimerChange += OnGrappleTimerChange;
+
         player.health.OnChanged += OnHealthChanged;
+        player.health.OnHit += OnHit;
         player.health.OnDeath += OnDeath;
 
         worm = GameManager.Instance.Worm;
         HeartRateSpeed = HeartRateSpeedMinMax.y;
+    }
+
+    private void OnHit(Health health)
+    {
+        HurtOverlayCG.alpha = 0.25f;
+    }
+
+    private void OnGrappleTimerChange(Player player)
+    {
+        if (player.GrappleTimer >= player.grappleInterval) {
+            GrapplePivot.alpha = 0;
+        }
+        else {
+            GrapplePivot.alpha = 1;
+
+            float grapplePercent = player.GrappleTimer / player.grappleInterval;
+
+            GrappleSliderFill.fillAmount = grapplePercent;
+        }
     }
 
     public void ShowDigging(float percent)
@@ -85,9 +112,12 @@ public class PlayerHUD : MonoBehaviour {
         if (healtRateOffset > 1) {
             healtRateOffset = 1 - healtRateOffset;
         }
-
         HealthRate.GetComponent<Image>().material.mainTextureOffset = Vector2.right * healtRateOffset;
 
+
+        if (HurtOverlayCG.alpha > 0f) {
+            HurtOverlayCG.alpha -= Time.deltaTime * 0.5f;
+        }
 
         float dist = Vector3.Distance(worm.transform.position, player.transform.position);
 
@@ -153,6 +183,9 @@ public class PlayerHUD : MonoBehaviour {
             if (player.hit.collider.GetComponent<Interactible>() != null) {
                 InteractTxt.text = player.hit.collider.GetComponent<Interactible>().Action.ToString();
             }
+        }
+        else if (player.InRangeState == Player.InRange.Grapple) {
+            Reticule.color = GrappleReticuleColor;
         }
     }
 

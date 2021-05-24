@@ -161,6 +161,9 @@ public class MovementController : MonoBehaviour {
             if (FallingSpeed > Velocity.y) {
                 FallingSpeed = Velocity.y;
             }
+            if (Velocity.y >= 0) {
+                FallingSpeed = 0;
+            }
         }
     }
 
