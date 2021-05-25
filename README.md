@@ -59,6 +59,16 @@ sauvegarder votre progrès ou vous soigner.
 Si vous entendez un cri, c'est que le ver vous a ciblé et vous devez l'éviter.
 - Lorsque vous mourez, votre sauvegarde est effacé, et vous devez recommencer.
 
+## Dossier de Sauvegarde
+La sauvegarde est faites dans le dossier suivant:
+- "C:\Users\VotreNomUtilisateur\AppData\LocalLow\DefaultCompany\Hollow Grotto"
+
+Le dossier "AppData" est invisible de base donc il faut choisir l'option 
+d'afficher les dossiers cachés.
+- Sinon dans la barre de recherche de l'explorateur de fichier écriver %appdata% 
+et faite "Enter". À partir d'où vous êtes, remonter d'un dossier et vous serez 
+dans "C:\Users\VotreNomUtilisateur\AppData". Suivez le chemin : 
+"LocalLow\DefaultCompany\Hollow Grotto" pour arrivez au dossier de sauvegarde.
 
 ## Références
 - Table de marching Cubes : http://paulbourke.net/geometry/polygonise/
